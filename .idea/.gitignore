@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../../../:\Users\harry\OneDrive\Documents\UON\2021\SENG2050\apache-tomcat-9.0.44\webapps\AutumnRoomsBookings\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
