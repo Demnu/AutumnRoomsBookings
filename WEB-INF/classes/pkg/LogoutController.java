@@ -20,7 +20,33 @@ public class LogoutController extends HttpServlet {
         dispatcher.forward(request, response);
 
     }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
+
+        //Recieved by Login.jsp: Username and Password
+        String username = (String) request.getParameter("username");
+        String passwordStr = (String) request.getParameter("password");
+        System.out.println(username + passwordStr);
+        //authenticate User and create User object
+        User user;
+        Integer password = Integer.parseInt(passwordStr);
+        if (UserDatabaseInterface.checkUserDetails(username,password)){
+            user = new User(username,password);
+            session.setAttribute("user",user);
+        }
+        else {
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+            dispatcher.forward(request, response);
+
+        }
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
+        dispatcher.forward(request, response);
+        return;
+
+    }
 }
+
 
 
