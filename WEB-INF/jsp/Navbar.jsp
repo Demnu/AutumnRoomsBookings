@@ -10,11 +10,11 @@
                     <img src="${pageContext.request.contextPath}/imgs/img.png" alt="UON Logo" class="float-end w-100">
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/">Home</a>
+                    <a class="nav-link" href="">Home</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/viewAllIssues">View all issues </a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Create Section</a>
                 </li>
 
                 <li class="nav-item">

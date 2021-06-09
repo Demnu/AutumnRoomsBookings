@@ -10,17 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("")
-public class LoginController extends HttpServlet {
+@WebServlet("/createSection")
+public class CreateSectionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        //Check if user is logged in
         User user = (User) session.getAttribute("user");
-        if (user!=null){
+        if (user==null){
+            System.out.println("not logged in");
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
             dispatcher.forward(req, resp);
         }
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
         dispatcher.forward(req, resp);
         return;
     }
@@ -29,24 +31,21 @@ public class LoginController extends HttpServlet {
         HttpSession session = request.getSession();
 
 
-        //Received by Login.jsp: Username and Password
-        String username = (String) request.getParameter("username");
-        String passwordStr = (String) request.getParameter("password");
-        System.out.println(username + passwordStr);
-        //authenticate User and create User object
-        User user;
-        Integer password = Integer.parseInt(passwordStr);
-        if (UserDatabaseInterface.checkUserDetails(username,password)){
-            user = new User(username,password);
-            session.setAttribute("user",user);
-        }
-        else {
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
-            dispatcher.forward(request, response);
+        //Received by CreateSection.jsp: Section Name and Brief Description
+        String sectionName = (String) request.getParameter("sectionName");
+        String sectionDesc = (String) request.getParameter("sectionDesc");
 
+        //Authenticate section details and save to database
+        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc)){
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
+            dispatcher.forward(request, response);
+            return;
         }
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
-        dispatcher.forward(request, response);
+        else{
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
+            dispatcher.forward(request, response);
+        }
+
         return;
 
     }

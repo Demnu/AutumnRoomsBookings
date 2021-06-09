@@ -10,15 +10,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/logout")
-public class LogoutController extends HttpServlet {
+@WebServlet("/template")
+public class Ztemplate extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
-        dispatcher.forward(request, response);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
 
+        //Check if user is logged in
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
+            dispatcher.forward(req, resp);
+        }
+
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+        dispatcher.forward(req, resp);
+        return;
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,23 +37,11 @@ public class LogoutController extends HttpServlet {
         String passwordStr = (String) request.getParameter("password");
         System.out.println(username + passwordStr);
         //authenticate User and create User object
-        User user;
-        Integer password = Integer.parseInt(passwordStr);
-        if (UserDatabaseInterface.checkUserDetails(username,password)){
-            user = new User(username,password);
-            session.setAttribute("user",user);
-        }
-        else {
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
-            dispatcher.forward(request, response);
-
-        }
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
         dispatcher.forward(request, response);
         return;
 
     }
 }
-
 
 

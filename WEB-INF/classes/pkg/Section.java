@@ -1,0 +1,36 @@
+package pkg;
+import java.util.*;
+public class Section {
+    private String name;
+    private String description;
+
+    Section(){
+
+    }
+    Section(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ArrayList<Section> getSectionList(){
+        ArrayList<Section> sectionList;
+        sectionList = SectionDatabaseInterface.getAllSections();
+        return sectionList;
+    }
+}

@@ -3,9 +3,9 @@ package pkg;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    String name;
-    String username;
-    Integer password;
+    private String name;
+    private String username;
+    private Integer password;
     User(){
         name = null;
         password = null;
