@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @WebServlet("")
-public class Login extends HttpServlet {
+public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -34,6 +34,11 @@ public class Login extends HttpServlet {
         if (UserDatabaseInterface.checkUserDetails(username,password)){
             user = new User(username,password);
             session.setAttribute("user",user);
+        }
+        else {
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+            dispatcher.forward(request, response);
+
         }
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
         dispatcher.forward(request, response);

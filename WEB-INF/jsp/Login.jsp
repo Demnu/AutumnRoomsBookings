@@ -21,7 +21,7 @@
                     <input class="form-control form-control-user" type="text" placeholder="Username" name="username" />
                 </div>
                 <div class="mb-3">
-                    <input class="form-control form-control-user" type="password" placeholder="Password" name="password" />
+                    <input class="form-control form-control-user" type="number" placeholder="Password" name="password" maxlength="4"/>
                 </div>
                 <div class="mb-3">
 
