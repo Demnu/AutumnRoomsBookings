@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;"%>
 <%@ page import="java.util.*" %>
-<!DOCTYPE html>
+<%@ page import="pkg.User" %>
+<%User user = (User) session.getAttribute("user");%>
+    <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -14,7 +16,7 @@
 <div class="container">
     <div class="card w-100">
         <div class="card-header">
-            <h2>Welcome to the Autumn Rooms Booking System</h2>
+            <h2>Welcome <%=user.getName()%> to the Autumn Rooms Booking System</h2>
         </div>
         <div class="card-body">
             <div class="row">

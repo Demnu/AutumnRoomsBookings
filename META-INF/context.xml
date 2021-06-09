@@ -15,11 +15,11 @@ type="javax.sql.DataSource"
 username="root"
 
 
-password="Harding1945"
+password="root"
 
 
 driverClassName="com.mysql.cj.jdbc.Driver"
-url="jdbc:mysql://localhost:3306/A3"
+url="jdbc:mysql://localhost:3306/AutumnRoomsBookingDB"
 
 
 />
