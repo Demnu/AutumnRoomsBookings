@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/template")
-public class Ztemplate extends HttpServlet {
+@WebServlet("/deleteSection")
+public class DeleteSectionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -19,11 +19,16 @@ public class Ztemplate extends HttpServlet {
         //Check if user is logged in
         User user = (User) session.getAttribute("user");
         if (user==null){
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
             dispatcher.forward(request, response);
         }
+        String sectionIDStr = (request.getParameter("deleteSection"));
 
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+        if (sectionIDStr!=null){
+            Integer sectionID = Integer.parseInt(sectionIDStr);
+            SectionDatabaseInterface.deleteSection(sectionID);
+        }
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
         dispatcher.forward(request, response);
         return;
     }

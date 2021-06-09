@@ -10,7 +10,7 @@
                     <img src="${pageContext.request.contextPath}/imgs/img.png" alt="UON Logo" class="float-end w-100">
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="">Home</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/">Home</a>
                 </li>
 
                 <li class="nav-item">
