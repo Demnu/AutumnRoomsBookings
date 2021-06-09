@@ -6,6 +6,9 @@
     <div class="container">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <img src="${pageContext.request.contextPath}/imgs/img.png" alt="UON Logo" class="float-end w-100">
+                </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="${pageContext.request.contextPath}/">Home</a>
                 </li>
@@ -25,7 +28,6 @@
                 </li>
             </ul>
         </div>
-        <p class="float-end nav-item text-white align-text-bottom pe-2">Logged in as: <%=request.getUserPrincipal().getName()%></p>
     </div>
 
 
