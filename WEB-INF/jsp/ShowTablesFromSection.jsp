@@ -48,7 +48,7 @@
                                 <input type="number" name="seatsNumber" id="seatsNumber" class="form-control" min="1" max="100" value="<%=tableList.get(i).getSeats()%>"/>
                             </td>
                             <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Table</button></td>
-                            <td> <a class="btn btn-outline-danger" href="<%=request.getContextPath()%>/deleteSection?deleteSection=<%=tableList.get(i).getSectionID()%>">Delete Table</a></td>
+                            <td> <a class="btn btn-outline-danger" href="<%=request.getContextPath()%>/deleteSingleTable?tableID=<%=tableList.get(i).getTableID()%>&sectionID=<%=tableList.get(i).getSectionID()%>">Delete Table</a></td>
                         </tr>
                     </form>
                     <%}%>

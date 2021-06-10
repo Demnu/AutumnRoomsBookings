@@ -32,21 +32,6 @@ public class DeleteSectionController extends HttpServlet {
         dispatcher.forward(request, response);
         return;
     }
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-
-        //Received by Login.jsp: Username and Password
-        String username = (String) request.getParameter("username");
-        String passwordStr = (String) request.getParameter("password");
-        System.out.println(username + passwordStr);
-        //authenticate User and create User object
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
-        dispatcher.forward(request, response);
-        return;
-
-    }
 }
 
 

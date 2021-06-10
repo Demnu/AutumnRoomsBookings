@@ -50,11 +50,11 @@ public class ServableTableDatabaseInterface {
         return tableList;
     }
 
-    public static void deleteSection (int sectionID) {
-        String query = "DELETE FROM Section WHERE sectionID=?";
+    public static void deleteServableTable(int tableID) {
+        String query = "DELETE FROM ServableTable WHERE tableID=?";
         try (Connection connection = ConfigBean.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query); //step 2
-            preparedStatement.setInt(1, sectionID);
+            preparedStatement.setInt(1, tableID);
             preparedStatement.execute();
             preparedStatement.close();
             connection.close();
