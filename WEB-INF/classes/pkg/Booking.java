@@ -2,26 +2,29 @@ package pkg;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 
 public class Booking {
     private int bookingID;
-    private int intStaffID;
+    private int staffID;
     private Date dateBooked;
     private Time timeBooked;
+    private Date dateOfBooking;
     private Time startTimeOfBooking;
     private Time endTimeOfBooking;
     private int numberOfPeople;
     private boolean confirmed;
+    private ArrayList<ServableTable> assignedTables;
 
-    public Booking(int bookingID, int intStaffID, Date dateBooked, Time timeBooked, Time startTimeOfBooking, Time endTimeOfBooking, int numberOfPeople, boolean confirmed) {
-        this.bookingID = bookingID;
-        this.intStaffID = intStaffID;
-        this.dateBooked = dateBooked;
-        this.timeBooked = timeBooked;
-        this.startTimeOfBooking = startTimeOfBooking;
-        this.endTimeOfBooking = endTimeOfBooking;
-        this.numberOfPeople = numberOfPeople;
-        this.confirmed = confirmed;
+    public ArrayList<ServableTable> getAssignedTables() {
+        return assignedTables;
+    }
+
+    public void setAssignedTables(ArrayList<ServableTable> assignedTables) {
+        this.assignedTables = assignedTables;
+    }
+
+    public Booking() {
     }
 
     public int getBookingID() {
@@ -32,12 +35,12 @@ public class Booking {
         this.bookingID = bookingID;
     }
 
-    public int getIntStaffID() {
-        return intStaffID;
+    public int getStaffID() {
+        return staffID;
     }
 
-    public void setIntStaffID(int intStaffID) {
-        this.intStaffID = intStaffID;
+    public void setStaffID(int staffID) {
+        this.staffID = staffID;
     }
 
     public Date getDateBooked() {
@@ -54,6 +57,14 @@ public class Booking {
 
     public void setTimeBooked(Time timeBooked) {
         this.timeBooked = timeBooked;
+    }
+
+    public Date getDateOfBooking() {
+        return dateOfBooking;
+    }
+
+    public void setDateOfBooking(Date dateOfBooking) {
+        this.dateOfBooking = dateOfBooking;
     }
 
     public Time getStartTimeOfBooking() {

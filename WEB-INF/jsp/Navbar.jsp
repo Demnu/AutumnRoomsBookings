@@ -23,7 +23,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/createBooking">Create Booking</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/checkBookingAvailability">Create Booking</a>
             </li>
 
             <li class="nav-item">

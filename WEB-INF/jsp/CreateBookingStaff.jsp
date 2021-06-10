@@ -24,12 +24,9 @@
 
     <script>
 
-            $( function() {
-            $( "#datepicker" ).datepicker();
-                $( ".selector" ).datepicker({
-                    minDate: new Date(2007, 1 - 1, 1)
-                });
-        } );
+        $(function () {
+            $('#datepicker').datepicker({ dateFormat: 'dd-mm-yy' });
+        });
             $(function(){
                 $('input.timepicker').timepicker({});
             });
@@ -50,13 +47,14 @@
                     <p>Please enter the form below to create a booking.</p>
                 </div>
                 <div class="form-group">
-                    <form action="createBooking" method="POST" name="ReportForm" id="BookingForm">
+                    <form action="checkBookingAvailability" method="POST" name="ReportForm" id="BookingForm">
+                        <input type="hidden" name="staffID" id="staffID" class="form-control" value="<%=user.getStaffID()%>">
                         <label for="datepicker">Date of Booking:</label>
                         <input name="dateOfBooking" autocomplete="off" class="form-control" type="text" id="datepicker">
                         <p>Hour:</p>
-                        <select class="form-control" id="hours"></select>
+                        <select class="form-control" name="hours" id="hours"></select>
                         <p>Minute:</p>
-                        <select class="form-control" id="minutes"></select>
+                        <select class="form-control" name="minutes" id="minutes"></select>
                         <label for="numberOfPeople">Number of people:</label>
                         <input required type="number" name="numberOfPeople" id="numberOfPeople" class="form-control" min="1" max="150"/>
                         <br>

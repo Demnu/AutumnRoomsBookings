@@ -2,7 +2,7 @@ package pkg;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
-public class ServableTableDatabaseInterface {
+public class TableBookingsDatabaseInterface {
     public static boolean saveServableTable(int sectionID, int tableNumber, int seats) {
         try {
             // creates prepared statement and sets its values
@@ -24,20 +24,15 @@ public class ServableTableDatabaseInterface {
         return false;
     }
 
-    public static ArrayList<ServableTable> getAllServeableTables(int sectionID){
-        ArrayList<ServableTable> tableList = new ArrayList<ServableTable>();
-        String query = "SELECT* FROM ServableTable WHERE sectionID=?";
+    public static ArrayList getTableIDsInputtedBookingID(int bookingID){
+        ArrayList tableIDList = new ArrayList();
+        String query = "SELECT* FROM TableBookings WHERE bookingID=?";
         try(Connection connection = ConfigBean.getConnection();){
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, sectionID);
+            preparedStatement.setInt(1, bookingID);
             ResultSet result = preparedStatement.executeQuery();
             while(result.next()){
-                ServableTable tempServableTable = new ServableTable();
-                tempServableTable.setTableID(result.getInt(1));
-                tempServableTable.setSectionID(result.getInt(2));
-                tempServableTable.setTableNumber(result.getInt(3));
-                tempServableTable.setSeats(result.getInt(4));
-                tableList.add(tempServableTable);
+                tableIDList.add(result.getInt(2));
             }
             result.close();
             preparedStatement.close();
@@ -47,57 +42,10 @@ public class ServableTableDatabaseInterface {
             System.err.println(e.getMessage());
             System.err.println(e.getStackTrace());
         }
-        return tableList;
+        return tableIDList;
     }
-    public static ArrayList<ServableTable> getAllServableTablesInBooking(int tableID){
-        ArrayList<ServableTable> tableList = new ArrayList<ServableTable>();
-        String query = "SELECT* FROM ServableTable WHERE tableID=?";
-        try(Connection connection = ConfigBean.getConnection();){
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, tableID);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                ServableTable tempServableTable = new ServableTable();
-                tempServableTable.setTableID(result.getInt(1));
-                tempServableTable.setSectionID(result.getInt(2));
-                tempServableTable.setTableNumber(result.getInt(3));
-                tempServableTable.setSeats(result.getInt(4));
-                tableList.add(tempServableTable);
-            }
-            result.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return tableList;
-    }
-    public static ArrayList<ServableTable> getAllServableTablesInBooking(){
-        ArrayList<ServableTable> tableList = new ArrayList<ServableTable>();
-        String query = "SELECT* FROM ServableTable";
-        try(Connection connection = ConfigBean.getConnection();){
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                ServableTable tempServableTable = new ServableTable();
-                tempServableTable.setTableID(result.getInt(1));
-                tempServableTable.setSectionID(result.getInt(2));
-                tempServableTable.setTableNumber(result.getInt(3));
-                tempServableTable.setSeats(result.getInt(4));
-                tableList.add(tempServableTable);
-            }
-            result.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return tableList;
-    }
+
+
     public static void deleteServableTable(int tableID) {
         String query = "DELETE FROM ServableTable WHERE tableID=?";
         try (Connection connection = ConfigBean.getConnection()) {
