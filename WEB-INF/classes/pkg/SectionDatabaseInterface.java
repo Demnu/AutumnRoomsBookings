@@ -66,7 +66,45 @@ public class SectionDatabaseInterface {
 
         }
     }
+    public static boolean updateMaxTimeOfBooking(int sectionID, Time maxTimeOfBooking) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE Section SET maxTimeOfBooking=? WHERE sectionID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setTime(1, maxTimeOfBooking);
+            s.setInt(2, sectionID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+            return  true;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean updateMaxCapacity(int sectionID, int maxCapacity) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE Section SET maxCapacity=? WHERE sectionID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setInt(1, maxCapacity);
+            s.setInt(2, sectionID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+            return  true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
 

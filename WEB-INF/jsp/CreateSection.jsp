@@ -34,19 +34,34 @@
                         <th class="th-sm">Max Time for Bookings</th>
                         <th class="th-sm"></th>
                         <th class="th-sm"></th>
-
                     </tr>
                     </thead>
                     <tbody>
                     <% for (int i = 0; i< sectionList.size(); i++){ %>
+                    <form action="editSingleSection" method="POST" name="editSectionForm" id="editSectionForm">
                     <tr>
+                        <input type="hidden" name="editSingleSectionID" value="<%=sectionList.get(i).getSectionID()%>">
                         <td><%=sectionList.get(i).getName()%></td>
                         <td><%=sectionList.get(i).getDescription()%></td>
-                        <td><%=sectionList.get(i).getMaxCapacity()%></td>
-                        <td><%=sectionList.get(i).getMaxTimeOfBooking()%></td>
-                        <td> <a class="btn btn-primary" href="<%=request.getContextPath()%>/deleteSection?editSingleSection=<%=sectionList.get(i).getSectionID()%>">Edit Section</a>
+                        <td>
+                            <input type="number" name="maxCapacity" id="maxCapacity" class="form-control" min="1" max="150" value="<%=sectionList.get(i).getMaxCapacity()%>"/>
+                        <td>
+                            <select name="maxTimeOfBooking" id="maxTimeOfBooking" class="form-control">
+                                <option value="0"><%=sectionList.get(i).getMaxTimeOfBooking()%></option>
+                                <option value="1">0:15</option>
+                                <option value="2">0:30</option>
+                                <option value="3">0:45</option>
+                                <option value="4">1:00</option>
+                                <option value="5">1:15</option>
+                                <option value="6">1:30</option>
+                                <option value="7">1:45</option>
+                                <option value="8">2:00</option>
+                            </select>
+                        </td>
+                        <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Section</button></td>
                         <td> <a class="btn btn-outline-danger" href="<%=request.getContextPath()%>/deleteSection?deleteSection=<%=sectionList.get(i).getSectionID()%>">Delete Section</a></td>
                     </tr>
+                    </form>
                     <%}%>
                     </tbody>
                 </table>
@@ -66,7 +81,7 @@
                         <label for="sectionDesc" class="mt-2">Description of Section</label>
                         <textarea required id="sectionDesc" name="sectionDesc" form="ReportForm" class="form-control " placeholder="Enter a brief description for the section"></textarea><br>
                         <label for="maxCapacity">Maximum People allowed in the Section:</label>
-                        <input required type="number" name="maxCapacity" id="maxCapacity" class="form-control"/>
+                        <input required type="number" name="maxCapacity" id="maxCapacity" class="form-control" min="1" max="150"/>
                         <br>
                         <label for="maxTimeOfBooking">Maximum time HH/MM allowed for a booking:</label>
                         <select name="maxTimeOfBooking" id="maxTimeOfBooking" class="form-control">

@@ -17,34 +17,20 @@ import javax.servlet.http.HttpSession;
 public class EditSingleSectionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        //Check if user is logged in
-        User user = (User) session.getAttribute("user");
-        if (user==null){
-            System.out.println("not logged in");
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
-            dispatcher.forward(request, response);
-        }
 
-        //Forward the Section List to CreateSection.jsp
-        ArrayList<Section> sectionList = new ArrayList<Section>();
-        sectionList = SectionDatabaseInterface.getAllSections();
-        request.setAttribute("sectionList",sectionList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
-        dispatcher.forward(request, response);
-        return;
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        //Received by CreateSection.jsp: Section Name and Brief Description
-        String sectionName = (String) request.getParameter("sectionName");
-        String sectionDesc = (String) request.getParameter("sectionDesc");
+        //Received by CreateSection.jsp Edit Button
+        String sectionIDStr = (request.getParameter("editSingleSectionID"));
         String maxCapacityStr = (String) request.getParameter("maxCapacity");
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
+        Integer sectionID = Integer.parseInt(sectionIDStr);
         Integer maxCapacity = Integer.parseInt(maxCapacityStr);
         Integer maxTimeOfBooking = Integer.parseInt(hourMinsStr);
+        boolean maxTimeOfBookingChanged = true;
 
         Time tempTime = new Time(0,0,0);
         if(maxTimeOfBooking==1){
@@ -56,7 +42,6 @@ public class EditSingleSectionController extends HttpServlet {
         else if (maxTimeOfBooking==3){
             tempTime = new Time(0,45,0);
         }
-
         else if (maxTimeOfBooking==4){
             tempTime = new Time(1,0,0);
         }
@@ -72,19 +57,20 @@ public class EditSingleSectionController extends HttpServlet {
         else if (maxTimeOfBooking==8){
             tempTime = new Time(2,0,0);
         }
-
-
-        //Authenticate section details and save to database
-        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCapacity,tempTime)){
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
-            dispatcher.forward(request, response);
-            return;
-        }
-        else{
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
-            dispatcher.forward(request, response);
+        //if maxTimeOfBooking is unchanged
+        else{            maxTimeOfBookingChanged = false;
         }
 
+        //if maxTimeOfBooking has been changed update database
+        if (maxTimeOfBookingChanged){
+            SectionDatabaseInterface.updateMaxTimeOfBooking(sectionID,tempTime);
+        }
+        SectionDatabaseInterface.updateMaxCapacity(sectionID,maxCapacity);
+        ArrayList<Section> sectionList = new ArrayList<Section>();
+        sectionList = SectionDatabaseInterface.getAllSections();
+        request.setAttribute("sectionList",sectionList);
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
+        dispatcher.forward(request, response);
         return;
 
     }

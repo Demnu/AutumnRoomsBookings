@@ -18,7 +18,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Create Section</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Sections</a>
             </li>
 
             <li class="nav-item">
