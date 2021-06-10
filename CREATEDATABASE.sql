@@ -20,7 +20,7 @@ CREATE TABLE ServableTable (
                                tableID INT NOT NULL AUTO_INCREMENT,
                                sectionID int NOT NULL,
                                tableNumber int NOT NULL,
-                               maxTimeOfBooking TIME,
+                               seats int NOT NULL,
                                PRIMARY KEY (tableID),
                                FOREIGN KEY (sectionID) REFERENCES Section(sectionID)
 );

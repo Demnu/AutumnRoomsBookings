@@ -2,17 +2,16 @@ package pkg;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
-public class SectionDatabaseInterface {
-    public static boolean saveSection(String sectionName, String description, int maxCapacity, Time maxTimeOfBooking) {
+public class ServableTableDatabaseInterface {
+    public static boolean saveServableTable(int sectionID, int tableNumber, int seats) {
         try {
             // creates prepared statement and sets its values
-            String query = "INSERT INTO Section (sectionName,description,maxCapacity,maxTimeOfBooking) VALUES (?,?,?,?) ";
+            String query = "INSERT INTO ServableTable (sectionID,tableNumber,seats) VALUES (?,?,?) ";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
-            s.setString(1, sectionName);
-            s.setString(2, description);
-            s.setInt(3, maxCapacity);
-            s.setTime(4, maxTimeOfBooking);
+            s.setInt(1, sectionID);
+            s.setInt(2, tableNumber);
+            s.setInt(3, seats);
             // executes the statement and closes statement and connection
             s.executeUpdate();
             s.close();
@@ -24,15 +23,21 @@ public class SectionDatabaseInterface {
         }
         return false;
     }
-    public static String getSectionName(int sectionID){
-        String query = "SELECT sectionName FROM Section WHERE sectionID=?";
+
+    public static ArrayList<ServableTable> getAllServeableTables(int sectionID){
+        ArrayList<ServableTable> tableList = new ArrayList<ServableTable>();
+        String query = "SELECT* FROM ServableTable WHERE sectionID=?";
         try(Connection connection = ConfigBean.getConnection();){
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, sectionID);
             ResultSet result = preparedStatement.executeQuery();
-            System.out.println(sectionID);
             while(result.next()){
-                return result.getString(1);
+                ServableTable tempServableTable = new ServableTable();
+                tempServableTable.setTableID(result.getInt(1));
+                tempServableTable.setSectionID(result.getInt(2));
+                tempServableTable.setTableNumber(result.getInt(3));
+                tempServableTable.setSeats(result.getInt(4));
+                tableList.add(tempServableTable);
             }
             result.close();
             preparedStatement.close();
@@ -42,32 +47,7 @@ public class SectionDatabaseInterface {
             System.err.println(e.getMessage());
             System.err.println(e.getStackTrace());
         }
-        return "EMPTY";
-    }
-    public static ArrayList<Section> getAllSections(){
-        ArrayList<Section> sectionList = new ArrayList<Section>();
-        String query = "SELECT* FROM Section";
-        try(Connection connection = ConfigBean.getConnection();){
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                Section tempSection = new Section();
-                tempSection.setSectionID(result.getInt(1));
-                tempSection.setName(result.getString(2));
-                tempSection.setDescription(result.getString(3));
-                tempSection.setMaxCapacity(result.getInt(4));
-                tempSection.setMaxTimeOfBooking(result.getTime(5));
-                sectionList.add(tempSection);
-            }
-            result.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return sectionList;
+        return tableList;
     }
     public static void deleteSection (int sectionID) {
         String query = "DELETE FROM Section WHERE sectionID=?";
