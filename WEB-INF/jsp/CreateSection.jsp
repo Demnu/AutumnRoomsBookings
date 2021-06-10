@@ -25,6 +25,7 @@
         </div>
         <div class="card-body">
             <div class="row">
+                <h4>All Sections</h4>
                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                     <thead>
                     <tr>

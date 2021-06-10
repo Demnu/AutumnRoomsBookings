@@ -19,4 +19,12 @@ public class User implements Serializable {
     public String getName() {
         return name;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Integer getPassword() {
+        return password;
+    }
 }
