@@ -44,7 +44,8 @@
 
                 <div class="col-10">
                     <h4>Create a Booking</h4>
-                    <p>Please enter the form below to create a booking.</p>
+                    <h5>Search for Availability</h5>
+                    <p>Please enter the details below to check availability.</p>
                 </div>
                 <div class="form-group">
                     <form action="checkBookingAvailability" method="POST" name="ReportForm" id="BookingForm">
@@ -58,7 +59,7 @@
                         <label for="numberOfPeople">Number of people:</label>
                         <input required type="number" name="numberOfPeople" id="numberOfPeople" class="form-control" min="1" max="150"/>
                         <br>
-                        <input type="submit" class="btn btn-outline-primary" value="Search for Availability">
+                        <input type="submit" class="btn btn-primary" value="Search for Availability">
                         <input type="reset" class="btn btn-outline-secondary">
                     </form>
 
