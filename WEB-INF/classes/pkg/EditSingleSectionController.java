@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/createSection")
-public class CreateSectionController extends HttpServlet {
+@WebServlet("/editSingleSection")
+public class EditSingleSectionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -76,13 +76,15 @@ public class CreateSectionController extends HttpServlet {
 
         //Authenticate section details and save to database
         if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCapacity,tempTime)){
-
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
+            dispatcher.forward(request, response);
+            return;
         }
-        ArrayList<Section> sectionList = new ArrayList<Section>();
-        sectionList = SectionDatabaseInterface.getAllSections();
-        request.setAttribute("sectionList",sectionList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
-        dispatcher.forward(request, response);
+        else{
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
+            dispatcher.forward(request, response);
+        }
+
         return;
 
     }
