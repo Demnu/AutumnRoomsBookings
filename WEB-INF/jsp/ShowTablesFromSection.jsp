@@ -41,9 +41,12 @@
                     <% for (int i = 0; i< tableList.size(); i++){ %>
                     <form action="editSingleTable" method="POST" name="editSingleTable" id="editSingleTable">
                         <tr>
-                            <input type="hidden" name="editSingleTableID" value="<%=tableList.get(i).getTableID()%>">
+                            <input type="hidden" name="tableID" value="<%=tableList.get(i).getTableID()%>">
+                            <input type="hidden" name="sectionID" value="<%=sectionID%>">
                             <td><%=tableList.get(i).getTableNumber()%></td>
-                            <td><%=tableList.get(i).getSeats()%></td>
+                            <td>
+                                <input type="number" name="seatsNumber" id="seatsNumber" class="form-control" min="1" max="100" value="<%=tableList.get(i).getSeats()%>"/>
+                            </td>
                             <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Table</button></td>
                             <td> <a class="btn btn-outline-danger" href="<%=request.getContextPath()%>/deleteSection?deleteSection=<%=tableList.get(i).getSectionID()%>">Delete Table</a></td>
                         </tr>

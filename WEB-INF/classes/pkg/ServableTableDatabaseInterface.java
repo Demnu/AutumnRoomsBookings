@@ -66,14 +66,14 @@ public class ServableTableDatabaseInterface {
 
         }
     }
-    public static boolean updateMaxTimeOfBooking(int sectionID, Time maxTimeOfBooking) {
+    public static boolean updateSeatsNumber(int tableID, int seats) {
         try {
             // creates prepared statement and sets its values
-            String query = "UPDATE Section SET maxTimeOfBooking=? WHERE sectionID=?";
+            String query = "UPDATE ServableTable SET seats=? WHERE tableID=?";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
-            s.setTime(1, maxTimeOfBooking);
-            s.setInt(2, sectionID);
+            s.setInt(1, seats);
+            s.setInt(2, tableID);
             // executes the statement and closes statement and connection
             s.executeUpdate();
             s.close();
