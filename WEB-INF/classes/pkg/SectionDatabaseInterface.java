@@ -46,6 +46,8 @@ public class SectionDatabaseInterface {
     }
     public static ArrayList<Section> getAllSections(){
         ArrayList<Section> sectionList = new ArrayList<Section>();
+        ArrayList<ServableTable> servableTablesList = new ArrayList<ServableTable>();
+
         String query = "SELECT* FROM Section";
         try(Connection connection = ConfigBean.getConnection();){
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -57,6 +59,7 @@ public class SectionDatabaseInterface {
                 tempSection.setDescription(result.getString(3));
                 tempSection.setMaxCapacity(result.getInt(4));
                 tempSection.setMaxTimeOfBooking(result.getTime(5));
+                tempSection.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(tempSection.getSectionID()));
                 sectionList.add(tempSection);
             }
             result.close();

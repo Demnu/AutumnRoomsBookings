@@ -7,6 +7,7 @@ public class Section {
     private String description;
     private Integer maxCapacity;
     private Time maxTimeOfBooking;
+    private ArrayList<ServableTable> servableTables;
 
     Section(){
 
@@ -42,6 +43,10 @@ public class Section {
         return sectionID;
     }
 
+    public void setServableTables(ArrayList<ServableTable> servableTables) {
+        this.servableTables = servableTables;
+    }
+
     public String getName() {
         return name;
     }
@@ -62,5 +67,17 @@ public class Section {
 
     public Time getMaxTimeOfBooking() {
         return maxTimeOfBooking;
+    }
+
+    public ArrayList<ServableTable> getServableTables() {
+        return servableTables;
+    }
+
+    public int getAmountSeats(){
+        int amountSeats=0;
+        for (int i =0 ; i<servableTables.size();i++){
+            amountSeats+= servableTables.get(i).getSeats();
+        }
+        return amountSeats;
     }
 }

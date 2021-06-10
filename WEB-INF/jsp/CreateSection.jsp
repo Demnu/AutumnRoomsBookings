@@ -31,6 +31,8 @@
                     <tr>
                         <th class="th-sm">Section Name</th>
                         <th class="th-sm">Description</th>
+                        <th class="th-sm">Amount of Tables</th>
+                        <th class="th-sm">Amount of Seats</th>
                         <th class="th-sm">Max Capacity</th>
                         <th class="th-sm">Max Time for Bookings</th>
                         <th class="th-sm"></th>
@@ -44,6 +46,8 @@
                         <input type="hidden" name="editSingleSectionID" value="<%=sectionList.get(i).getSectionID()%>">
                         <td><%=sectionList.get(i).getName()%></td>
                         <td><%=sectionList.get(i).getDescription()%></td>
+                        <td><%=sectionList.get(i).getServableTables().size()%></td>
+                        <td><%=sectionList.get(i).getAmountSeats()%></td>
                         <td>
                             <input type="number" name="maxCapacity" id="maxCapacity" class="form-control" min="1" max="150" value="<%=sectionList.get(i).getMaxCapacity()%>"/>
                         <td>

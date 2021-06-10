@@ -49,6 +49,7 @@ public class ServableTableDatabaseInterface {
         }
         return tableList;
     }
+
     public static void deleteSection (int sectionID) {
         String query = "DELETE FROM Section WHERE sectionID=?";
         try (Connection connection = ConfigBean.getConnection()) {
