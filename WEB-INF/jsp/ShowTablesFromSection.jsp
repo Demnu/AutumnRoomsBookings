@@ -76,11 +76,10 @@
                 </div>
 
             </div>
-
         </div>
-
-
     </div>
+    <br>
+    <a class="btn btn-primary" href="<%=request.getContextPath()%>/selectSectionAddTable">Back</a>
 </div>
 </body>
 </html>

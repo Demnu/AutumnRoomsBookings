@@ -113,6 +113,9 @@
 
 
     </div>
+    <br>
+    <a class="btn btn-primary" href="<%=request.getContextPath()%>/">Back</a>
+
 </div>
 </body>
 </html>

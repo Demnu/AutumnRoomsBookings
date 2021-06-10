@@ -27,7 +27,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/selectSectionAddTable">Add Table</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/selectSectionAddTable">Tables</a>
             </li>
             <li class="nav-item">
 

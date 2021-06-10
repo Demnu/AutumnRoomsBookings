@@ -25,7 +25,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <h4>Select a Section for the New Table</h4>
+                <h4>Select a Section to View and Add Tables</h4>
                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                     <thead>
                     <tr>
@@ -58,6 +58,8 @@
             </div>
         </div>
     </div>
+    <br>
+    <a class="btn btn-primary" href="<%=request.getContextPath()%>/">Back</a>
 </div>
 </body>
 </html>
