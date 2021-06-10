@@ -23,6 +23,14 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/createBooking">Create Booking</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/viewAllBookings">View Bookings</a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Sections</a>
             </li>
 
