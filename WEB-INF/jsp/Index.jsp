@@ -13,7 +13,8 @@
 </head>
 <body>
 <jsp:include page="Navbar.jsp"/>
-
+<h1>hello mum and dad</h1>
+<p>this is apargarahp</p>
 <div class="container">
     <div class="card w-100">
         <div class="card-header">
