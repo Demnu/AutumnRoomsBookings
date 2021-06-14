@@ -23,10 +23,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Runs a single command using the runners shell
-      - name: Clone Repositry
-        run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/tomcat/webapps/thisWorked
       - name: delete directory
         run: /opt/tomcat/webapps/./ rm -rf test
+      - name: Clone Repositry
+        run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/tomcat/webapps/test
         if: success()
       - name: Restart Tomcat server
         run: /opt/tomcat/bin/./catalina.sh stop
