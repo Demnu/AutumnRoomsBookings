@@ -26,7 +26,7 @@ jobs:
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/tomcat/webapps/thisWorked
       - name: delete directory
-        run: /opt/tomcat/webabbs rm -rf test
+        run: /opt/tomcat/webapps/./ rm -rf test
         if: success()
       - name: Restart Tomcat server
         run: /opt/tomcat/bin/./catalina.sh stop
