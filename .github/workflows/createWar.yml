@@ -24,9 +24,11 @@ jobs:
       - uses: actions/checkout@v2
       # Runs a single command using the runners shell
       - name: delete directory
-        run: rm -rf /opt/tomcat/webapps/test
+        run: rm -rf /opt/AR
       - name: Clone Repositry
-        run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/tomcat/webapps/test
+        run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
+      - name: Create War
+        run: ( cd opt/AR ; jar -cvf AR.war *) 
         if: success()
       - name: Restart Tomcat server
         run: /opt/tomcat/bin/./catalina.sh stop
