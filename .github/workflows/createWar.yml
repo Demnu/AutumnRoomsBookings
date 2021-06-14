@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v2
       # Runs a single command using the runners shell
       - name: delete directory
-        run: /opt/tomcat/webapps/./ rm -rf test
+        run: rm -rf /opt/tomcat/webapps/test
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/tomcat/webapps/test
         if: success()
