@@ -28,7 +28,7 @@ jobs:
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
       - name: Create War
-        run: ( cd opt/AR ; jar -cvf AR.war *) 
+        run: (cd /opt/AR ; jar -cvf AR.war *) 
         if: success()
       - name: Restart Tomcat server
         run: /opt/tomcat/bin/./catalina.sh stop
