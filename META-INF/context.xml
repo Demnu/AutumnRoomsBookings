@@ -15,7 +15,7 @@ type="javax.sql.DataSource"
 username="root"
 
 
-password="test"
+password="root"
 
 
 driverClassName="com.mysql.cj.jdbc.Driver"
