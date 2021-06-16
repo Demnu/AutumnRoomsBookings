@@ -28,9 +28,9 @@ jobs:
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
       - name: Download servlet-api.jar
-      - run: (cd /opt/AR/WEB-INF/classes/pkg ; wget http://www.java2s.com/Code/JarDownload/servlet/servlet-api.jar.zip)
+        run: (cd /opt/AR/WEB-INF/classes/pkg ; wget http://www.java2s.com/Code/JarDownload/servlet/servlet-api.jar.zip)
       - name: Unzip servlet.zip
-      - run: unzip servlet-api.jar.zip
+        run: unzip servlet-api.jar.zip
       - name: Compile classes
         run: (cd WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
         if: success()
