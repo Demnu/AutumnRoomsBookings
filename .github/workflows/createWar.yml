@@ -32,7 +32,7 @@ jobs:
       - name: Unzip servlet.zip
         run: (cd /opt/AR/WEB-INF/classes/pkg ; unzip servlet-api.jar.zip)
       - name: Compile classes
-        run: (cd opt/AR/WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
+        run: (cd /opt/AR/WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
         if: success()
       - name: Create War
         run: (cd /opt/AR ; jar -cvf AR.war *) 
