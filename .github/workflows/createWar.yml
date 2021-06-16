@@ -39,9 +39,6 @@ jobs:
         if: success()
       - name: Move War File to Webapps
         run: mv /opt/AR/AR.war /opt/tomcat/webapps/
-        if: success()
-      - name: Restart Tomcat server
-        run: /opt/tomcat/bin/./catalina.sh stop
     
 
 
