@@ -28,7 +28,7 @@ jobs:
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
       - name: Compile classes
-        run: javac *.java
+        run: (cd WEB-INF/classes/pkg ; javac *.java)
         if: success()
       - name: Create War
         run: (cd /opt/AR ; jar -cvf AR.war *) 
