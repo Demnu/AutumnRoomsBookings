@@ -14,7 +14,7 @@
 
         <div class="p-5 card login-box">
             <div class="text-center">
-                <h1>GITHUBITWORKED</h1>
+                <h1>Login</h1>
                 <p class="text-muted"> Please enter your login and password!</p>
             </div>
             <form class="user" action="" method="post">
