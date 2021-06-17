@@ -35,45 +35,30 @@
                     <thead>
                     <tr>
                         <th class="th-sm">Table Number</th>
-                        <th class="th-sm">Number of Seats</th>
+                        <th class="th-sm">Maximum Time of Booking</th>
+                        <th class="th-sm">Section</th>
                         <th class="th-sm"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <% for (int i = 0; i< availableServableTables.size(); i++){ %>
-                    <form action="editSingleTable" method="POST" name="editSingleTable" id="editSingleTable">
+                    <form action="selectTableToBook" method="POST" name="selectTableToBook" id="selectTableToBook">
+                        <input type="hidden" name="tableID" value="<%=availableServableTables.get(i).getTableID()%>">
+                        <input type="hidden" name="sectionID" value="<%=availableServableTables.get(i).getSectionID()%>">
                         <tr>
                             <td><%=availableServableTables.get(i).getTableNumber()%></td>
                             <td>
-                                <input type="number" name="seatsNumber" id="seatsNumber" class="form-control" min="1" max="100" value="<%=availableServableTables.get(i).getSeats()%>"/>
+                                <%=availableServableTables.get(i).getMaxTimeOfBooking()%>
                             </td>
-                            <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Table</button></td>
+                            <td>
+                                <%=availableServableTables.get(i).getSectionName()%>
+                            </td>
+                            <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Select Table</button></td>
                         </tr>
                     </form>
                     <%}%>
                     </tbody>
                 </table>
-            </div>
-            <div class="row">
-
-                <div class="col-10">
-                    <h4>Create a Table</h4>
-                    <p>Please enter the form below to create a table.</p>
-                </div>
-                <div class="form-group">
-                    <form action="createServableTable" method="POST" name="createTable" id="createTable">
-                        <input hidden name="sectionID" id="sectionID" value="<%=sectionID%>">
-                        <label for="tableNumber">Table Number:</label>
-                        <input required type="number" name="tableNumber" id="tableNumber" class="form-control"/>
-                        <br>
-                        <label for="seatsNumber" class="mt-2">Number of Seats:</label>
-                        <input required type="number" name="seatsNumber" id="seatsNumber" class="form-control" min="1" max="100"/>
-                        <br>
-                        <input type="submit" class="btn btn-outline-primary" value="Create Table">
-                        <input type="reset" class="btn btn-outline-secondary">
-                    </form>
-                </div>
-
             </div>
         </div>
     </div>

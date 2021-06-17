@@ -24,6 +24,26 @@ public class SectionDatabaseInterface {
         }
         return false;
     }
+
+    public static Time getMaxTimeOfSection(int sectionID){
+        try{
+            String query = "Select maxTimeOfBooking FROM Section WHERE sectionID =?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, sectionID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                Booking tempBooking = new Booking();
+                return result.getTime(1);
+            }
+            result.close();
+            preparedStatement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static String getSectionName(int sectionID){
         String query = "SELECT sectionName FROM Section WHERE sectionID=?";
         try(Connection connection = ConfigBean.getConnection();){

@@ -2,7 +2,6 @@ package pkg;
 
 import java.io.IOException;
 import java.sql.Time;
-import java.text.DateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,11 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @WebServlet("/checkBookingAvailability")
-public class CheckBookingAvailabilityController extends HttpServlet {
+public class CheckBookingAvailabilityStaffController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -46,7 +43,6 @@ public class CheckBookingAvailabilityController extends HttpServlet {
         String minutesStr = (String) request.getParameter("minutes");
         String numberOfPeopleStr = (String) request.getParameter("numberOfPeople");
         Integer staffID = Integer.parseInt(staffIDstr);
-
         //parse dateString into util.Date then into sql.Date
         Date dateOfBookingJava = new Date();
         try {
@@ -65,6 +61,10 @@ public class CheckBookingAvailabilityController extends HttpServlet {
         Integer numberOfPeople = Integer.parseInt(numberOfPeopleStr);
 
         ArrayList<Booking> bookingsOnDay = BookingDatabaseInterface.getAllBookingsInputtedDate(dateOfBookingSql);
+        //TODO Enhancement: getAllServableTablesInBookingOnDateSupplied to have faster retrieval
+        //TODO Bug: Once Searched for availability you cannot search for another
+        //TODO Bug: Error produced when searching for availability when there is another booking on the same date
+        //TODO Development: Retrieval of available only shows tables that are not booked for that day
         ArrayList<ServableTable> allServableTables = ServableTableDatabaseInterface.getAllServableTablesInBooking();
         ArrayList<ServableTable> availableServableTables = allServableTables;
         for (int i = 0 ; i<availableServableTables.size() ; i++){
@@ -79,7 +79,9 @@ public class CheckBookingAvailabilityController extends HttpServlet {
         String timeOfBookingStr = (hours + ":" + minutes);
         request.setAttribute("dateOfBooking",dateOfBookingStr);
         request.setAttribute("timeOfBooking",timeOfBookingStr);
+        session.setAttribute("timeOfBookingLocalTime", timeOfBookingJava);
         session.setAttribute("dateOfBooking",dateOfBookingSql);
+        session.setAttribute("numberOfPeople",numberOfPeople);
         session.setAttribute("timeOfBooking",timeOfBookingSql);
         request.setAttribute("availableServableTables",availableServableTables);
         //authenticate User and create User object

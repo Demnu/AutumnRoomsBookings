@@ -3,27 +3,6 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 public class BookingDatabaseInterface {
-    public static boolean saveServableTable(int sectionID, int tableNumber, int seats) {
-        try {
-            // creates prepared statement and sets its values
-            String query = "INSERT INTO ServableTable (sectionID,tableNumber,seats) VALUES (?,?,?) ";
-            Connection connection = ConfigBean.getConnection();
-            PreparedStatement s = connection.prepareStatement(query);
-            s.setInt(1, sectionID);
-            s.setInt(2, tableNumber);
-            s.setInt(3, seats);
-            // executes the statement and closes statement and connection
-            s.executeUpdate();
-            s.close();
-            connection.close();
-            return  true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public static ArrayList<Booking> getAllBookingsInputtedDate(Date dateOfBooking){
         ArrayList<Booking> bookingList = new ArrayList<Booking>();
         String query = "SELECT* FROM Booking WHERE dateOfBooking=?";
@@ -62,31 +41,20 @@ public class BookingDatabaseInterface {
         return bookingList;
     }
 
-
-    public static void deleteServableTable(int tableID) {
-        String query = "DELETE FROM ServableTable WHERE tableID=?";
-        try (Connection connection = ConfigBean.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(query); //step 2
-            preparedStatement.setInt(1, tableID);
-            preparedStatement.execute();
-            preparedStatement.close();
-            connection.close();
-        } //step 1
-
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-
-        }
-    }
-    public static boolean updateSeatsNumber(int tableID, int seats) {
+    public static boolean saveBooking(Integer staffID, Date dateBooked, Time timeBooked, Date dateOfBooking, Time startTimeOfBooking, Time endTimeOfBooking, int numberOfPeople, boolean confirmed, ArrayList tableIDsBooking) {
         try {
             // creates prepared statement and sets its values
-            String query = "UPDATE ServableTable SET seats=? WHERE tableID=?";
+            String query = "INSERT INTO Booking (staffID,dateBooked,timeBooked,dateOfBooking,startTimeOfBooking,endTimeOfBooking,numberOfPeople,confirmed) VALUES (?,?,?,?,?,?,?,?) ";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
-            s.setInt(1, seats);
-            s.setInt(2, tableID);
+            s.setInt(1, staffID);
+            s.setDate(2, dateBooked);
+            s.setTime(3, timeBooked);
+            s.setDate(4,dateOfBooking);
+            s.setTime(5,startTimeOfBooking);
+            s.setTime(6, endTimeOfBooking);
+            s.setInt(7,numberOfPeople);
+            s.setBoolean(8,confirmed);
             // executes the statement and closes statement and connection
             s.executeUpdate();
             s.close();
@@ -98,26 +66,5 @@ public class BookingDatabaseInterface {
         }
         return false;
     }
-
-    public static boolean updateMaxCapacity(int sectionID, int maxCapacity) {
-        try {
-            // creates prepared statement and sets its values
-            String query = "UPDATE Section SET maxCapacity=? WHERE sectionID=?";
-            Connection connection = ConfigBean.getConnection();
-            PreparedStatement s = connection.prepareStatement(query);
-            s.setInt(1, maxCapacity);
-            s.setInt(2, sectionID);
-            // executes the statement and closes statement and connection
-            s.executeUpdate();
-            s.close();
-            connection.close();
-            return  true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 }
 

@@ -1,12 +1,14 @@
 package pkg;
 
 import java.util.ArrayList;
-
+import java.sql.*;
 public class ServableTable {
     private int tableID;
     private int sectionID;
     private int tableNumber;
     private int seats;
+    private Time maxTimeOfBooking;
+    private String sectionName;
 
     ServableTable(){
 
@@ -33,6 +35,14 @@ public class ServableTable {
         this.seats = seats;
     }
 
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
+    public void setMaxTimeOfBooking(Time maxTimeOfBooking) {
+        this.maxTimeOfBooking = maxTimeOfBooking;
+    }
+
     public int getTableID() {
         return tableID;
     }
@@ -47,6 +57,14 @@ public class ServableTable {
 
     public int getSeats() {
         return seats;
+    }
+
+    public String getSectionName() {
+        return sectionName;
+    }
+
+    public Time getMaxTimeOfBooking() {
+        return maxTimeOfBooking;
     }
 
     public ArrayList<ServableTable> getTableList(int sectionID){
