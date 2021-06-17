@@ -24,11 +24,12 @@ public class DeleteSectionController extends HttpServlet {
         }
         String sectionIDStr = (request.getParameter("deleteSection"));
 
+        //TODO Development: Success and Error messages for delete section
         if (sectionIDStr!=null){
             Integer sectionID = Integer.parseInt(sectionIDStr);
             SectionDatabaseInterface.deleteSection(sectionID);
         }
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
         dispatcher.forward(request, response);
         return;
     }

@@ -35,6 +35,7 @@
                         <th class="th-sm">Amount of Seats</th>
                         <th class="th-sm">Max Capacity</th>
                         <th class="th-sm">Max Time for Bookings</th>
+                        <th class="th-sm">Time Required to Reset After Booking is Finished</th>
                         <th class="th-sm"></th>
                         <th class="th-sm"></th>
                     </tr>
@@ -63,6 +64,20 @@
                                 <option value="8">2:00</option>
                             </select>
                         </td>
+                        <td>
+                            <select name="timeRequiredAfterBookingIsFinished" id="timeRequiredAfterBookingIsFinished" class="form-control">
+                                <option value="0"><%=sectionList.get(i).getTimeRequiredAfterBookingIsFinishedTime()%></option>
+                                <option value="1">0:15</option>
+                                <option value="2">0:30</option>
+                                <option value="3">0:45</option>
+                                <option value="4">1:00</option>
+                                <option value="5">1:15</option>
+                                <option value="6">1:30</option>
+                                <option value="7">1:45</option>
+                                <option value="8">2:00</option>
+                            </select>
+                        </td>
+
                         <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Section</button></td>
                         <td> <a class="btn btn-outline-danger" href="<%=request.getContextPath()%>/deleteSection?deleteSection=<%=sectionList.get(i).getSectionID()%>">Delete Section</a></td>
                     </tr>
@@ -98,7 +113,19 @@
                             <option value="6">1:30</option>
                             <option value="7">1:45</option>
                             <option value="8">2:00</option>
-                        </select>                        <br>
+                        </select>
+                        <br>
+                        <label for="timeRequiredAfterBookingIsFinished">Time Required (HH/MM) to Reset After Booking is Finished</label>
+                        <select name="timeRequiredAfterBookingIsFinished" id="timeRequiredAfterBookingIsFinished" class="form-control">
+                            <option value="1">0:15</option>
+                            <option value="2">0:30</option>
+                            <option value="3">0:45</option>
+                            <option value="4">1:00</option>
+                            <option value="5">1:15</option>
+                            <option value="6">1:30</option>
+                            <option value="7">1:45</option>
+                            <option value="8">2:00</option>
+                        </select><br>
                         <input type="submit" class="btn btn-outline-primary" value="Create Section">
                         <input type="reset" class="btn btn-outline-secondary">
                     </form>

@@ -14,6 +14,7 @@ CREATE TABLE Section (
                          description VARCHAR(120) NOT NULL,
                          maxCapacity int,
                          maxTimeOfBooking TIME,
+                         timeRequiredAfterBookingIsFinished TIME,
                          PRIMARY KEY (sectionID)
 );
 CREATE TABLE ServableTable (

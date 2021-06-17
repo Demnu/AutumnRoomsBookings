@@ -41,6 +41,8 @@ public class BookingDatabaseInterface {
         return bookingList;
     }
 
+
+
     public static boolean saveBooking(Integer staffID, Date dateBooked, Time timeBooked, Date dateOfBooking, Time startTimeOfBooking, Time endTimeOfBooking, int numberOfPeople, boolean confirmed, ArrayList tableIDsBooking) {
         try {
             // creates prepared statement and sets its values

@@ -59,7 +59,10 @@ public class SaveBookingController extends HttpServlet {
         //TODO Development: Double check that the booking is possible
 
         //TODO Development: Have bookings with multiple tables
-        //TODO Devlopment: Messages for success/fail of saving of booking to database
+        //TODO Development: Save entries into BookingTable Table
+        //TODO Development: Messages for success/fail of saving of booking to database
+
+        //TODO Development: Get all bookings on date of desired booking
         //Save booking to database
         if (BookingDatabaseInterface.saveBooking(signedInUser.getStaffID(),dateBooked,timeBooked,dateOfBooking,startTimeOfBooking,endTimeOfBooking,numberOfPeople,true , tableIDsBooking)){
         }

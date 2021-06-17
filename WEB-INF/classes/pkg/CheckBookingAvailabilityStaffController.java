@@ -64,7 +64,6 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
         //TODO Enhancement: getAllServableTablesInBookingOnDateSupplied to have faster retrieval
         //TODO Bug: Once Searched for availability you cannot search for another
         //TODO Bug: Error produced when searching for availability when there is another booking on the same date
-        //TODO Development: Retrieval of available only shows tables that are not booked for that day
         ArrayList<ServableTable> allServableTables = ServableTableDatabaseInterface.getAllServableTablesInBooking();
         ArrayList<ServableTable> availableServableTables = allServableTables;
         for (int i = 0 ; i<availableServableTables.size() ; i++){

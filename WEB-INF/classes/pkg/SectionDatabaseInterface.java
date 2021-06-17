@@ -3,16 +3,17 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 public class SectionDatabaseInterface {
-    public static boolean saveSection(String sectionName, String description, int maxCapacity, Time maxTimeOfBooking) {
+    public static boolean saveSection(String sectionName, String description, int maxCapacity, Time maxTimeOfBooking, Time timeRequiredAfterBookingIsFinished) {
         try {
             // creates prepared statement and sets its values
-            String query = "INSERT INTO Section (sectionName,description,maxCapacity,maxTimeOfBooking) VALUES (?,?,?,?) ";
+            String query = "INSERT INTO Section (sectionName,description,maxCapacity,maxTimeOfBooking,timeRequiredAfterBookingIsFinished) VALUES (?,?,?,?,?) ";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
             s.setString(1, sectionName);
             s.setString(2, description);
             s.setInt(3, maxCapacity);
             s.setTime(4, maxTimeOfBooking);
+            s.setTime(5, timeRequiredAfterBookingIsFinished);
             // executes the statement and closes statement and connection
             s.executeUpdate();
             s.close();
@@ -79,6 +80,7 @@ public class SectionDatabaseInterface {
                 tempSection.setDescription(result.getString(3));
                 tempSection.setMaxCapacity(result.getInt(4));
                 tempSection.setMaxTimeOfBooking(result.getTime(5));
+                tempSection.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
                 tempSection.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(tempSection.getSectionID()));
                 sectionList.add(tempSection);
             }
@@ -135,6 +137,26 @@ public class SectionDatabaseInterface {
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
             s.setInt(1, maxCapacity);
+            s.setInt(2, sectionID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+            return  true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean updateTimeRequiredAfterBookingIsFinished(int sectionID, Time timeRequiredAfterBookingIsFinished) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE Section SET timeRequiredAfterBookingIsFinished=? WHERE sectionID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setTime(1, timeRequiredAfterBookingIsFinished);
             s.setInt(2, sectionID);
             // executes the statement and closes statement and connection
             s.executeUpdate();

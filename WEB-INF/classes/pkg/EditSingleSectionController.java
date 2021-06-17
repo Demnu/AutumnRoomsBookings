@@ -27,9 +27,11 @@ public class EditSingleSectionController extends HttpServlet {
         String sectionIDStr = (request.getParameter("editSingleSectionID"));
         String maxCapacityStr = (String) request.getParameter("maxCapacity");
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
+        String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
         Integer sectionID = Integer.parseInt(sectionIDStr);
         Integer maxCapacity = Integer.parseInt(maxCapacityStr);
         Integer maxTimeOfBooking = Integer.parseInt(hourMinsStr);
+        Integer timeRequiredAfterBookingIsFinished = Integer.parseInt(timeRequiredAfterBookingIsFinishedStr);
         boolean maxTimeOfBookingChanged = true;
 
         Time tempTime = new Time(0,0,0);
@@ -59,6 +61,48 @@ public class EditSingleSectionController extends HttpServlet {
         }
         //if maxTimeOfBooking is unchanged
         else{            maxTimeOfBookingChanged = false;
+        }
+
+        //if maxTimeOfBooking has been changed update database
+        if (maxTimeOfBookingChanged){
+            SectionDatabaseInterface.updateMaxTimeOfBooking(sectionID,tempTime);
+        }
+
+
+        boolean timeRequiredAfterBookingIsFinishedTimeChanged = true;
+        Time timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
+        if(timeRequiredAfterBookingIsFinished==1){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,15,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==2){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,30,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==3){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,45,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==4){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,0,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==5){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,15,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==6){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,30,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==7){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,45,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==8){
+            timeRequiredAfterBookingIsFinishedTime = new Time(2,0,0);
+        }
+        //if maxTimeOfBooking is unchanged
+        else{
+            timeRequiredAfterBookingIsFinishedTimeChanged = false;
+        }
+
+        //if timeRequiredAfterBookingIsFinished has been changed updatedatabase
+        if (timeRequiredAfterBookingIsFinishedTimeChanged){
+            SectionDatabaseInterface.updateTimeRequiredAfterBookingIsFinished(sectionID,timeRequiredAfterBookingIsFinishedTime);
         }
 
         //if maxTimeOfBooking has been changed update database

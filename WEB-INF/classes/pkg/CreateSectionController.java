@@ -43,9 +43,11 @@ public class CreateSectionController extends HttpServlet {
         String sectionDesc = (String) request.getParameter("sectionDesc");
         String maxCapacityStr = (String) request.getParameter("maxCapacity");
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
+        String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
         Integer maxCapacity = Integer.parseInt(maxCapacityStr);
         Integer maxTimeOfBooking = Integer.parseInt(hourMinsStr);
-
+        Integer timeRequiredAfterBookingIsFinished = Integer.parseInt(timeRequiredAfterBookingIsFinishedStr);
+        Time timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
         Time tempTime = new Time(0,0,0);
         if(maxTimeOfBooking==1){
             tempTime = new Time(0,15,0);
@@ -73,9 +75,33 @@ public class CreateSectionController extends HttpServlet {
             tempTime = new Time(2,0,0);
         }
 
+        if(timeRequiredAfterBookingIsFinished==1){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,15,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==2){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,30,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==3){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,45,0);
+        }
 
+        else if (timeRequiredAfterBookingIsFinished==4){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,0,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==5){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,15,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==6){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,30,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==7){
+            timeRequiredAfterBookingIsFinishedTime = new Time(1,45,0);
+        }
+        else if (timeRequiredAfterBookingIsFinished==8){
+            timeRequiredAfterBookingIsFinishedTime = new Time(2,0,0);
+        }
         //Authenticate section details and save to database
-        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCapacity,tempTime)){
+        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCapacity,tempTime, timeRequiredAfterBookingIsFinishedTime)){
 
         }
         ArrayList<Section> sectionList = new ArrayList<Section>();

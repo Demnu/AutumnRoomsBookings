@@ -7,16 +7,18 @@ public class Section {
     private String description;
     private Integer maxCapacity;
     private Time maxTimeOfBooking;
+    private Time timeRequiredAfterBookingIsFinishedTime;
     private ArrayList<ServableTable> servableTables;
 
     Section(){
 
     }
-    Section(int sectionID, String name, String description, Integer maxCapacity, Time maxTimeOfBooking){
+    Section(int sectionID, String name, String description, Integer maxCapacity, Time maxTimeOfBooking, Time timeRequiredAfterBookingIsFinishedTime){
         this.name = name;
         this.description = description;
         this.maxCapacity = maxCapacity;
         this.maxTimeOfBooking = maxTimeOfBooking;
+        this.timeRequiredAfterBookingIsFinishedTime = timeRequiredAfterBookingIsFinishedTime;
     }
 
     public void setSectionID(int sectionID) {
@@ -41,6 +43,10 @@ public class Section {
 
     public int getSectionID() {
         return sectionID;
+    }
+
+    public void setTimeRequiredAfterBookingIsFinishedTime(Time timeRequiredAfterBookingIsFinishedTime) {
+        this.timeRequiredAfterBookingIsFinishedTime = timeRequiredAfterBookingIsFinishedTime;
     }
 
     public void setServableTables(ArrayList<ServableTable> servableTables) {
@@ -79,5 +85,9 @@ public class Section {
             amountSeats+= servableTables.get(i).getSeats();
         }
         return amountSeats;
+    }
+
+    public Time getTimeRequiredAfterBookingIsFinishedTime() {
+        return timeRequiredAfterBookingIsFinishedTime;
     }
 }
