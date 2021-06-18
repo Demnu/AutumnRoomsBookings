@@ -29,8 +29,7 @@ public class DeleteSectionController extends HttpServlet {
             Integer sectionID = Integer.parseInt(sectionIDStr);
             SectionDatabaseInterface.deleteSection(sectionID);
         }
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
-        dispatcher.forward(request, response);
+        response.sendRedirect("/AR/createSection");
         return;
     }
 }

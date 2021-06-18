@@ -42,6 +42,7 @@
                     </thead>
                     <tbody>
                     <% for (int i = 0; i< availableServableTables.size(); i++){ %>
+                    //form is sent to SaveBookingController
                     <form action="selectTableToBook" method="POST" name="selectTableToBook" id="selectTableToBook">
                         <input type="hidden" name="tableID" value="<%=availableServableTables.get(i).getTableID()%>">
                         <input type="hidden" name="sectionID" value="<%=availableServableTables.get(i).getSectionID()%>">

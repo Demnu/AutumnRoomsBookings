@@ -34,7 +34,7 @@ public class CreateTablePickSection extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        //Received by ServableTabe-PickSection.jsp: Section ID
+        //Received by ServableTable-PickSection.jsp: Section ID
         String sectionIDStr = (request.getParameter("chosenSectionID"));
         Integer sectionID = Integer.parseInt(sectionIDStr);
         String sectionName = SectionDatabaseInterface.getSectionName(sectionID);

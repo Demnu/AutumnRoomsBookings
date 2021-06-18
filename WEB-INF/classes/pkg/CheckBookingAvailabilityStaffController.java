@@ -2,6 +2,7 @@ package pkg;
 
 import java.io.IOException;
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,21 +57,56 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
         //parse hours and minutes into time
         Integer hours = Integer.parseInt(hoursStr);
         Integer minutes = Integer.parseInt(minutesStr);
-        LocalTime timeOfBookingJava = LocalTime.of(hours,minutes);
-        Time timeOfBookingSql = Time.valueOf(timeOfBookingJava);
+        LocalTime timeOfBookingLocalTime = LocalTime.of(hours,minutes);
+        Time startTimeOfBookingSql = Time.valueOf(timeOfBookingLocalTime);
         Integer numberOfPeople = Integer.parseInt(numberOfPeopleStr);
-
         ArrayList<Booking> bookingsOnDay = BookingDatabaseInterface.getAllBookingsInputtedDate(dateOfBookingSql);
-        //TODO Enhancement: getAllServableTablesInBookingOnDateSupplied to have faster retrieval
-        //TODO Bug: Once Searched for availability you cannot search for another
-        //TODO Bug: Error produced when searching for availability when there is another booking on the same date
         ArrayList<ServableTable> allServableTables = ServableTableDatabaseInterface.getAllServableTablesInBooking();
         ArrayList<ServableTable> availableServableTables = allServableTables;
+
+        //getEndTimeOfBooking
+
+        //get
+
         for (int i = 0 ; i<availableServableTables.size() ; i++){
             for (int j = 0 ; j<bookingsOnDay.size() ; j++){
                 for (int k = 0; k<bookingsOnDay.get(j).getAssignedTables().size(); k++){
                     if (availableServableTables.get(i).getTableID() == bookingsOnDay.get(j).getAssignedTables().get(k).getTableID()){
-                        availableServableTables.remove(i);
+                        System.out.println(availableServableTables.get(i).getTableNumber() + " Conflicts");
+                        //check if desired booking time conflicts with table
+                            //TODO Enhancement: Add function to ServableTable class to automatically add maxTimeOfSection and requiredTimeToSetUpAfterBooking
+                            //Get hours and minutes of maxTimeOfSectionTime
+                            Time maxTimeOfSectionTime = availableServableTables.get(i).getMaxTimeOfBooking();
+                            int maxTimeOfSectionHours = maxTimeOfSectionTime.getHours();
+                            int maxTimeOfSectionMinutes = maxTimeOfSectionTime.getMinutes();
+                            //Get hours and minutes of timeRequiredAfterBookingIsFinished
+                            Time timeRequiredAfterBookingIsFinished = availableServableTables.get(i).getTimeRequiredAfterBookingIsFinished();
+                            int timeRequiredAfterBookingIsFinishedHours = timeRequiredAfterBookingIsFinished.getHours();
+                            int timeRequiredAfterBookingIsFinishedMinutes = timeRequiredAfterBookingIsFinished.getMinutes();
+                            //Create duration
+                            Duration maxTimeOfSectionDuration;
+                            maxTimeOfSectionDuration= Duration.ZERO.plusHours(maxTimeOfSectionHours);
+                            maxTimeOfSectionDuration = Duration.ZERO.plusMinutes(maxTimeOfSectionMinutes);
+                            Duration timeRequiredAfterBookingIsFinishedDuration;
+                            timeRequiredAfterBookingIsFinishedDuration = Duration.ZERO.plusHours(timeRequiredAfterBookingIsFinishedHours);
+                            timeRequiredAfterBookingIsFinishedDuration = Duration.ZERO.plusMinutes(timeRequiredAfterBookingIsFinishedMinutes);
+                            //Plus duration onto desired booking start time
+                            Duration totalDuration = timeRequiredAfterBookingIsFinishedDuration.plus(maxTimeOfSectionDuration);
+                            LocalTime totalTime = timeOfBookingLocalTime.plus(totalDuration);
+                            System.out.println(totalTime);
+                        //Parse totalTime to Sql Time
+                            Time endTimeOfBooking = Time.valueOf(totalTime);
+                        //working on this
+                        if (!endTimeOfBooking.before(bookingsOnDay.get(j).getStartTimeOfBooking()) && !endTimeOfBooking.after(bookingsOnDay.get(j).getStartTimeOfBooking())){
+                            availableServableTables.remove(i);
+                            System.out.println("End time of booking is during another booking \n" + "End Time: " + endTimeOfBooking);
+
+                        }
+                        else if (startTimeOfBookingSql.after(bookingsOnDay.get(j).getStartTimeOfBooking()) && startTimeOfBookingSql.before(bookingsOnDay.get(j).getEndTimeOfBooking())){
+                            availableServableTables.remove(i);
+                            System.out.println("start time is between another booking");
+
+                        }
                     }
                 }
             }
@@ -78,10 +114,10 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
         String timeOfBookingStr = (hours + ":" + minutes);
         request.setAttribute("dateOfBooking",dateOfBookingStr);
         request.setAttribute("timeOfBooking",timeOfBookingStr);
-        session.setAttribute("timeOfBookingLocalTime", timeOfBookingJava);
+        session.setAttribute("timeOfBookingLocalTime", timeOfBookingLocalTime);
         session.setAttribute("dateOfBooking",dateOfBookingSql);
         session.setAttribute("numberOfPeople",numberOfPeople);
-        session.setAttribute("timeOfBooking",timeOfBookingSql);
+        session.setAttribute("timeOfBooking",startTimeOfBookingSql);
         request.setAttribute("availableServableTables",availableServableTables);
         //authenticate User and create User object
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ShowAvailableServableTables.jsp");

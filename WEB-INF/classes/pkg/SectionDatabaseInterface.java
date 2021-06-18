@@ -25,22 +25,38 @@ public class SectionDatabaseInterface {
         }
         return false;
     }
-
-    public static Time getMaxTimeOfSection(int sectionID){
-        try{
-            String query = "Select maxTimeOfBooking FROM Section WHERE sectionID =?";
-            Connection connection = ConfigBean.getConnection();
+    public static Time getTimeRequiredAfterBookingIsFinishedInputtedSectionID(int sectionID) {
+        try(Connection connection = ConfigBean.getConnection();){
+            String query = "Select timeRequiredAfterBookingIsFinished FROM Section WHERE sectionID =?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, sectionID);
             ResultSet result = preparedStatement.executeQuery();
             while(result.next()){
-                Booking tempBooking = new Booking();
                 return result.getTime(1);
             }
             result.close();
             preparedStatement.close();
 
         } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static Time getMaxTimeOfSectionInputtedSectionID(int sectionID){
+        try(Connection connection = ConfigBean.getConnection();){
+            String query = "Select maxTimeOfBooking FROM Section WHERE sectionID =?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, sectionID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                return result.getTime(1);
+            }
+            result.close();
+            preparedStatement.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -96,6 +112,7 @@ public class SectionDatabaseInterface {
     }
     public static void deleteSection (int sectionID) {
         String query = "DELETE FROM Section WHERE sectionID=?";
+        //TODO Development: Delete tables assigned to deleted section
         try (Connection connection = ConfigBean.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query); //step 2
             preparedStatement.setInt(1, sectionID);
@@ -169,6 +186,7 @@ public class SectionDatabaseInterface {
         }
         return false;
     }
+
 
 }
 

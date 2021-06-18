@@ -51,7 +51,7 @@
                     <form action="checkBookingAvailability" method="POST" name="ReportForm" id="BookingForm">
                         <input type="hidden" name="staffID" id="staffID" class="form-control" value="<%=user.getStaffID()%>">
                         <label for="datepicker">Date of Booking:</label>
-                        <input name="dateOfBooking" autocomplete="off" class="form-control" type="text" id="datepicker">
+                        <input required name="dateOfBooking" autocomplete="off" class="form-control" type="text" id="datepicker">
                         <p>Hour:</p>
                         <select class="form-control" name="hours" id="hours"></select>
                         <p>Minute:</p>

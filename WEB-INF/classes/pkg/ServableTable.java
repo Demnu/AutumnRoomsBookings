@@ -9,6 +9,7 @@ public class ServableTable {
     private int seats;
     private Time maxTimeOfBooking;
     private String sectionName;
+    private Time timeRequiredAfterBookingIsFinished;
 
     ServableTable(){
 
@@ -43,6 +44,10 @@ public class ServableTable {
         this.maxTimeOfBooking = maxTimeOfBooking;
     }
 
+    public void setTimeRequiredAfterBookingIsFinished(Time timeRequiredAfterBookingIsFinished) {
+        this.timeRequiredAfterBookingIsFinished = timeRequiredAfterBookingIsFinished;
+    }
+
     public int getTableID() {
         return tableID;
     }
@@ -71,5 +76,9 @@ public class ServableTable {
         ArrayList<ServableTable> tableList;
         tableList = ServableTableDatabaseInterface.getAllServeableTables(sectionID);
         return tableList;
+    }
+
+    public Time getTimeRequiredAfterBookingIsFinished() {
+        return timeRequiredAfterBookingIsFinished;
     }
 }

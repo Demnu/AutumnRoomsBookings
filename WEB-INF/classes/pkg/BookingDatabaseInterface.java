@@ -35,6 +35,7 @@ public class BookingDatabaseInterface {
         for (int i =0; i<bookingList.size();i++){
             tableIDsAssignedToFoundBooking = TableBookingsDatabaseInterface.getTableIDsInputtedBookingID(bookingList.get(i).getBookingID());
             for (int j = 0 ; j<tableIDsAssignedToFoundBooking.size();j++){
+                System.out.println("Booking has: tables " + tableIDsAssignedToFoundBooking.get(j));
                 bookingList.get(i).setAssignedTables(ServableTableDatabaseInterface.getAllServableTablesInBooking((Integer) tableIDsAssignedToFoundBooking.get(j)));
             }
         }
@@ -61,6 +62,18 @@ public class BookingDatabaseInterface {
             s.executeUpdate();
             s.close();
             connection.close();
+            //Create entry in TableBooking
+            //Get generated bookingID
+            int bookingID = getBookingIDInputtedTimeBookedStaffID(staffID,timeBooked);
+            if (bookingID !=-1){
+                for (int i = 0; i<tableIDsBooking.size();i++){
+                    TableBookingsDatabaseInterface.saveTableBooking(bookingID,tableIDsBooking.get(i));
+                }
+            }
+            else{
+                System.out.println("ERROR, Could not find bookingID");
+                return false;
+            }
             return  true;
 
         } catch (Exception e) {
@@ -68,5 +81,30 @@ public class BookingDatabaseInterface {
         }
         return false;
     }
+
+    public static int getBookingIDInputtedTimeBookedStaffID(Integer staffID, Time timeBooked){
+        ArrayList<Booking> bookingList = new ArrayList<Booking>();
+        String query = "SELECT* FROM Booking WHERE staffID=? AND timeBooked =?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, staffID);
+            preparedStatement.setTime(2, timeBooked);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                return result.getInt(1);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return -1;
+
+    }
+
+
 }
 
