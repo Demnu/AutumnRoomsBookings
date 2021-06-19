@@ -100,6 +100,9 @@ public class CreateSectionController extends HttpServlet {
         else if (timeRequiredAfterBookingIsFinished==8){
             timeRequiredAfterBookingIsFinishedTime = new Time(2,0,0);
         }
+        else if (timeRequiredAfterBookingIsFinished==9){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
+        }
         //Authenticate section details and save to database
         if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCapacity,tempTime, timeRequiredAfterBookingIsFinishedTime)){
 

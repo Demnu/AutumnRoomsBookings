@@ -95,6 +95,9 @@ public class EditSingleSectionController extends HttpServlet {
         else if (timeRequiredAfterBookingIsFinished==8){
             timeRequiredAfterBookingIsFinishedTime = new Time(2,0,0);
         }
+        else if (timeRequiredAfterBookingIsFinished==9){
+            timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
+        }
         //if maxTimeOfBooking is unchanged
         else{
             timeRequiredAfterBookingIsFinishedTimeChanged = false;

@@ -61,6 +61,12 @@ public class ServableTableDatabaseInterface {
                 tempServableTable.setSectionID(result.getInt(2));
                 tempServableTable.setTableNumber(result.getInt(3));
                 tempServableTable.setSeats(result.getInt(4));
+                //get max time for seat
+                tempServableTable.setMaxTimeOfBooking(SectionDatabaseInterface.getMaxTimeOfSectionInputtedSectionID(result.getInt(2)));
+                //get section name for table
+                tempServableTable.setSectionName(SectionDatabaseInterface.getSectionName(result.getInt(2)));
+                //get timeRequiredAfterBookingIsFinished for table
+                tempServableTable.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(result.getInt(2)));
                 tableList.add(tempServableTable);
             }
             result.close();

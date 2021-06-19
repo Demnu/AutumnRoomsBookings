@@ -75,6 +75,7 @@
                                 <option value="6">1:30</option>
                                 <option value="7">1:45</option>
                                 <option value="8">2:00</option>
+                                <option value="9">0:00</option>
                             </select>
                         </td>
 
@@ -113,6 +114,7 @@
                             <option value="6">1:30</option>
                             <option value="7">1:45</option>
                             <option value="8">2:00</option>
+                            <option value="9">0:00</option>
                         </select>
                         <br>
                         <label for="timeRequiredAfterBookingIsFinished">Time Required (HH/MM) to Reset After Booking is Finished</label>

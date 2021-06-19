@@ -75,37 +75,65 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
                         System.out.println(availableServableTables.get(i).getTableNumber() + " Conflicts");
                         //check if desired booking time conflicts with table
                             //TODO Enhancement: Add function to ServableTable class to automatically add maxTimeOfSection and requiredTimeToSetUpAfterBooking
-                            //Get hours and minutes of maxTimeOfSectionTime
+                            //Get LocalTime of maxTimeBooking
                             Time maxTimeOfSectionTime = availableServableTables.get(i).getMaxTimeOfBooking();
                             int maxTimeOfSectionHours = maxTimeOfSectionTime.getHours();
                             int maxTimeOfSectionMinutes = maxTimeOfSectionTime.getMinutes();
-                            //Get hours and minutes of timeRequiredAfterBookingIsFinished
+                            LocalTime maxTimeOfSectionLocalTime = LocalTime.of(maxTimeOfSectionHours,maxTimeOfSectionMinutes,0);
+                            //Get hours and minutes of timeRequiredAfterBookingIsFinished into Duration
                             Time timeRequiredAfterBookingIsFinished = availableServableTables.get(i).getTimeRequiredAfterBookingIsFinished();
                             int timeRequiredAfterBookingIsFinishedHours = timeRequiredAfterBookingIsFinished.getHours();
                             int timeRequiredAfterBookingIsFinishedMinutes = timeRequiredAfterBookingIsFinished.getMinutes();
-                            //Create duration
-                            Duration maxTimeOfSectionDuration;
-                            maxTimeOfSectionDuration= Duration.ZERO.plusHours(maxTimeOfSectionHours);
-                            maxTimeOfSectionDuration = Duration.ZERO.plusMinutes(maxTimeOfSectionMinutes);
-                            Duration timeRequiredAfterBookingIsFinishedDuration;
-                            timeRequiredAfterBookingIsFinishedDuration = Duration.ZERO.plusHours(timeRequiredAfterBookingIsFinishedHours);
+                            Duration timeRequiredAfterBookingIsFinishedDuration = Duration.ZERO.plusHours(timeRequiredAfterBookingIsFinishedHours);
                             timeRequiredAfterBookingIsFinishedDuration = Duration.ZERO.plusMinutes(timeRequiredAfterBookingIsFinishedMinutes);
+                            //Plus timeRequiredAfterBookingDuration and maxTimeOfSection
+                            LocalTime totalTimeDurationLocalTime = maxTimeOfSectionLocalTime.plus(timeRequiredAfterBookingIsFinishedDuration);
+                            //Get hours and minutes of totalTimeDuration into Duration
+                            int totalTimeDurationHours = totalTimeDurationLocalTime.getHour();
+                            int totalTimeDurationMinutes = totalTimeDurationLocalTime.getMinute();
+                            Duration totalTimeDuration = Duration.ZERO.plusHours(totalTimeDurationHours);
+                            totalTimeDuration = Duration.ZERO.plusMinutes(totalTimeDurationMinutes);
                             //Plus duration onto desired booking start time
-                            Duration totalDuration = timeRequiredAfterBookingIsFinishedDuration.plus(maxTimeOfSectionDuration);
-                            LocalTime totalTime = timeOfBookingLocalTime.plus(totalDuration);
+                            LocalTime totalTime = timeOfBookingLocalTime.plus(totalTimeDuration);
                             System.out.println(totalTime);
-                        //Parse totalTime to Sql Time
+                            //Parse totalTime to Sql Time
                             Time endTimeOfBooking = Time.valueOf(totalTime);
-                        //working on this
-                        if (!endTimeOfBooking.before(bookingsOnDay.get(j).getStartTimeOfBooking()) && !endTimeOfBooking.after(bookingsOnDay.get(j).getStartTimeOfBooking())){
-                            availableServableTables.remove(i);
-                            System.out.println("End time of booking is during another booking \n" + "End Time: " + endTimeOfBooking);
 
+                        //get tempBooking endTimePlus timeRequiredAfterBookingIsFinished
+                        Booking tempBooking = bookingsOnDay.get(j);
+                        Time tempBookingEndTime = tempBooking.getEndTimeOfBooking();
+                        Time tempBookingTimeRequiredAfterBookingIsFinished = tempBooking.getAssignedTables().get(0).getTimeRequiredAfterBookingIsFinished();
+                        System.out.println(tempBooking.getAssignedTables().get(0).getTableNumber());
+                        //Get hours and minutes
+                        int tempBookingEndTimeHours = tempBookingEndTime.getHours();
+                        int tempBookingEndTimeMinutes = tempBookingEndTime.getMinutes();
+                        int tempBookingTimeRequiredAfterBookingIsFinishedHours = tempBookingTimeRequiredAfterBookingIsFinished.getHours();
+                        int tempBookingTimeRequiredAfterBookingIsFinishedMinutes = tempBookingTimeRequiredAfterBookingIsFinished.getMinutes();
+                        //Get duration of timeRequiredAfterBookingIsFinished
+                        Duration tempDuration1 = Duration.ZERO.plusHours(tempBookingTimeRequiredAfterBookingIsFinishedHours);
+                        tempDuration1 = Duration.ZERO.plusMinutes(tempBookingTimeRequiredAfterBookingIsFinishedMinutes);
+                        //Create LocalTime
+                        LocalTime endTimeTempBooking = LocalTime.of(tempBookingEndTimeHours,tempBookingEndTimeMinutes,0);
+                        //add timeRequiredAfterBookingIsFinishedHours to endTimeOfBooking
+                        LocalTime totalEndTimeTempBookingLocalTime = endTimeTempBooking.plus(tempDuration1);
+                        //Parse LocalTime to Sql Time
+                        Time totalEndTimeTempBooking = Time.valueOf(totalEndTimeTempBookingLocalTime);
+
+
+                        if (startTimeOfBookingSql.equals(tempBooking.getStartTimeOfBooking())){
+                            availableServableTables.remove(i);
+                            System.out.println("Start time of booking is at the same start as another booking");
                         }
-                        else if (startTimeOfBookingSql.after(bookingsOnDay.get(j).getStartTimeOfBooking()) && startTimeOfBookingSql.before(bookingsOnDay.get(j).getEndTimeOfBooking())){
-                            availableServableTables.remove(i);
-                            System.out.println("start time is between another booking");
 
+                        else if(startTimeOfBookingSql.before(tempBooking.getStartTimeOfBooking())){
+                                if(endTimeOfBooking.after(tempBooking.getStartTimeOfBooking())&&endTimeOfBooking.before(totalEndTimeTempBooking)){
+                                    System.out.println("End time of booking is during another booking");
+                                    availableServableTables.remove(i);
+                                }
+                        }
+                        else if(startTimeOfBookingSql.after(tempBooking.getStartTimeOfBooking()) && startTimeOfBookingSql.before(totalEndTimeTempBooking)){
+                            System.out.println("Start time of booking is during another booking");
+                            availableServableTables.remove(i);
                         }
                     }
                 }

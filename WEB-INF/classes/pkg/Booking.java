@@ -15,6 +15,7 @@ public class Booking {
     private int numberOfPeople;
     private boolean confirmed;
     private ArrayList<ServableTable> assignedTables;
+    private Time timeRequiredAfterBookingIsFinished;
 
     public ArrayList<ServableTable> getAssignedTables() {
         return assignedTables;
@@ -59,6 +60,10 @@ public class Booking {
         this.timeBooked = timeBooked;
     }
 
+    public void setTimeRequiredAfterBookingIsFinished(Time timeRequiredAfterBookingIsFinished) {
+        this.timeRequiredAfterBookingIsFinished = timeRequiredAfterBookingIsFinished;
+    }
+
     public Date getDateOfBooking() {
         return dateOfBooking;
     }
@@ -97,5 +102,9 @@ public class Booking {
 
     public void setConfirmed(boolean confirmed) {
         this.confirmed = confirmed;
+    }
+
+    public Time getTimeRequiredAfterBookingIsFinished() {
+        return timeRequiredAfterBookingIsFinished;
     }
 }

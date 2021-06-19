@@ -35,7 +35,6 @@ public class BookingDatabaseInterface {
         for (int i =0; i<bookingList.size();i++){
             tableIDsAssignedToFoundBooking = TableBookingsDatabaseInterface.getTableIDsInputtedBookingID(bookingList.get(i).getBookingID());
             for (int j = 0 ; j<tableIDsAssignedToFoundBooking.size();j++){
-                System.out.println("Booking has: tables " + tableIDsAssignedToFoundBooking.get(j));
                 bookingList.get(i).setAssignedTables(ServableTableDatabaseInterface.getAllServableTablesInBooking((Integer) tableIDsAssignedToFoundBooking.get(j)));
             }
         }
