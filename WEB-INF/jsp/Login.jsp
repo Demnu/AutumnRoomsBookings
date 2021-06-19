@@ -14,7 +14,8 @@
 
         <div class="p-5 card login-box">
             <div class="text-center">
-                <h1>Login</h1>
+                <h1>Autumn Rooms Booking Service</h1>
+                <h2>Login</h2>
                 <p class="text-muted"> Please enter your login and password!</p>
             </div>
             <form class="user" action="" method="post">
