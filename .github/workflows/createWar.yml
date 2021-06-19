@@ -22,8 +22,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 
       # Runs a single command using the runners shell
-      - name: delete directory
-        run: rm -rf /opt/AR
+#      - name: delete directory
+#        run: rm -rf /opt/AR
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
 #      - name: Download servlet-api.jar
@@ -32,12 +32,14 @@ jobs:
 #        run: (cd /opt/AR/WEB-INF/classes/pkg ; unzip servlet-api.jar.zip)
 #      - name: Compile classes
 #        run: (cd /opt/AR/WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
+#        if: success()
+#      - name: Create War
+#        run: (cd /opt/AR ; jar -cvf AR.war *)
         if: success()
-      - name: Create War
-        run: (cd /opt/AR ; jar -cvf AR.war *) 
-        if: success()
-      - name: Move War File to Webapps
-        run: mv /opt/AR/AR.war /opt/tomcat/webapps/
+#      - name: Move War File to Webapps
+#        run: mv /opt/AR/AR.war /opt/tomcat/webapps/
+      - name: Move Folder to Webapps
+        run: mv /opt/AR /opt/tomcat/webapps/
     
 
 
