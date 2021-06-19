@@ -67,5 +67,26 @@ public class UserDatabaseInterface {
         }
         return null;
     }
+
+    public static String getStaffNameInputtedStaffID(int staffID) {
+        String query = "SELECT username FROM Staff WHERE staffID =?";
+        try(Connection connection = ConfigBean.getConnection();){
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, staffID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                return result.getString(1);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return null;
+    }
 }
 

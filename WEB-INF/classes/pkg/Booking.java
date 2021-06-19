@@ -16,6 +16,7 @@ public class Booking {
     private boolean confirmed;
     private ArrayList<ServableTable> assignedTables;
     private Time timeRequiredAfterBookingIsFinished;
+    private String staffName;
 
     public ArrayList<ServableTable> getAssignedTables() {
         return assignedTables;
@@ -26,6 +27,10 @@ public class Booking {
     }
 
     public Booking() {
+    }
+
+    public String getStaffName() {
+        return staffName;
     }
 
     public int getBookingID() {
@@ -94,6 +99,10 @@ public class Booking {
 
     public void setNumberOfPeople(int numberOfPeople) {
         this.numberOfPeople = numberOfPeople;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
     }
 
     public boolean isConfirmed() {

@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/template")
-public class Ztemplate extends HttpServlet {
+@WebServlet("/viewAllBookings")
+public class ViewAllBookingsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -24,8 +24,9 @@ public class Ztemplate extends HttpServlet {
         }
         ArrayList<Booking>allBookingsList = new ArrayList<Booking>();
         allBookingsList = BookingDatabaseInterface.getAllBookings();
+        request.setAttribute("allBookingsList",allBookingsList);
 
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ViewAllBookings.jsp");
         dispatcher.forward(request, response);
         return;
     }
