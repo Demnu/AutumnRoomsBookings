@@ -26,12 +26,12 @@ jobs:
         run: rm -rf /opt/AR
       - name: Clone Repositry
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
-      - name: Download servlet-api.jar
-        run: (cd /opt/AR/WEB-INF/classes/pkg ; wget http://www.java2s.com/Code/JarDownload/servlet/servlet-api.jar.zip)
-      - name: Unzip servlet.zip
-        run: (cd /opt/AR/WEB-INF/classes/pkg ; unzip servlet-api.jar.zip)
-      - name: Compile classes
-        run: (cd /opt/AR/WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
+#      - name: Download servlet-api.jar
+#        run: (cd /opt/AR/WEB-INF/classes/pkg ; wget http://www.java2s.com/Code/JarDownload/servlet/servlet-api.jar.zip)
+#      - name: Unzip servlet.zip
+#        run: (cd /opt/AR/WEB-INF/classes/pkg ; unzip servlet-api.jar.zip)
+#      - name: Compile classes
+#        run: (cd /opt/AR/WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
         if: success()
       - name: Create War
         run: (cd /opt/AR ; jar -cvf AR.war *) 
