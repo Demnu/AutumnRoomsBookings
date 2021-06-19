@@ -28,8 +28,14 @@ jobs:
         run: git clone https://github.com/Demnu/AutumnRoomsBookings.git /opt/AR
       - name: Download servlet-api.jar
         run: (cd /opt/AR/WEB-INF/classes/pkg ; wget http://www.java2s.com/Code/JarDownload/servlet/servlet-api.jar.zip)
+      - name: Sleep for 10 seconds
+        run: sleep 10s
+        shell: bash
       - name: Unzip servlet.zip
         run: (cd /opt/AR/WEB-INF/classes/pkg ; unzip servlet-api.jar.zip)
+      - name: Sleep for 5 seconds
+        run: sleep 5s
+        shell: bash
       - name: Compile classes
         run: (cd /opt/AR/WEB-INF/classes/pkg ; javac -cp servlet-api.jar *java)
         if: success()
