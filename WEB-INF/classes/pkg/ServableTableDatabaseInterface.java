@@ -79,7 +79,7 @@ public class ServableTableDatabaseInterface {
         }
         return tableList;
     }
-    public static ArrayList<ServableTable> getAllServableTablesInBooking(){
+    public static ArrayList<ServableTable> getAllServableTabless(){
         ArrayList<ServableTable> tableList = new ArrayList<ServableTable>();
         String query = "SELECT* FROM ServableTable";
         try(Connection connection = ConfigBean.getConnection();){

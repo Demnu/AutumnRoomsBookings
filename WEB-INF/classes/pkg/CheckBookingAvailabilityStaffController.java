@@ -61,7 +61,7 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
         Time startTimeOfBookingSql = Time.valueOf(timeOfBookingLocalTime);
         Integer numberOfPeople = Integer.parseInt(numberOfPeopleStr);
         ArrayList<Booking> bookingsOnDay = BookingDatabaseInterface.getAllBookingsInputtedDate(dateOfBookingSql);
-        ArrayList<ServableTable> allServableTables = ServableTableDatabaseInterface.getAllServableTablesInBooking();
+        ArrayList<ServableTable> allServableTables = ServableTableDatabaseInterface.getAllServableTabless();
         ArrayList<ServableTable> availableServableTables = allServableTables;
 
         //getEndTimeOfBooking

@@ -1,5 +1,5 @@
 package pkg;
-
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.sql.*;
 public class ServableTable {
@@ -10,7 +10,8 @@ public class ServableTable {
     private Time maxTimeOfBooking;
     private String sectionName;
     private Time timeRequiredAfterBookingIsFinished;
-
+    private ArrayList<LocalTime> timeIncrementsBookedOutForDay = new ArrayList<LocalTime>();
+    private ArrayList<Booking> bookingsOnDay = new ArrayList<Booking>();
     ServableTable(){
 
     }
@@ -20,6 +21,7 @@ public class ServableTable {
         this.tableNumber = tableNumber;
         this.seats = seats;
     }
+
     public void setTableID(int tableID) {
         this.tableID = tableID;
     }
@@ -81,4 +83,24 @@ public class ServableTable {
     public Time getTimeRequiredAfterBookingIsFinished() {
         return timeRequiredAfterBookingIsFinished;
     }
+
+    public ArrayList<LocalTime> getTimeIncrementsBookedOutForDay() {
+        return timeIncrementsBookedOutForDay;
+    }
+
+    public void setTimeIncrementsBookedOutForDay(ArrayList<LocalTime> timesBookedOutForDay) {
+        System.out.println("Table: ");
+        for (int i = 0 ; i < timesBookedOutForDay.size() ;i++){
+            timeIncrementsBookedOutForDay.add(timesBookedOutForDay.get(i));
+        }
+    }
+
+    public ArrayList<Booking> getBookingsOnDay() {
+        return bookingsOnDay;
+    }
+
+    public void setBookingsOnDay(Booking booking) {
+        bookingsOnDay.add(booking);
+    }
+
 }
