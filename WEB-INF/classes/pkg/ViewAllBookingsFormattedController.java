@@ -56,12 +56,14 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
                 }
             }
         }
+        Functions functions = new Functions();
         request.setAttribute("openTime",openTime);
         request.setAttribute("closeTime",closeTime);
         request.setAttribute("allTables",allTables);
         request.setAttribute("indexsForTablesWithBookings",indexsForTablesWithBookings);
         request.setAttribute("todaysBookingsList",bookingsOnDay);
         request.setAttribute("timeIncrements",timeIncrements);
+        request.setAttribute("functions",functions);
 
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ViewAllBookingsFormatted.jsp");

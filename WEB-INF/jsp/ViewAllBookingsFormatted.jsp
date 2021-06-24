@@ -4,6 +4,8 @@
 <%@ page import="pkg.User" %>
 <%@ page import="pkg.Booking" %>
 <%@ page import="pkg.ServableTable" %>
+<%@ page import="pkg.Functions" %>
+
 <%
     User user = (User) session.getAttribute("user");
     ArrayList<Booking> todaysBookingsList = (ArrayList<Booking>) request.getAttribute("todaysBookingsList");
@@ -12,6 +14,7 @@
     ArrayList<Integer> indexsForTablesWithBookings = (ArrayList<Integer>) request.getAttribute("indexsForTablesWithBookings");
     LocalTime openTime = (LocalTime) request.getAttribute("openTime");
     LocalTime closeTime = (LocalTime) request.getAttribute("closeTime");
+    Functions functions = (Functions) request.getAttribute("functions");
 
 %>
 <!DOCTYPE html>
@@ -53,12 +56,38 @@
             text-align: center;
 
         }
+        .imageHiddenOdd {
+            width : 100%;
+            height : 2em;
+            float:left;
+            background-color: #fffee0;
+            text-align: center;
 
+        }
+        .imageHiddenEven {
+            width : 100%;
+            height : 2em;
+            float:left;
+            background-color: #f2f1d5;
+            text-align: center;
+
+        }
+        .currentTimeLine {
+            width : 100%;
+            height : 2em;
+            float:left;
+            background-color: gold;
+            text-align: center;
+
+        }
 
         th{
             padding: 0px !important ;
             margin: 0px !important;
             filter: brightness(100%) !important;
+            border-right: solid 1px grey !important;
+            border-left: solid 1px grey !important;
+            text-align: center;
 
         }
         table{
@@ -68,8 +97,8 @@
         td {
             padding: 0px !important ;
             margin: 0px !important;
-            border-right: dashed 1px grey !important;
-            border-left: dashed 1px grey !important;
+            /*border-right: solid 0.01em #c6c6c6 !important;*/
+            /*border-left: solid 0.01em #c6c6c6 !important;*/
             text-align: center;
         }
         .hiddenTimeIncrement{
@@ -118,8 +147,8 @@
 
                 }
                 else{
-                    var result
-
+                    var result;
+                    var resultTemp;
                     if (incrementTimeMinutesTemp == 15){
                         result = (currentDateMinutes/15)*100;
                     }
@@ -135,8 +164,15 @@
                         currentDateMinutes-=45;
                         result = (currentDateMinutes/15)*100;
                     }
+                    resultTemp = result;
+                    resultTemp -=5;
+                    resultTemp +="%";
                     result+="%"
                     $("div.image:contains('" + incrementTime +"')").css("width", result);
+                    $("div.imageHiddenOdd:contains('" + incrementTime +"')").css("width", resultTemp);
+                    $("div.imageHiddenEven:contains('" + incrementTime +"')").css("width", resultTemp);
+                    $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "5%");
+
                     // document.getElementById("demo1").innerHTML = incrementTime + currentTime + " " +result;
 
                     break;
@@ -210,15 +246,28 @@
                                             }
                                         }
                                     }
-
-                                %>
-
+                                    %>
                                 <% if (tdHighlighted==false){%>
-                                    <td style="font-size: 12px" class="timeIncrement">
-                                        <div class="image" style="width: 0%">
-                                            <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                        </div>
-                                    </td>
+                                    <% if (functions.isOdd(i)){%>
+                                        <td style="font-size: 12px" class="timeIncrement">
+                                            <div class="imageHiddenOdd" style="width: 0%">
+                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                            </div>
+                                            <div class="currentTimeLine" style="width: 0%">
+                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                            </div>
+                                        </td>
+                                    <%}
+                                    else if (!functions.isOdd(i)){%>
+                                        <td style="font-size: 12px" class="timeIncrement">
+                                            <div class="imageHiddenEven" style="width: 0%">
+                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                            </div>
+                                            <div class="currentTimeLine" style="width: 0%">
+                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                            </div>
+                                        </td>
+                                    <%}%>
                                 <%}%>
                             <%}%>
                         </tr>
