@@ -47,13 +47,12 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
         //parse dateString into util.Date then into sql.Date
         Date dateOfBookingJava = new Date();
         try {
-            final String OLD_FORMAT = "dd-MM-yyyy";
+            final String OLD_FORMAT = "dd/MM/yyyy";
             final String NEW_FORMAT = "yyyy/MM/dd";
             SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
             dateOfBookingJava = sdf.parse(dateOfBookingStr);
         }catch (Exception e){System.out.println(e);};
         java.sql.Date dateOfBookingSql = new java.sql.Date(dateOfBookingJava.getTime());
-
         //parse hours and minutes into time
         Integer hours = Integer.parseInt(hoursStr);
         Integer minutes = Integer.parseInt(minutesStr);
