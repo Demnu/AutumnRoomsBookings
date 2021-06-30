@@ -40,7 +40,21 @@
             white-space: nowrap;
         }
         .darker{
-            /*filter: brightness(50%);*/
+            filter: brightness(50%);
+        }
+        .imageBookingEven{
+            width : 100%;
+            height : 2em;
+            float:left;
+            background-color: #166ec4;
+            text-align: center;
+        }
+        .imageBookingOdd{
+            width : 100%;
+            height : 2em;
+            float:left;
+            background-color: #1774cf;
+            text-align: center;
         }
         .overlay {
             width:20px;
@@ -58,7 +72,7 @@
         }
         .imageHiddenOdd {
             width : 100%;
-            height : 2em;
+            height : 100%;
             float:left;
             background-color: #fffee0;
             text-align: center;
@@ -66,7 +80,7 @@
         }
         .imageHiddenEven {
             width : 100%;
-            height : 2em;
+            height : 100%;
             float:left;
             background-color: #f2f1d5;
             text-align: center;
@@ -74,11 +88,15 @@
         }
         .currentTimeLine {
             width : 100%;
-            height : 2em;
+            height : 100%;
             float:left;
             background-color: gold;
             text-align: center;
 
+        }
+
+        .bookingIncrement{
+            background-color: dodgerblue
         }
 
         th{
@@ -88,6 +106,7 @@
             border-right: solid 1px grey !important;
             border-left: solid 1px grey !important;
             text-align: center;
+            height: 1em;
 
         }
         table{
@@ -100,8 +119,10 @@
             /*border-right: solid 0.01em #c6c6c6 !important;*/
             /*border-left: solid 0.01em #c6c6c6 !important;*/
             text-align: center;
+            height: 1em;
         }
         .hiddenTimeIncrement{
+
             visibility: hidden;
         }
 
@@ -110,7 +131,7 @@
     <script>
         var timeIncrements = new Array();
         function myFunction() {
-            // setInterval(myFunction, 5000);
+            setInterval(myFunction, 5000);
 
             var currentDate = new Date();
 
@@ -139,11 +160,13 @@
                 }
                 var incrementTime = incrementTimeHours + ":" + incrementTimeMinutes;
                 if(timeIncrementDate<=currentDate){
-
                     $("th:contains('" + incrementTime +"')").css("background-color", "gold" );
-                    $("td:contains('" + incrementTime +"')").css("background-color", "#fffee0" );
-                    // $("div.image:contains('" + incrementTime +"')").css("width", 100);
-                    $("td:nth-child(5)").addClass("darker");
+                    $("td.timeIncrement:contains('" + incrementTime +"')").css("background-color", "#fffee0");
+                    $("td.timeIncrementBooking:contains('" + incrementTime +"')").css("background-color", "#1774CF");
+                    $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "0%");
+
+                    // $("div.imageBooking:contains('" + incrementTime +"')").css("background-color", "black");
+                    // $("td:nth-child(5)").addClass("darker");
 
                 }
                 else{
@@ -171,6 +194,8 @@
                     $("div.image:contains('" + incrementTime +"')").css("width", result);
                     $("div.imageHiddenOdd:contains('" + incrementTime +"')").css("width", resultTemp);
                     $("div.imageHiddenEven:contains('" + incrementTime +"')").css("width", resultTemp);
+                    $("div.imageBookingEven:contains('" + incrementTime +"')").css("width", resultTemp);
+                    $("div.imageBookingOdd:contains('" + incrementTime +"')").css("width", resultTemp);
                     $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "5%");
 
                     // document.getElementById("demo1").innerHTML = incrementTime + currentTime + " " +result;
@@ -206,11 +231,25 @@
             }
         }
 
+        function getCurrentDate(){
+            var currentDateTime = new Date();
+            var currentDate = currentDateTime.getDate() + currentDateTime.getMonth() + currentDateTime.getFullYear();
+            document.getElementById("currentDate").innerHTML = currentDate;
+        }
     </script>
 </head>
-<body onload="getTimeIncrements(),myFunction()" >
+<body onload="getTimeIncrements(),myFunction(),getCurrentDate()">
 <%--<body>--%>
 <jsp:include page="Navbar.jsp"/>
+<div class="container">
+    <div class="card w-100">
+        <div class = "card-header">
+            <div class="row">
+                <h4 id="currentDate"></h4>
+            </div>
+        </div>
+    </div>
+</div>
 <h4>All Bookings</h4>
             <div class="scroll">
                 <table id="bookingsTable" class="table table-striped table-sm" cellspacing="0" width="100%">
@@ -239,9 +278,29 @@
                                             ServableTable tempServableTable = allTables.get(i);
                                             for (int l = 0 ; l<tempServableTable.getTimeIncrementsBookedOutForDay().size(); l++){
                                                 LocalTime timeIncrementForTable = tempServableTable.getTimeIncrementsBookedOutForDay().get(l);
-                                                if(timeIncrements.get(j).equals(timeIncrementForTable)){%>
-                                                    <td id="booked" style="background-color: dodgerblue"></td>
-                                                    <%tdHighlighted=true;
+                                                if(timeIncrements.get(j).equals(timeIncrementForTable)){
+
+                                                    if(functions.isOdd(i)){%>
+                                                        <td class = "timeIncrementBooking" style="background-color: dodgerblue">
+                                                            <div class="imageBookingOdd" style="width: 0%">
+                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                                            </div>
+                                                            <div class="currentTimeLine" style="width: 0%">
+                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                                            </div>
+                                                        </td>
+                                                    <%}
+                                                    else if(!functions.isOdd(i)){%>
+                                                        <td class = "timeIncrementBooking" style="background-color: dodgerblue">
+                                                            <div class="imageBookingEven" style="width: 0%">
+                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                                            </div>
+                                                            <div class="currentTimeLine" style="width: 0%">
+                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
+                                                            </div>
+                                                        </td>
+                                                    <%}
+                                                tdHighlighted=true;
                                                 }
                                             }
                                         }
@@ -276,7 +335,7 @@
                 </table>
             </div>
 
-    <p id="demo1"></p>
+    <p id="demo1">test</p>
 
     <br>
     <a class="btn btn-primary" href="<%=request.getContextPath()%>/">Back</a>
