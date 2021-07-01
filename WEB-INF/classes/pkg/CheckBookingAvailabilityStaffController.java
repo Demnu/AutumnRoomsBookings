@@ -1,8 +1,9 @@
 package pkg;
 
 import java.io.IOException;
-import java.sql.Time;
+import java.sql.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,14 +46,15 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
         String numberOfPeopleStr = (String) request.getParameter("numberOfPeople");
         Integer staffID = Integer.parseInt(staffIDstr);
         //parse dateString into util.Date then into sql.Date
-        Date dateOfBookingJava = new Date();
-        try {
-            final String OLD_FORMAT = "dd/MM/yyyy";
-            final String NEW_FORMAT = "yyyy/MM/dd";
-            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
-            dateOfBookingJava = sdf.parse(dateOfBookingStr);
-        }catch (Exception e){System.out.println(e);};
-        java.sql.Date dateOfBookingSql = new java.sql.Date(dateOfBookingJava.getTime());
+        LocalDate dateOfBookingLocalDate;
+        java.sql.Date dateOfBookingSql = new java.sql.Date(0,0,0);
+        try{
+            dateOfBookingLocalDate = LocalDate.parse(dateOfBookingStr);
+            dateOfBookingSql = java.sql.Date.valueOf(dateOfBookingLocalDate);
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
         //parse hours and minutes into time
         Integer hours = Integer.parseInt(hoursStr);
         Integer minutes = Integer.parseInt(minutesStr);
@@ -71,7 +73,6 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
             for (int j = 0 ; j<bookingsOnDay.size() ; j++){
                 for (int k = 0; k<bookingsOnDay.get(j).getAssignedTables().size(); k++){
                     if (availableServableTables.get(i).getTableID() == bookingsOnDay.get(j).getAssignedTables().get(k).getTableID()){
-                        System.out.println(availableServableTables.get(i).getTableNumber() + " Conflicts");
                         //check if desired booking time conflicts with table
                             //TODO Enhancement: Add function to ServableTable class to automatically add maxTimeOfSection and requiredTimeToSetUpAfterBooking
                             //Get LocalTime of maxTimeBooking
@@ -94,7 +95,6 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
                             totalTimeDuration = Duration.ZERO.plusMinutes(totalTimeDurationMinutes);
                             //Plus duration onto desired booking start time
                             LocalTime totalTime = timeOfBookingLocalTime.plus(totalTimeDuration);
-                            System.out.println(totalTime);
                             //Parse totalTime to Sql Time
                             Time endTimeOfBooking = Time.valueOf(totalTime);
 
@@ -102,7 +102,6 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
                         Booking tempBooking = bookingsOnDay.get(j);
                         Time tempBookingEndTime = tempBooking.getEndTimeOfBooking();
                         Time tempBookingTimeRequiredAfterBookingIsFinished = tempBooking.getAssignedTables().get(0).getTimeRequiredAfterBookingIsFinished();
-                        System.out.println(tempBooking.getAssignedTables().get(0).getTableNumber());
                         //Get hours and minutes
                         int tempBookingEndTimeHours = tempBookingEndTime.getHours();
                         int tempBookingEndTimeMinutes = tempBookingEndTime.getMinutes();

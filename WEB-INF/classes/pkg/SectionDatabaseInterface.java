@@ -67,7 +67,6 @@ public class SectionDatabaseInterface {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, sectionID);
             ResultSet result = preparedStatement.executeQuery();
-            System.out.println(sectionID);
             while(result.next()){
                 return result.getString(1);
             }

@@ -36,9 +36,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
             int inputMonth = inputtedDate.getMonthValue();
             int inputYear = inputtedDate.getYear();
             dateForBookings = Date.valueOf(inputtedDate);
-            System.out.println(""+ inputDay + "/"+inputMonth+"/"+inputYear);
             showDate = LocalDate.of(inputYear,inputMonth,inputDay);
-            System.out.println(dateForBookings);
         }
         else{
             dateForBookings = new java.sql.Date(System.currentTimeMillis());
@@ -70,11 +68,16 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
                 for(int k = 0 ; k<allTables.size();k++){
                     if (allTables.get(k).getTableID()==currentBooking.getAssignedTables().get(j).getTableID()){
                         //Get all time increments for specific booking
-                        indexsForTablesWithBookings.add(i);
+                        indexsForTablesWithBookings.add(k);
                         allTables.get(k).setTimeIncrementsBookedOutForDay(currentBooking.getTimeIncrementsForBooking());
                         allTables.get(k).setBookingsOnDay(currentBooking);
+                        System.out.println(currentBooking.getDateOfBooking());
                     }
                 }
+            }
+        }
+        for (int i = 0 ; i<allTables.size();i++){
+            for (int j = 0 ; j<allTables.get(i).getBookingsOnDay().size();j++){
             }
         }
         Functions functions = new Functions();
@@ -87,7 +90,6 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         request.setAttribute("showDate",showDate);
         request.setAttribute("showDateStr",showDateStr);
         request.setAttribute("functions",functions);
-
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ViewAllBookingsFormatted.jsp");
         dispatcher.forward(request, response);

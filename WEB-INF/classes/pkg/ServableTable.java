@@ -89,7 +89,6 @@ public class ServableTable {
     }
 
     public void setTimeIncrementsBookedOutForDay(ArrayList<LocalTime> timesBookedOutForDay) {
-        System.out.println("Table: ");
         for (int i = 0 ; i < timesBookedOutForDay.size() ;i++){
             timeIncrementsBookedOutForDay.add(timesBookedOutForDay.get(i));
         }

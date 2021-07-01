@@ -32,6 +32,8 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
+
     <style>
         html, body{
             height: 100%;
@@ -249,6 +251,14 @@
 
     <jsp:include page="Navbar.jsp"/>
 <br>
+test
+        <%for (int i = 0 ; i< allTables.size(); i++){%>
+            <%for (int j = 0; j<allTables.get(i).getBookingsOnDay().size();j++){%>
+                <p><%=allTables.get(i).getBookingsOnDay().get(j).getBookingID()%></p>
+            <%}
+        }%>
+
+
 <table class="table table-sm borderless">
     <tr>
         <td></td>

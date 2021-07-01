@@ -32,7 +32,6 @@ public class LoginController extends HttpServlet {
         //Received by Login.jsp: Username and Password
         String username = (String) request.getParameter("username");
         String passwordStr = (String) request.getParameter("password");
-        System.out.println(username + passwordStr);
         //authenticate User and create User object
         User user;
         Integer password = Integer.parseInt(passwordStr);
