@@ -1,6 +1,7 @@
 package pkg;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,13 +16,13 @@ public class ViewAllBookingsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-
         //Check if user is logged in
         User user = (User) session.getAttribute("user");
         if (user==null){
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
             dispatcher.forward(request, response);
         }
+
         ArrayList<Booking>allBookingsList = new ArrayList<Booking>();
         allBookingsList = BookingDatabaseInterface.getAllBookings();
         request.setAttribute("allBookingsList",allBookingsList);

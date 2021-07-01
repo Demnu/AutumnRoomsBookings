@@ -2,6 +2,7 @@ package pkg;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
@@ -24,10 +25,30 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
             dispatcher.forward(request, response);
         }
-        //Get bookings for today
-        java.sql.Date dateBooked = new java.sql.Date(System.currentTimeMillis());
+        java.sql.Date dateForBookings;
+        LocalDate showDate;
+        //Check if user has selected a date
+        String inputtedDateStr = request.getParameter("inputtedDate");
+        if (inputtedDateStr!=null){
+            LocalDate inputtedDate = LocalDate.parse(inputtedDateStr);
+
+            int inputDay = inputtedDate.getDayOfMonth();
+            int inputMonth = inputtedDate.getMonthValue();
+            int inputYear = inputtedDate.getYear();
+            dateForBookings = Date.valueOf(inputtedDate);
+            System.out.println(""+ inputDay + "/"+inputMonth+"/"+inputYear);
+            showDate = LocalDate.of(inputYear,inputMonth,inputDay);
+            System.out.println(dateForBookings);
+        }
+        else{
+            dateForBookings = new java.sql.Date(System.currentTimeMillis());
+            showDate = LocalDate.now();
+
+        }
+        //Convert showDate to DD/MM/YYYY
+        String showDateStr = showDate.getDayOfMonth() +"/"+showDate.getMonthValue() + "/" + showDate.getYear();
         ArrayList<Booking>bookingsOnDay = new ArrayList<Booking>();
-        bookingsOnDay = BookingDatabaseInterface.getAllBookingsInputtedDate(dateBooked);
+        bookingsOnDay = BookingDatabaseInterface.getAllBookingsInputtedDate(dateForBookings);
         //TODO Development: Add table in database for venue details
         //Get Venues Open time and Close time for today
         LocalTime openTime = LocalTime.of(8,0,0);
@@ -63,6 +84,8 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         request.setAttribute("indexsForTablesWithBookings",indexsForTablesWithBookings);
         request.setAttribute("todaysBookingsList",bookingsOnDay);
         request.setAttribute("timeIncrements",timeIncrements);
+        request.setAttribute("showDate",showDate);
+        request.setAttribute("showDateStr",showDateStr);
         request.setAttribute("functions",functions);
 
 

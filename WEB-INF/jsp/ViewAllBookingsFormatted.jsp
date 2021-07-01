@@ -14,8 +14,12 @@
     ArrayList<Integer> indexsForTablesWithBookings = (ArrayList<Integer>) request.getAttribute("indexsForTablesWithBookings");
     LocalTime openTime = (LocalTime) request.getAttribute("openTime");
     LocalTime closeTime = (LocalTime) request.getAttribute("closeTime");
+    LocalDate showDate = (LocalDate) request.getAttribute("showDate");
+    LocalDate currentDate = LocalDate.now();
+    String showDateStr = (String) request.getAttribute("showDateStr");
     Functions functions = (Functions) request.getAttribute("functions");
-
+    LocalDate dateBack = showDate.minusDays(1);
+    LocalDate dateForward = showDate.plusDays(1);
 %>
 <!DOCTYPE html>
 <html>
@@ -27,11 +31,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <style>
         html, body{
             height: 100%;
+            font-family: Arial;
         }
 
         div.scroll {
@@ -120,12 +124,19 @@
             /*border-left: solid 0.01em #c6c6c6 !important;*/
             text-align: center;
             height: 1em;
+
         }
         .hiddenTimeIncrement{
 
             visibility: hidden;
         }
-
+        #currentDate{
+            font-size: 32px;
+            font-family: "Arial";
+        }
+        .borderless td, .borderless th {
+            border: none;
+        }
     </style>
 
     <script>
@@ -231,26 +242,41 @@
             }
         }
 
-        function getCurrentDate(){
-            var currentDateTime = new Date();
-            var currentDate = currentDateTime.getDate() + currentDateTime.getMonth() + currentDateTime.getFullYear();
-            document.getElementById("currentDate").innerHTML = currentDate;
-        }
     </script>
 </head>
-<body onload="getTimeIncrements(),myFunction(),getCurrentDate()">
+<body onload="getTimeIncrements(),myFunction()">
 <%--<body>--%>
-<jsp:include page="Navbar.jsp"/>
-<div class="container">
-    <div class="card w-100">
-        <div class = "card-header">
-            <div class="row">
-                <h4 id="currentDate"></h4>
-            </div>
-        </div>
-    </div>
-</div>
-<h4>All Bookings</h4>
+
+    <jsp:include page="Navbar.jsp"/>
+<br>
+<table class="table table-sm borderless">
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            <%
+            if (!showDate.isEqual(currentDate)){%>
+            <a class="btn btn-primary" href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
+            <%}%></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr class="">
+        <td class="col-4"></td>
+        <td>
+            <a class="btn btn-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
+        </td>
+        <td>
+            <div id="currentDate" href="<%=request.getContextPath()%>/checkBookingAvailability"><%=showDateStr%></div>
+        </td>
+        <td>
+            <a class="btn btn-primary bi bi-chevron-right" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
+        </td>
+        <td class="col-4"></td>
+    </tr>
+</table>
             <div class="scroll">
                 <table id="bookingsTable" class="table table-striped table-sm" cellspacing="0" width="100%">
                     <thead>
