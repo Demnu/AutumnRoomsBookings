@@ -57,6 +57,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
 
         //Get all tables
         ArrayList<ServableTable> allTables = ServableTableDatabaseInterface.getAllServableTabless();
+        ArrayList<Section> allSections = SectionDatabaseInterface.getAllSections();
 
 
         //Get all times a table is booked for the day
@@ -71,15 +72,13 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
                         indexsForTablesWithBookings.add(k);
                         allTables.get(k).setTimeIncrementsBookedOutForDay(currentBooking.getTimeIncrementsForBooking());
                         allTables.get(k).setBookingsOnDay(currentBooking);
-                        System.out.println(currentBooking.getDateOfBooking());
                     }
                 }
             }
         }
-        for (int i = 0 ; i<allTables.size();i++){
-            for (int j = 0 ; j<allTables.get(i).getBookingsOnDay().size();j++){
-            }
-        }
+        //Create table for jsp
+        Table table = new Table(allTables, timeIncrements);
+
         Functions functions = new Functions();
         request.setAttribute("openTime",openTime);
         request.setAttribute("closeTime",closeTime);
@@ -90,6 +89,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         request.setAttribute("showDate",showDate);
         request.setAttribute("showDateStr",showDateStr);
         request.setAttribute("functions",functions);
+        request.setAttribute("table",table);
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ViewAllBookingsFormatted.jsp");
         dispatcher.forward(request, response);

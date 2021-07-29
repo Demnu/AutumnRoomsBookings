@@ -122,6 +122,11 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
                             availableServableTables.remove(i);
                             System.out.println("Start time of booking is at the same start as another booking");
                         }
+                        else if (startTimeOfBookingSql.equals(tempBooking.getEndTimeOfBooking())){
+                            availableServableTables.remove(i);
+                            System.out.println("Start time of booking is at the end time of another booking");
+
+                        }
 
                         else if(startTimeOfBookingSql.before(tempBooking.getStartTimeOfBooking())){
                                 if(endTimeOfBooking.after(tempBooking.getStartTimeOfBooking())&&endTimeOfBooking.before(totalEndTimeTempBooking)){
@@ -133,6 +138,7 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
                             System.out.println("Start time of booking is during another booking");
                             availableServableTables.remove(i);
                         }
+
                     }
                 }
             }

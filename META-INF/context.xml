@@ -1,6 +1,6 @@
 
 
-<Context>
+<Context path="/expert" docBase="expert" debug="0" reloadable="false">
 
 
 <Resource name="jdbc/BookingService"

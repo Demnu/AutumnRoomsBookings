@@ -5,10 +5,14 @@
 <%@ page import="pkg.Booking" %>
 <%@ page import="pkg.ServableTable" %>
 <%@ page import="pkg.Functions" %>
+<%@ page import="pkg.Table" %>
+<%@ page import="pkg.Rows" %>
+<%@ page import="pkg.Columns" %>
 
 <%
     User user = (User) session.getAttribute("user");
     ArrayList<Booking> todaysBookingsList = (ArrayList<Booking>) request.getAttribute("todaysBookingsList");
+    Table table = (Table) request.getAttribute("table");
     ArrayList<LocalTime> timeIncrements = (ArrayList<LocalTime>) request.getAttribute("timeIncrements");
     ArrayList<ServableTable> allTables = (ArrayList<ServableTable>) request.getAttribute("allTables");
     ArrayList<Integer> indexsForTablesWithBookings = (ArrayList<Integer>) request.getAttribute("indexsForTablesWithBookings");
@@ -251,13 +255,6 @@
 
     <jsp:include page="Navbar.jsp"/>
 <br>
-test
-        <%for (int i = 0 ; i< allTables.size(); i++){%>
-            <%for (int j = 0; j<allTables.get(i).getBookingsOnDay().size();j++){%>
-                <p><%=allTables.get(i).getBookingsOnDay().get(j).getBookingID()%></p>
-            <%}
-        }%>
-
 
 <table class="table table-sm borderless">
     <tr>
@@ -288,14 +285,14 @@ test
     </tr>
 </table>
             <div class="scroll">
-                <table id="bookingsTable" class="table table-striped table-sm" cellspacing="0" width="100%">
+                <table id="bookingsTable" class="table table-striped table-sm" cellspacing="0" width="100%" style='table-layout:fixed'>
                     <thead>
                     <tr>
                         <th class="th-sm overlay"></th>
                         <% for (int i = 0 ; i < timeIncrements.size(); i++){ %>
-                        <th style="font-size: 12px" class="timeIncrement">
+                        <th class="timeIncrement">
                             <div class="timeIncrement">
-                                <div class="image" style="width: 0%">
+                                <div class="image" style="width: 0%; font-size: 12px">
                                     <%=timeIncrements.get(i)%>
                                 </>
                             </div>
@@ -304,69 +301,65 @@ test
                     </tr>
                     </thead>
                     <tbody>
-                    <% for (int i = 0 ; i<allTables.size();i++){%>
-                        <tr>
-                            <td>T - <%=allTables.get(i).getTableNumber()%></td>
-                            <% for (int j = 0 ; j<timeIncrements.size();j++){
-                                    boolean tdHighlighted = false;
-                                    for (int k = 0 ; k<indexsForTablesWithBookings.size(); k++){
-                                        if (i == indexsForTablesWithBookings.get(k)){
-                                            ServableTable tempServableTable = allTables.get(i);
-                                            for (int l = 0 ; l<tempServableTable.getTimeIncrementsBookedOutForDay().size(); l++){
-                                                LocalTime timeIncrementForTable = tempServableTable.getTimeIncrementsBookedOutForDay().get(l);
-                                                if(timeIncrements.get(j).equals(timeIncrementForTable)){
 
-                                                    if(functions.isOdd(i)){%>
-                                                        <td class = "timeIncrementBooking" style="background-color: dodgerblue">
-                                                            <div class="imageBookingOdd" style="width: 0%">
-                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                                            </div>
-                                                            <div class="currentTimeLine" style="width: 0%">
-                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                                            </div>
-                                                        </td>
-                                                    <%}
-                                                    else if(!functions.isOdd(i)){%>
-                                                        <td class = "timeIncrementBooking" style="background-color: dodgerblue">
-                                                            <div class="imageBookingEven" style="width: 0%">
-                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                                            </div>
-                                                            <div class="currentTimeLine" style="width: 0%">
-                                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                                            </div>
-                                                        </td>
-                                                    <%}
-                                                tdHighlighted=true;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    %>
-                                <% if (tdHighlighted==false){%>
-                                    <% if (functions.isOdd(i)){%>
-                                        <td style="font-size: 12px" class="timeIncrement">
-                                            <div class="imageHiddenOdd" style="width: 0%">
-                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                            </div>
-                                            <div class="currentTimeLine" style="width: 0%">
-                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                            </div>
-                                        </td>
-                                    <%}
-                                    else if (!functions.isOdd(i)){%>
-                                        <td style="font-size: 12px" class="timeIncrement">
-                                            <div class="imageHiddenEven" style="width: 0%">
-                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                            </div>
-                                            <div class="currentTimeLine" style="width: 0%">
-                                                <div class="hiddenTimeIncrement"><%=timeIncrements.get(j)%></div>
-                                            </div>
-                                        </td>
-                                    <%}%>
+                    <%
+                        int i = 0;
+                        for (Rows row : table.getRows()){%>
+                      <tr>
+                          <td><%=row.getTableNumber()%></td>
+                          <%for (Columns column : row.getColumns()){%>
+                              <%if (Functions.isOdd(i)){
+                                  if (column.isBooked()){%>
+                                      <td class = "timeIncrementBooking" style="background-color: dodgerblue">
+                                          <div class="imageBookingOdd" style="width: 0%">
+                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                          </div>
+                                          <div class="currentTimeLine" style="width: 0%">
+                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                          </div>
+                                      </td>
+
                                 <%}%>
-                            <%}%>
-                        </tr>
-                    <%}%>
+                                  <%if (!column.isBooked()){%>
+                                          <td style="font-size: 12px" class="timeIncrement">
+                                              <div class="imageHiddenOdd" style="width: 0%">
+                                                  <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                              </div>
+                                              <div class="currentTimeLine" style="width: 0%">
+                                                  <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                              </div>
+                                          </td>
+                                  <%}
+                              }%>
+                              <%if (!Functions.isOdd(i)){
+                                  if (column.isBooked()){%>
+                                      <td class = "timeIncrementBooking" style="background-color: dodgerblue">
+                                          <div class="imageBookingEven" style="width: 0%">
+                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                          </div>
+                                          <div class="currentTimeLine" style="width: 0%">
+                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                          </div>
+                                      </td>
+
+                              <%}%>
+                              <%if (!column.isBooked()){%>
+                                      <td style="font-size: 12px" class="timeIncrement">
+                                          <div class="imageHiddenEven" style="width: 0%">
+                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                          </div>
+                                          <div class="currentTimeLine" style="width: 0%">
+                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                                          </div>
+                                      </td>
+                              <%}
+                            }%>
+                          <%}
+                        i++;
+                        }
+
+                    %>
+                      </tr>
                     </tbody>
                 </table>
             </div>
