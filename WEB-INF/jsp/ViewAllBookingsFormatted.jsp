@@ -104,6 +104,7 @@
         th{
             padding: 0px !important ;
             margin: 0px !important;
+            border: none !important;
         }
         table{
             padding: 0px !important ;
@@ -118,6 +119,14 @@
             text-align: center;
             height: 2em;
 
+        }
+        .hiddenTimeIncrementStartTime{
+
+            visibility: hidden;
+        }
+        .hiddenTimeIncrementEndTime{
+
+            visibility: hidden;
         }
         .hiddenTimeIncrement{
 
@@ -157,24 +166,20 @@
         }
         th:first-child {z-index:2;background-color:red;}
 
-        bookingDetails{
-
-            position: absolute !important;
-
-        }
 
         td.timeIncrementBooking{
-            border:none !important;
-            background-color: dodgerblue;
+            /*border:none !important;*/
+            color: white !important;
+            font-size: 12px;
+            text-align: left !important;
+
+        }
+        .booking{
+            padding: 0px !important;
         }
     </style>
 
     <script>
-
-        function sizeTable(){
-            $()
-
-        }
 
         var timeIncrements = new Array();
         function myFunction() {
@@ -206,11 +211,23 @@
                     incrementTimeMinutes = incrementTimeMinutesTemp;
                 }
                 var incrementTime = incrementTimeHours + ":" + incrementTimeMinutes;
+
+
+                $('.progress-bar').each(function() {
+                    var endTime = $(this).each();
+                    // $(this).css("width")
+                    document.getElementById("demo1").innerHTML = endTime;
+
+                });
+
                 if(timeIncrementDate<=currentDate){
                     $("th:contains('" + incrementTime +"')").css("background-color", "gold" );
                     $("td.timeIncrement:contains('" + incrementTime +"')").css("background-color", "#fffee0");
-                    $("td.timeIncrementBooking:contains('" + incrementTime +"')").css("background-color", "#1774CF");
+                    // $("td.timeIncrementBooking:contains('" + incrementTime +"')").css("background-color", "#1774CF");
+                    $("div.bookingProgress:contains('endTime" + incrementTime +"')").css("width", "100%");
                     $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "0%");
+                    $("td.timeIncrementBooking:contains('endTime" + incrementTime +"')").css("background-color", "#fffee0");
+                    // $('.bookingProgress').css('width', '100%');
 
                     // $("div.imageBooking:contains('" + incrementTime +"')").css("background-color", "black");
                     // $("td:nth-child(5)").addClass("darker");
@@ -244,8 +261,8 @@
                     $("div.imageBookingEven:contains('" + incrementTime +"')").css("width", resultTemp);
                     $("div.imageBookingOdd:contains('" + incrementTime +"')").css("width", resultTemp);
                     $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "5%");
-
-                    // document.getElementById("demo1").innerHTML = incrementTime + currentTime + " " +result;
+                    $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "5%");
+                    // document.getElementById("demo1").innerHTML = incrementTime + currentTime + " " +result;'
 
                     break;
                 }
@@ -285,6 +302,7 @@
 
     <jsp:include page="Navbar.jsp"/>
 <br>
+<p id="demo1">dfadsf</p>
 <table class="table table-sm borderless">
     <tr class="">
         <td class="col-4"></td>
@@ -324,7 +342,7 @@
             <% for (int i = 0 ; i < timeIncrements.size(); i++){ %>
             <th class="timeIncrement" style="background-color: white;">
                 <div class="timeIncrement">
-                    <div class="image" style="width: 0%; font-size: 12px; ">
+                    <div class="image" style="width: 0%; font-size: 18px; ">
                         <%=timeIncrements.get(i)%>
                     </div>
                 </div>
@@ -342,18 +360,25 @@
             <%for (Columns column : row.getColumns()){%>
             <%if (Functions.isOdd(i)){
                 if (column.isBooked()){%>
-            <td class = "timeIncrementBooking" style="background-color: dodgerblue">
-                <% if (column.isStartOfBooking()){%>
-
-                <%}%>
-                <div class="imageBookingOdd" style="width: 0%">
-                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                </div>
-                <div class="currentTimeLine" style="width: 0%">
-                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                </div>
-            </td>
-
+                    <% if (column.isStartOfBooking()){%>
+                        <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
+                            <div  class="booking" style="background-color: dodgerblue; border-radius: 5%;">
+                                <div style="padding-left: 2px">
+                                    <%=column.getBookingDetails()%>
+                                </div>
+                            </div>
+                            <div class="progress" style="height: 10px; background-color: dodgerblue">
+                                <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
+                                    <div class="hiddenTimeIncrementStartTime">
+                                        startTime<%=column.getStartTimeOfBooking()%>
+                                    </div>
+                                    <div class="hiddenTimeIncrementEndTime">
+                                        endTime<%=column.getEndTimeOfBooking()%>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    <%}%>
             <%}%>
             <%if (!column.isBooked()){%>
             <td style="font-size: 12px" class="timeIncrement">
@@ -368,18 +393,26 @@
             }%>
             <%if (!Functions.isOdd(i)){
                 if (column.isBooked()){%>
-            <td class = "timeIncrementBooking" style="background-color: dodgerblue">
-                <% if (column.isStartOfBooking()){%>
+                    <% if (column.isStartOfBooking()){%>
+                        <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
+                            <div  class="booking" style="background-color: dodgerblue; border-radius: 5%; height:80%; width:100%; margin: auto">
+                                <div style="padding-left: 2px">
+                                    <%=column.getBookingDetails()%>
+                                </div>
+                                <div class="progress" style="height: 10px; background-color: dodgerblue">
+                                    <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
 
-                <%}%>
-                <div class="imageBookingEven" style="width: 0%">
-                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                </div>
-                <div class="currentTimeLine" style="width: 0%">
-                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                </div>
-            </td>
-
+                                        <div class="hiddenTimeIncrementStartTime">
+                                            endTime<%=column.getStartTimeOfBooking()%>
+                                        </div>
+                                        <div class="hiddenTimeIncrementEndTime">
+                                            endTime<%=column.getEndTimeOfBooking()%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    <%}%>
             <%}%>
             <%if (!column.isBooked()){%>
             <td style="font-size: 12px" class="timeIncrement">

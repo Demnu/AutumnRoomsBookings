@@ -20,6 +20,9 @@ public class Rows {
                 tempColumn = new Columns();
                 if (startBookingIncrement == true){
                     tempColumn.setStartOfBooking(true);
+                    tempColumn.setAmountOfTimeIncrements(booking.getTimeIncrementsForBooking().size());
+                    tempColumn.setEndTimeOfBooking(booking.getEndTimeOfBooking());
+                    tempColumn.setStartTimeOfBooking(booking.getStartTimeOfBooking());
                     startBookingIncrement = false;
                 }
                 tempColumn.setTimeIncrement(bookingTimeIncrement.toString());
