@@ -44,14 +44,6 @@
             font-family: Arial;
         }
 
-        div.scroll {
-            overflow-x: auto;
-            overflow-y: hidden;
-            white-space: nowrap;
-        }
-        .darker{
-            filter: brightness(50%);
-        }
         .imageBookingEven{
             width : 100%;
             height : 2em;
@@ -77,7 +69,7 @@
             height : 100%;
             float:left;
             background-color: gold;
-            text-align: center;
+            text-align: center !important;
 
         }
         .imageHiddenOdd {
@@ -112,24 +104,19 @@
         th{
             padding: 0px !important ;
             margin: 0px !important;
-            filter: brightness(100%) !important;
-            border-right: solid 1px grey !important;
-            border-left: solid 1px grey !important;
-            text-align: center;
-            height: 1em;
-
         }
         table{
-            border-collapse: collapse !important;
-
+            padding: 0px !important ;
+            margin: 0px !important;
         }
+
         td {
             padding: 0px !important ;
             margin: 0px !important;
             /*border-right: solid 0.01em #c6c6c6 !important;*/
             /*border-left: solid 0.01em #c6c6c6 !important;*/
             text-align: center;
-            height: 1em;
+            height: 2em;
 
         }
         .hiddenTimeIncrement{
@@ -140,12 +127,55 @@
             font-size: 32px;
             font-family: "Arial";
         }
-        .borderless td, .borderless th {
+        .borderless td {
             border: none;
+        }
+
+        div.wholeTable{
+            overflow:auto;
+            width:100%;
+            height:500px;
+        }
+        td,
+        th {
+            border: 1px solid #000;
+        }
+        th {background-color:red;}
+
+        table {
+            width:100%;
+        }
+        td:first-child, th:first-child {
+            position:sticky;
+            left:0;
+            z-index:1;
+            background-color:grey;
+        }
+        thead tr th {
+            position:sticky;
+            top:0;
+        }
+        th:first-child {z-index:2;background-color:red;}
+
+        bookingDetails{
+
+            position: absolute !important;
+
+        }
+
+        td.timeIncrementBooking{
+            border:none !important;
+            background-color: dodgerblue;
         }
     </style>
 
     <script>
+
+        function sizeTable(){
+            $()
+
+        }
+
         var timeIncrements = new Array();
         function myFunction() {
             setInterval(myFunction, 5000);
@@ -250,121 +280,126 @@
 
     </script>
 </head>
-<body onload="getTimeIncrements(),myFunction()">
+<body onload="getTimeIncrements(),myFunction(),sizeTable()">
 <%--<body>--%>
 
     <jsp:include page="Navbar.jsp"/>
 <br>
-
 <table class="table table-sm borderless">
-    <tr>
-        <td></td>
-        <td></td>
-        <td>
-            <%
-            if (!showDate.isEqual(currentDate)){%>
-            <a class="btn btn-primary" href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
-            <%}%></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
     <tr class="">
         <td class="col-4"></td>
         <td>
             <a class="btn btn-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
         </td>
         <td>
-            <div id="currentDate" href="<%=request.getContextPath()%>/checkBookingAvailability"><%=showDateStr%></div>
+            <%
+                if (!showDate.isEqual(currentDate)){%>
+            <a class="btn btn-primary" href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
+            <%}%></td>
+
         </td>
         <td>
             <a class="btn btn-primary bi bi-chevron-right" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
         </td>
         <td class="col-4"></td>
     </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            <div id="currentDate" href="<%=request.getContextPath()%>/checkBookingAvailability"><%=showDateStr%></div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
 </table>
-            <div class="scroll">
-                <table id="bookingsTable" class="table table-striped table-sm" cellspacing="0" width="100%" style='table-layout:fixed'>
-                    <thead>
-                    <tr>
-                        <th class="th-sm overlay"></th>
-                        <% for (int i = 0 ; i < timeIncrements.size(); i++){ %>
-                        <th class="timeIncrement">
-                            <div class="timeIncrement">
-                                <div class="image" style="width: 0%; font-size: 12px">
-                                    <%=timeIncrements.get(i)%>
-                                </>
-                            </div>
-                        </th>
-                        <%}%>
-                    </tr>
-                    </thead>
-                    <tbody>
+<br>
+<div class="wholeTable">
+    <table id="bookingsTable" class="table table-striped table-sm table-bordered" cellspacing="0" width="100%" style='table-layout:fixed'>
+        <thead>
+        <tr>
+            <th style="background-color: white";></th>
+            <% for (int i = 0 ; i < timeIncrements.size(); i++){ %>
+            <th class="timeIncrement" style="background-color: white;">
+                <div class="timeIncrement">
+                    <div class="image" style="width: 0%; font-size: 12px; ">
+                        <%=timeIncrements.get(i)%>
+                    </div>
+                </div>
+            </th>
+            <%}%>
+        </tr>
+        </thead>
+        <tbody>
 
-                    <%
-                        int i = 0;
-                        for (Rows row : table.getRows()){%>
-                      <tr>
-                          <td><%=row.getTableNumber()%></td>
-                          <%for (Columns column : row.getColumns()){%>
-                              <%if (Functions.isOdd(i)){
-                                  if (column.isBooked()){%>
-                                      <td class = "timeIncrementBooking" style="background-color: dodgerblue">
-                                          <div class="imageBookingOdd" style="width: 0%">
-                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                          </div>
-                                          <div class="currentTimeLine" style="width: 0%">
-                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                          </div>
-                                      </td>
+        <%
+            int i = 0;
+            for (Rows row : table.getRows()){%>
+        <tr>
+            <td><%=row.getTableNumber()%></td>
+            <%for (Columns column : row.getColumns()){%>
+            <%if (Functions.isOdd(i)){
+                if (column.isBooked()){%>
+            <td class = "timeIncrementBooking" style="background-color: dodgerblue">
+                <% if (column.isStartOfBooking()){%>
 
-                                <%}%>
-                                  <%if (!column.isBooked()){%>
-                                          <td style="font-size: 12px" class="timeIncrement">
-                                              <div class="imageHiddenOdd" style="width: 0%">
-                                                  <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                              </div>
-                                              <div class="currentTimeLine" style="width: 0%">
-                                                  <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                              </div>
-                                          </td>
-                                  <%}
-                              }%>
-                              <%if (!Functions.isOdd(i)){
-                                  if (column.isBooked()){%>
-                                      <td class = "timeIncrementBooking" style="background-color: dodgerblue">
-                                          <div class="imageBookingEven" style="width: 0%">
-                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                          </div>
-                                          <div class="currentTimeLine" style="width: 0%">
-                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                          </div>
-                                      </td>
+                <%}%>
+                <div class="imageBookingOdd" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+                <div class="currentTimeLine" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+            </td>
 
-                              <%}%>
-                              <%if (!column.isBooked()){%>
-                                      <td style="font-size: 12px" class="timeIncrement">
-                                          <div class="imageHiddenEven" style="width: 0%">
-                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                          </div>
-                                          <div class="currentTimeLine" style="width: 0%">
-                                              <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
-                                          </div>
-                                      </td>
-                              <%}
-                            }%>
-                          <%}
-                        i++;
-                        }
+            <%}%>
+            <%if (!column.isBooked()){%>
+            <td style="font-size: 12px" class="timeIncrement">
+                <div class="imageHiddenOdd" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+                <div class="currentTimeLine" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+            </td>
+            <%}
+            }%>
+            <%if (!Functions.isOdd(i)){
+                if (column.isBooked()){%>
+            <td class = "timeIncrementBooking" style="background-color: dodgerblue">
+                <% if (column.isStartOfBooking()){%>
 
-                    %>
-                      </tr>
-                    </tbody>
-                </table>
-            </div>
+                <%}%>
+                <div class="imageBookingEven" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+                <div class="currentTimeLine" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+            </td>
 
-    <p id="demo1">test</p>
+            <%}%>
+            <%if (!column.isBooked()){%>
+            <td style="font-size: 12px" class="timeIncrement">
+                <div class="imageHiddenEven" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+                <div class="currentTimeLine" style="width: 0%">
+                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>
+                </div>
+            </td>
+            <%}
+            }%>
+            <%}
+                i++;
+            }
+            %>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
     <br>
     <a class="btn btn-primary" href="<%=request.getContextPath()%>/">Back</a>

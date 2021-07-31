@@ -15,14 +15,18 @@ public class Rows {
         Columns tempColumn;
         ArrayList<LocalTime> timeIncrementsFilled = new ArrayList<>();
         for (Booking booking : servableTable.getBookingsOnDay()){
+            boolean startBookingIncrement = true;
             for (LocalTime bookingTimeIncrement : booking.getTimeIncrementsForBooking()){
                 tempColumn = new Columns();
+                if (startBookingIncrement == true){
+                    tempColumn.setStartOfBooking(true);
+                    startBookingIncrement = false;
+                }
                 tempColumn.setTimeIncrement(bookingTimeIncrement.toString());
                 tempColumn.setBooked(true);
                 tempColumn.setBookingDetails("Harry Collins");
                 tempColumn.setTimeIncrementLocalTime(bookingTimeIncrement);
                 columns.add(tempColumn);
-                System.out.println(bookingTimeIncrement);
                 timeIncrementsFilled.add(bookingTimeIncrement);
             }
         }

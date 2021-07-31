@@ -6,6 +6,7 @@ public class Columns implements Comparable<Columns>{
     private String timeIncrement;
     private boolean booked;
     private String bookingDetails;
+    private boolean startOfBooking = false;
 
     @Override
     public String toString() {
@@ -29,6 +30,7 @@ public class Columns implements Comparable<Columns>{
     public Columns() {
         timeIncrement = "";
         bookingDetails = "";
+        startOfBooking = false;
     }
 
     public LocalTime getTimeIncrementLocalTime() {
@@ -61,5 +63,13 @@ public class Columns implements Comparable<Columns>{
 
     public void setBookingDetails(String bookingDetails) {
         this.bookingDetails = bookingDetails;
+    }
+
+    public boolean isStartOfBooking() {
+        return startOfBooking;
+    }
+
+    public void setStartOfBooking(boolean startOfBooking) {
+        this.startOfBooking = startOfBooking;
     }
 }
