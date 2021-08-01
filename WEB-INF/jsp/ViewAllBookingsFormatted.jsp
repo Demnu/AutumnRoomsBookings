@@ -42,6 +42,7 @@
     <style>
         html, body{
             height: 100%;
+            margin: 0; padding: 0;
             font-family: Arial;
         }
 
@@ -155,7 +156,7 @@
         table {
             width:100%;
         }
-        td:first-child, th:first-child {
+        td:first-child, th:first-child{
             position:sticky;
             left:0;
             z-index:1;
@@ -178,6 +179,14 @@
         .booking{
             padding: 0px !important;
         }
+        .progress{
+            border-radius: 0px!important;
+        }
+        .progress-bar{
+            border-radius: 0px !important
+            background-color: gold!important;
+        }
+
     </style>
 
     <script>
@@ -218,7 +227,7 @@
 
 
                 if(timeIncrementDate<=currentDate){
-                    $("th:contains('" + incrementTime +"')").css("background-color", "gold" );
+                    $("th.header:contains('" + incrementTime +"')").css("background-color", "gold" );
                     $("td.timeIncrement:contains('" + incrementTime +"')").css("background-color", "#fffee0");
                     // $("td.timeIncrementBooking:contains('" + incrementTime +"')").css("background-color", "#1774CF");
                     $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "0%");
@@ -328,7 +337,6 @@
             var totalMinutesOfBooking = (bookingEndTime.getHours()*60 + bookingEndTime.getMinutes())- (bookingStartTime.getHours()*60+bookingStartTime.getMinutes());
             var totalMinutesCurrentTime = currentTime.getHours()*60 + currentTime.getMinutes();
             var result = (totalMinutesCurrentTime/totalMinutesOfBooking)*100;
-            document.getElementById("demo1").innerHTML = bookingEndTime + " " + result + " " + totalMinutesOfBooking + " " + totalMinutesCurrentTime;
 
             $(".progress-bar").each(function() {
                 var currentTime = new Date();
@@ -336,6 +344,7 @@
                 var bookingStartTime = new Date(bookingStartTimes[i]);
                 if (currentTime>bookingEndTime){
                     $(this).css("width","100%")
+                    $(this).removeClass("progress-bar-striped progress-bar-animated")
                 }
                 else if (currentTime<bookingEndTime && currentTime>bookingStartTime){
                     var totalMinutesOfBooking = (bookingEndTime.getHours()*60 + bookingEndTime.getMinutes())-(bookingStartTime.getHours()*60+bookingStartTime.getMinutes());
@@ -345,6 +354,7 @@
                     var result = (currentTime/totalMinutesOfBooking)*100;
                     result +="%"
                     $(this).css("width", result)
+                    $(this).addClass("progress-bar-striped progress-bar-animated")
 
                 }
                 i = i + 1;
@@ -359,7 +369,7 @@
 
     <jsp:include page="Navbar.jsp"/>
 <br>
-<p id="demo1">dfadsf</p>
+<p id="demo1"></p>
 <table class="table table-sm borderless">
     <tr class="">
         <td class="col-4"></td>
@@ -391,18 +401,22 @@
     </tr>
 </table>
 <br>
-<div class="wholeTable">
+<table class="timeTable">
+    <tbody>
+
+    </tbody>
+</table>
+<div class="wholeTable" style="display: flex; flex-direction: column">
+
     <table id="bookingsTable" class="table table-striped table-sm table-bordered" cellspacing="0" width="100%" style='table-layout:fixed'>
         <thead>
         <tr>
-            <th style="background-color: white";></th>
+            <th style="background-color: white;"></th>
             <% for (int i = 0 ; i < timeIncrements.size(); i++){ %>
-            <th class="timeIncrement" style="background-color: white;">
-                <div class="timeIncrement">
-                    <div class="image" style="width: 0%; font-size: 18px; ">
-                        <%=timeIncrements.get(i)%>
-                    </div>
-                </div>
+            <th class="" style="background-color: white;  text-align: right; left: 20px;">
+
+                <%=timeIncrements.get(i)%>
+
             </th>
             <%}%>
         </tr>
@@ -420,22 +434,28 @@
                     <% if (column.isStartOfBooking()){
                         %>
                         <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
-                            <div  class="booking" style="background-color: dodgerblue; height: 100%">
+                            <div  class="booking" style="background-color: dodgerblue; height: 70%; display: flex; justify-content: space-between;">
                                 <div style="padding-left: 2px">
                                     <%=column.getBookingDetails()%>
                                 </div>
-                                <div class="progress" style="height: 10px; background-color: dodgerblue">
-                                    <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
-                                        <div class="hiddenTimeIncrementStartTime">
-                                            startTime<%=column.getStartTimeOfBooking()%>
-                                        </div>
-                                        <div class="hiddenTimeIncrementEndTime">
-                                            endTime<%=column.getEndTimeOfBooking()%>
-                                        </div>
+                                <div style="padding-right: 2px; display: flex">
+                                    <%=todaysBookingsList.get(0).getNumberOfPeople()%>
+                                    <div style="font-size: 10px">
+                                        seats
                                     </div>
                                 </div>
                             </div>
+                            <div class="progress" style="height: 10px; background-color: dodgerblue">
+                                <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
+                                    <div class="hiddenTimeIncrementStartTime">
+                                        startTime<%=column.getStartTimeOfBooking()%>
+                                    </div>
+                                    <div class="hiddenTimeIncrementEndTime">
+                                        endTime<%=column.getEndTimeOfBooking()%>
+                                    </div>
+                                </div>
 
+                            </div>
                         </td>
                     <%}%>
             <%}%>
@@ -454,10 +474,17 @@
                 if (column.isBooked()){%>
                     <% if (column.isStartOfBooking()){
                         %>
-                        <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
-                            <div  class="booking" style="background-color: dodgerblue; height: 100%">
-                                <div style="padding-left: 2px">
-                                    <%=column.getBookingDetails()%>
+                            <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
+                                <div  class="booking" style="background-color: dodgerblue; height: 70%; display: flex; justify-content: space-between;">
+                                    <div style="padding-left: 2px">
+                                        <%=column.getBookingDetails()%>
+                                    </div>
+                                    <div style="padding-right: 2px; display: flex">
+                                        <%=todaysBookingsList.get(0).getNumberOfPeople()%>
+                                        <div style="font-size: 10px">
+                                            seats
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="progress" style="height: 10px; background-color: dodgerblue">
                                     <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
@@ -469,9 +496,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                        </td>
+                            </td>
                     <%}%>
             <%}%>
             <%if (!column.isBooked()){%>
@@ -493,7 +518,6 @@
         </tbody>
     </table>
 </div>
-
     <br>
     <a class="btn btn-primary" href="<%=request.getContextPath()%>/">Back</a>
 </body>
