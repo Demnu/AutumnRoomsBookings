@@ -10,6 +10,7 @@
 <%@ page import="pkg.Columns" %>
 
 <%
+    int k = 0;
     User user = (User) session.getAttribute("user");
     ArrayList<Booking> todaysBookingsList = (ArrayList<Booking>) request.getAttribute("todaysBookingsList");
     Table table = (Table) request.getAttribute("table");
@@ -182,6 +183,8 @@
     <script>
 
         var timeIncrements = new Array();
+        var bookingStartTimes = new Array();
+        var bookingEndTimes = new Array();
         function myFunction() {
             setInterval(myFunction, 5000);
 
@@ -213,18 +216,11 @@
                 var incrementTime = incrementTimeHours + ":" + incrementTimeMinutes;
 
 
-                $('.progress-bar').each(function() {
-                    var endTime = $(this).each();
-                    // $(this).css("width")
-                    document.getElementById("demo1").innerHTML = endTime;
-
-                });
 
                 if(timeIncrementDate<=currentDate){
                     $("th:contains('" + incrementTime +"')").css("background-color", "gold" );
                     $("td.timeIncrement:contains('" + incrementTime +"')").css("background-color", "#fffee0");
                     // $("td.timeIncrementBooking:contains('" + incrementTime +"')").css("background-color", "#1774CF");
-                    $("div.bookingProgress:contains('endTime" + incrementTime +"')").css("width", "100%");
                     $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "0%");
                     $("td.timeIncrementBooking:contains('endTime" + incrementTime +"')").css("background-color", "#fffee0");
                     // $('.bookingProgress').css('width', '100%');
@@ -294,10 +290,71 @@
                 currentMinute+=15;
             }
         }
+        function getBookingTimeIncrements(){
+
+
+            <%
+            for (Rows row : table.getRows()){
+                    for (Columns column : row.getColumns()){
+                        if (column.isStartOfBooking()){%>
+                            var startTime = new Date();
+                            startTime.setSeconds(0);
+                            var endTime = new Date();
+                            endTime.setSeconds(0);
+                            var hoursStartTime = <%=column.getStartTimeHours()%>;
+                            var minutesStartTime = <%=column.getStartTimeMinutes()%>;
+                            var hoursEndTime = <%=column.getEndTimeHours()%>;
+                            var minutesEndTime = <%=column.getEndTimeMinutes()%>;
+                            startTime.setHours(hoursStartTime)
+                            startTime.setMinutes(minutesStartTime)
+                            endTime.setHours(hoursEndTime)
+                            endTime.setMinutes(minutesEndTime)
+                            bookingStartTimes.push(startTime);
+                            bookingEndTimes.push(endTime);
+                        <%}
+                    }
+            }
+            %>
+
+        }
+        function updateProgressBars(){
+            setInterval(updateProgressBars, 5000);
+            let i = 0;
+            var currentTime = new Date();
+            var timeIncrementDate = new Date(bookingEndTimes[0]);
+
+            var bookingEndTime = new Date(bookingEndTimes[3]);
+            var bookingStartTime = new Date(bookingStartTimes[3]);
+            var totalMinutesOfBooking = (bookingEndTime.getHours()*60 + bookingEndTime.getMinutes())- (bookingStartTime.getHours()*60+bookingStartTime.getMinutes());
+            var totalMinutesCurrentTime = currentTime.getHours()*60 + currentTime.getMinutes();
+            var result = (totalMinutesCurrentTime/totalMinutesOfBooking)*100;
+            document.getElementById("demo1").innerHTML = bookingEndTime + " " + result + " " + totalMinutesOfBooking + " " + totalMinutesCurrentTime;
+
+            $(".progress-bar").each(function() {
+                var currentTime = new Date();
+                var bookingEndTime = new Date(bookingEndTimes[i]);
+                var bookingStartTime = new Date(bookingStartTimes[i]);
+                if (currentTime>bookingEndTime){
+                    $(this).css("width","100%")
+                }
+                else if (currentTime<bookingEndTime && currentTime>bookingStartTime){
+                    var totalMinutesOfBooking = (bookingEndTime.getHours()*60 + bookingEndTime.getMinutes())-(bookingStartTime.getHours()*60+bookingStartTime.getMinutes());
+                    var totalMinutesAtStartOfBooking = (bookingStartTime.getHours()*60 + bookingStartTime.getMinutes());
+                    var totalMinutesCurrentTime = currentTime.getHours()*60 + currentTime.getMinutes();
+                    var currentTime = totalMinutesCurrentTime - totalMinutesAtStartOfBooking;
+                    var result = (currentTime/totalMinutesOfBooking)*100;
+                    result +="%"
+                    $(this).css("width", result)
+
+                }
+                i = i + 1;
+            });
+
+        }
 
     </script>
 </head>
-<body onload="getTimeIncrements(),myFunction(),sizeTable()">
+<body onload="getTimeIncrements(),myFunction(),getBookingTimeIncrements(),updateProgressBars()">
 <%--<body>--%>
 
     <jsp:include page="Navbar.jsp"/>
@@ -360,23 +417,25 @@
             <%for (Columns column : row.getColumns()){%>
             <%if (Functions.isOdd(i)){
                 if (column.isBooked()){%>
-                    <% if (column.isStartOfBooking()){%>
+                    <% if (column.isStartOfBooking()){
+                        %>
                         <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
-                            <div  class="booking" style="background-color: dodgerblue; border-radius: 5%;">
+                            <div  class="booking" style="background-color: dodgerblue; height: 100%">
                                 <div style="padding-left: 2px">
                                     <%=column.getBookingDetails()%>
                                 </div>
-                            </div>
-                            <div class="progress" style="height: 10px; background-color: dodgerblue">
-                                <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
-                                    <div class="hiddenTimeIncrementStartTime">
-                                        startTime<%=column.getStartTimeOfBooking()%>
-                                    </div>
-                                    <div class="hiddenTimeIncrementEndTime">
-                                        endTime<%=column.getEndTimeOfBooking()%>
+                                <div class="progress" style="height: 10px; background-color: dodgerblue">
+                                    <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
+                                        <div class="hiddenTimeIncrementStartTime">
+                                            startTime<%=column.getStartTimeOfBooking()%>
+                                        </div>
+                                        <div class="hiddenTimeIncrementEndTime">
+                                            endTime<%=column.getEndTimeOfBooking()%>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </td>
                     <%}%>
             <%}%>
@@ -393,17 +452,17 @@
             }%>
             <%if (!Functions.isOdd(i)){
                 if (column.isBooked()){%>
-                    <% if (column.isStartOfBooking()){%>
+                    <% if (column.isStartOfBooking()){
+                        %>
                         <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">
-                            <div  class="booking" style="background-color: dodgerblue; border-radius: 5%; height:80%; width:100%; margin: auto">
+                            <div  class="booking" style="background-color: dodgerblue; height: 100%">
                                 <div style="padding-left: 2px">
                                     <%=column.getBookingDetails()%>
                                 </div>
                                 <div class="progress" style="height: 10px; background-color: dodgerblue">
                                     <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">
-
                                         <div class="hiddenTimeIncrementStartTime">
-                                            endTime<%=column.getStartTimeOfBooking()%>
+                                            startTime<%=column.getStartTimeOfBooking()%>
                                         </div>
                                         <div class="hiddenTimeIncrementEndTime">
                                             endTime<%=column.getEndTimeOfBooking()%>
@@ -411,6 +470,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </td>
                     <%}%>
             <%}%>

@@ -16,21 +16,30 @@ public class Rows {
         ArrayList<LocalTime> timeIncrementsFilled = new ArrayList<>();
         for (Booking booking : servableTable.getBookingsOnDay()){
             boolean startBookingIncrement = true;
+            boolean firstIncrementSkipped = false;
             for (LocalTime bookingTimeIncrement : booking.getTimeIncrementsForBooking()){
                 tempColumn = new Columns();
-                if (startBookingIncrement == true){
-                    tempColumn.setStartOfBooking(true);
-                    tempColumn.setAmountOfTimeIncrements(booking.getTimeIncrementsForBooking().size());
-                    tempColumn.setEndTimeOfBooking(booking.getEndTimeOfBooking());
-                    tempColumn.setStartTimeOfBooking(booking.getStartTimeOfBooking());
-                    startBookingIncrement = false;
+                if (firstIncrementSkipped == false){
+                    firstIncrementSkipped = true;
                 }
-                tempColumn.setTimeIncrement(bookingTimeIncrement.toString());
-                tempColumn.setBooked(true);
-                tempColumn.setBookingDetails("Harry Collins");
-                tempColumn.setTimeIncrementLocalTime(bookingTimeIncrement);
-                columns.add(tempColumn);
-                timeIncrementsFilled.add(bookingTimeIncrement);
+                else{
+                    tempColumn = new Columns();
+                    if (startBookingIncrement == true){
+                        tempColumn.setStartOfBooking(true);
+                        tempColumn.setAmountOfTimeIncrements(booking.getTimeIncrementsForBooking().size());
+                        tempColumn.setEndTimeOfBooking(booking.getEndTimeOfBookingLocalTime());
+                        tempColumn.setStartTimeOfBooking(booking.getStartTimeOfBooking());
+                        tempColumn.setEndTimeOfBookingLocalTime(booking.getEndTimeOfBookingLocalTime());
+                        tempColumn.setStartTimeOfBookingLocalTime(booking.getStartTimeOfBookingLocalTime());
+                        startBookingIncrement = false;
+                    }
+                    tempColumn.setTimeIncrementLocalTime(bookingTimeIncrement);
+                    tempColumn.setTimeIncrement(bookingTimeIncrement.toString());
+                    tempColumn.setBooked(true);
+                    tempColumn.setBookingDetails("Harry Collins");
+                    columns.add(tempColumn);
+                    timeIncrementsFilled.add(bookingTimeIncrement);
+                }
             }
         }
         boolean timeIncrementIsFilled;

@@ -5,7 +5,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Booking {
+public class Booking implements Comparable{
     private int bookingID;
     private int staffID;
     private Date dateBooked;
@@ -161,5 +161,10 @@ public class Booking {
 
         }
         return  timeIncrementsForBooking;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

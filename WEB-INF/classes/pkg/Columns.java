@@ -11,6 +11,8 @@ public class Columns implements Comparable<Columns>{
     private int amountOfTimeIncrements;
     private String endTimeOfBooking;
     private String startTimeOfBooking;
+    private LocalTime endTimeOfBookingLocalTime;
+    private LocalTime startTimeOfBookingLocalTime;
     @Override
     public String toString() {
         if (bookingDetails.isEmpty()){
@@ -83,33 +85,36 @@ public class Columns implements Comparable<Columns>{
     }
 
     public void setAmountOfTimeIncrements(int amountOfTimeIncrements) {
-        this.amountOfTimeIncrements = amountOfTimeIncrements;
+        this.amountOfTimeIncrements = amountOfTimeIncrements-1;
     }
 
     public String getEndTimeOfBooking() {
         return endTimeOfBooking;
     }
 
-    public void setEndTimeOfBooking(Time endTimeOfBooking) {
-        String time;
-        int hoursInt = endTimeOfBooking.getHours();
-        int minutesInt = endTimeOfBooking.getMinutes();
-        String hoursStr;
-        String minutesStr;
-        if (hoursInt < 10){
-            hoursStr = "0" + hoursInt;
-        }
-        else{
-            hoursStr = Integer.toString(hoursInt);
-        }
-        if (endTimeOfBooking.getMinutes()==0){
-            minutesStr ="00";
-        }
-        else{
-            minutesStr = Integer.toString(minutesInt);
-        }
-        time = hoursStr + ":" + minutesStr;
-        this.endTimeOfBooking = time;
+    public void setEndTimeOfBooking(LocalTime endTimeOfBooking) {
+
+        LocalTime tempLocalTime = endTimeOfBooking.plusMinutes(15);
+        this.endTimeOfBooking = tempLocalTime.toString();
+//        String time;
+//        int hoursInt = endTimeOfBooking.getHours();
+//        int minutesInt = endTimeOfBooking.getMinutes();
+//        String hoursStr;
+//        String minutesStr;
+//        if (hoursInt < 10){
+//            hoursStr = "0" + hoursInt;
+//        }
+//        else{
+//            hoursStr = Integer.toString(hoursInt);
+//        }
+//        if (endTimeOfBooking.getMinutes()==0){
+//            minutesStr ="00";
+//        }
+//        else{
+//            minutesStr = Integer.toString(minutesInt);
+//        }
+//        time = hoursStr + ":" + minutesStr;
+//        this.endTimeOfBooking = time;
     }
 
     public String getStartTimeOfBooking() {
@@ -136,5 +141,35 @@ public class Columns implements Comparable<Columns>{
         }
         time = hoursStr + ":" + minutesStr;
         this.startTimeOfBooking = time;
+    }
+
+    public LocalTime getEndTimeOfBookingLocalTime() {
+        return endTimeOfBookingLocalTime;
+    }
+
+    public void setEndTimeOfBookingLocalTime(LocalTime endTimeOfBookingLocalTime) {
+        this.endTimeOfBookingLocalTime = endTimeOfBookingLocalTime;
+    }
+
+    public LocalTime getStartTimeOfBookingLocalTime() {
+        return startTimeOfBookingLocalTime;
+    }
+
+    public void setStartTimeOfBookingLocalTime(LocalTime startTimeOfBookingLocalTime) {
+        this.startTimeOfBookingLocalTime = startTimeOfBookingLocalTime;
+    }
+
+    public int getStartTimeHours(){
+        return startTimeOfBookingLocalTime.getHour();
+    }
+    public int getStartTimeMinutes(){
+        return startTimeOfBookingLocalTime.getMinute();
+    }
+
+    public int getEndTimeHours(){
+        return endTimeOfBookingLocalTime.getHour();
+    }
+    public int getEndTimeMinutes(){
+        return endTimeOfBookingLocalTime.getMinute();
     }
 }
