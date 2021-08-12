@@ -35,14 +35,14 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Sections</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Edit Sections</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/selectSectionAddTable">Tables</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/selectSectionAddTable">Edit Tables</a>
             </li>
             <li class="nav-item">
-
+                <a class="nav-link" href="${pageContext.request.contextPath}/selectEditVenueDetails">Edit Venue Details</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a>

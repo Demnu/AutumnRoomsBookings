@@ -36,7 +36,7 @@ public class LoginController extends HttpServlet {
         User user;
         Integer password = Integer.parseInt(passwordStr);
         if (UserDatabaseInterface.checkUserDetails(username,password)){
-            user = new User(username,password);
+            user = UserDatabaseInterface.getUserDetails(username,password);
             session.setAttribute("user",user);
         }
         else {

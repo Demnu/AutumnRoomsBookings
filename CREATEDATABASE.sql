@@ -46,3 +46,34 @@ CREATE TABLE TableBookings(
                               FOREIGN KEY (tableID) REFERENCES ServableTable(tableID),
                               FOREIGN KEY (bookingID) REFERENCES Booking(bookingID)
 );
+CREATE TABLE VenueDetails(
+                             venueID INT NOT NULL auto_increment,
+                             venueName VARCHAR(80) NOT NULL,
+                             openTimeMonday TIME,
+                             closeTimeMonday TIME,
+                             openTimeTuesday TIME,
+                             closeTimeTuesday TIME,
+                             openTimeWednesday TIME,
+                             closeTimeWednesday TIME,
+                             openTimeThursday TIME,
+                             closeTimeThursday TIME,
+                             openTimeFriday TIME,
+                             closeTimeFriday TIME,
+                             openTimeSaturday TIME,
+                             closeTimeSaturday TIME,
+                             openTimeSunday TIME,
+                             closeTimeSunday TIME,
+                             maximumCovers INT,
+                             primary key (venueID)
+
+)
+
+CREATE TABLE changedDate(
+                            changedDateID INT NOT NULL auto_increment,
+                            changedDate DATE NOT NULL,
+                            changedOpenTime TIME NOT NULL,
+                            changedCloseTime TIME NOT NULL,
+                            venueID int,
+                            PRIMARY KEY (changedDateID),
+                            FOREIGN KEY (venueID) REFERENCES VenueDetails(venueID)
+);

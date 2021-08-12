@@ -69,6 +69,7 @@ public class CheckBookingAvailabilityStaffController extends HttpServlet {
 
         //get
 
+
         for (int i = 0 ; i<availableServableTables.size() ; i++){
             for (int j = 0 ; j<bookingsOnDay.size() ; j++){
                 for (int k = 0; k<bookingsOnDay.get(j).getAssignedTables().size(); k++){

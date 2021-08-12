@@ -7,6 +7,7 @@ public class User implements Serializable {
     private String username;
     private Integer password;
     private Integer staffID;
+    private Integer venueID;
     User(){
         name = null;
         password = null;
@@ -26,11 +27,28 @@ public class User implements Serializable {
         return username;
     }
 
-    public Integer getPassword() {
-        return password;
-    }
 
     public Integer getStaffID() {
         return staffID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setStaffID(Integer staffID) {
+        this.staffID = staffID;
+    }
+
+    public Integer getVenueID() {
+        return venueID;
+    }
+
+    public void setVenueID(Integer venueID) {
+        this.venueID = venueID;
     }
 }

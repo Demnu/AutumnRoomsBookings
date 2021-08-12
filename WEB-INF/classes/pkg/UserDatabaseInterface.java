@@ -88,5 +88,31 @@ public class UserDatabaseInterface {
         }
         return null;
     }
+
+    public static User getUserDetails(String username, Integer password) {
+        String query = "SELECT* FROM Staff WHERE username=? AND password=?";
+        User user = new User();
+        try(Connection connection = ConfigBean.getConnection();){
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            preparedStatement.setInt(2, password);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                user.setStaffID(result.getInt(1));
+                user.setName(result.getString(2));
+                user.setUsername(result.getString(3));
+                user.setVenueID(result.getInt(5));
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return user;
+    }
 }
 
