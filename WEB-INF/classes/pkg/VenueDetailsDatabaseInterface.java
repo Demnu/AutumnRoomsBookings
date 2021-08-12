@@ -19,62 +19,20 @@ public class VenueDetailsDatabaseInterface {
             while(result.next()){
                 tempVenue.setVenueID(1);
                 tempVenue.setVenueName(result.getString(2));
-                if (result.getTime(3)!=null){
-                    openTimes.add(result.getTime(3).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(4)!=null){
-                    closeTimes.add(result.getTime(4).toLocalTime());
-                }
-                closeTimes.add(null);
-                if (result.getTime(5)!=null){
-                    openTimes.add(result.getTime(5).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(6)!=null){
-                    closeTimes.add(result.getTime(6).toLocalTime());
-                }
-                closeTimes.add(null);
-                if (result.getTime(7)!=null){
-                    openTimes.add(result.getTime(7).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(8)!=null){
-                    closeTimes.add(result.getTime(8).toLocalTime());
-                }
-                closeTimes.add(null);
-                if (result.getTime(9)!=null){
-                    openTimes.add(result.getTime(9).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(10)!=null){
-                    closeTimes.add(result.getTime(10).toLocalTime());
-                }
-                closeTimes.add(null);
-                if (result.getTime(11)!=null){
-                    openTimes.add(result.getTime(11).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(12)!=null){
-                    closeTimes.add(result.getTime(12).toLocalTime());
-                }
-                closeTimes.add(null);
-                if (result.getTime(13)!=null){
-                    openTimes.add(result.getTime(13).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(14)!=null){
-                    closeTimes.add(result.getTime(14).toLocalTime());
-                }
-                closeTimes.add(null);
-                if (result.getTime(15)!=null){
-                    openTimes.add(result.getTime(15).toLocalTime());
-                }
-                openTimes.add(null);
-                if (result.getTime(16)!=null){
-                    closeTimes.add(result.getTime(16).toLocalTime());
-                }
-                closeTimes.add(null);
+                openTimes.add(result.getTime(3).toLocalTime());
+                closeTimes.add(result.getTime(4).toLocalTime());
+                openTimes.add(result.getTime(5).toLocalTime());
+                closeTimes.add(result.getTime(6).toLocalTime());
+                openTimes.add(result.getTime(7).toLocalTime());
+                closeTimes.add(result.getTime(8).toLocalTime());
+                openTimes.add(result.getTime(9).toLocalTime());
+                closeTimes.add(result.getTime(10).toLocalTime());
+                openTimes.add(result.getTime(11).toLocalTime());
+                closeTimes.add(result.getTime(12).toLocalTime());
+                openTimes.add(result.getTime(13).toLocalTime());
+                closeTimes.add(result.getTime(14).toLocalTime());
+                openTimes.add(result.getTime(15).toLocalTime());
+                closeTimes.add(result.getTime(16).toLocalTime());
                 tempVenue.setOpenTimes(openTimes);
                 tempVenue.setCloseTimes(closeTimes);
                 tempVenue.setMaxCovers(result.getInt(17));
@@ -91,47 +49,35 @@ public class VenueDetailsDatabaseInterface {
         return null;
     }
 
-    public static Integer getStaffID(String username, Integer password) {
-        String query = "SELECT staffID FROM Staff WHERE username =? AND password=?";
-        try(Connection connection = ConfigBean.getConnection();){
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, username);
-            preparedStatement.setInt(2, password);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                return result.getInt(1);
-            }
-            result.close();
-            preparedStatement.close();
+    public static void editVenueTimes(int venueID, Time mondayOpenTime, Time mondayCloseTime, Time tuesdayOpenTime, Time tuesdayCloseTime, Time wednesdayOpenTime, Time wednesdayCloseTime, Time thursdayOpenTime, Time thursdayCloseTime, Time fridayOpenTime, Time fridayCloseTime, Time saturdayOpenTime, Time saturdayCloseTime, Time sundayOpenTime, Time sundayCloseTime) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE VenueDetails SET openTimeMonday=?, closeTimeMonday=?, openTimeTuesday=?, closeTimeTuesday=?, openTimeWednesday=?, closeTimeWednesday=?, openTimeThursday=?, closeTimeThursday=?, openTimeFriday=?, closeTimeFriday=?, openTimeSaturday=?, closeTimeSaturday=?, openTimeSunday=?, closeTimeSunday=? WHERE venueID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setTime(1, mondayOpenTime);
+            s.setTime(2, mondayCloseTime);
+            s.setTime(3, tuesdayOpenTime);
+            s.setTime(4, tuesdayCloseTime);
+            s.setTime(5, wednesdayOpenTime);
+            s.setTime(6, wednesdayCloseTime);
+            s.setTime(7, thursdayOpenTime);
+            s.setTime(8, thursdayCloseTime);
+            s.setTime(9, fridayOpenTime);
+            s.setTime(10, fridayCloseTime);
+            s.setTime(11, saturdayOpenTime);
+            s.setTime(12, saturdayCloseTime);
+            s.setTime(13, sundayOpenTime);
+            s.setTime(14, sundayCloseTime);
+            s.setInt(15,venueID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
             connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return null;
-    }
 
-    public static String getStaffNameInputtedStaffID(int staffID) {
-        String query = "SELECT username FROM Staff WHERE staffID =?";
-        try(Connection connection = ConfigBean.getConnection();){
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, staffID);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                return result.getString(1);
-            }
-            result.close();
-            preparedStatement.close();
-            connection.close();
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return null;
     }
 }
 

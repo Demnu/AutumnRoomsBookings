@@ -1,6 +1,7 @@
 package pkg;
 
 import java.lang.reflect.Array;
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.time.Duration;
@@ -23,6 +24,8 @@ public class VenueDetails {
     public VenueDetails() {
 
     }
+
+
 
     public LocalTime getTimeVenueCloses() {
         return timeVenueCloses;

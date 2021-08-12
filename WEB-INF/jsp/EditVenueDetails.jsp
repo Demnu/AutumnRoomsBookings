@@ -10,6 +10,7 @@
     VenueDetails venueDetails = (VenueDetails) request.getAttribute("venueDetails");
     ArrayList<LocalTime>timeIncrementsList = Functions.getTimeIncrementsFrom0To24Hours();
     ArrayList<String> dayNames = Functions.getDayNames();
+    ArrayList<String> errors = (ArrayList<String>) request.getAttribute("errors");
 %>
 <!DOCTYPE html>
 <html>
@@ -32,6 +33,7 @@
             <div class="row">
                 <h4>All Bookings</h4>
                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+
                     <thead>
                     <tr>
                         <th class="th-sm">Venue Name</th>
@@ -59,19 +61,24 @@
             <div class="row">
                 <h4>All Bookings</h4>
                 <table id="openAndCloseTimes" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                    <%
+                        if (errors != null){%>
+                            <tr class="bg-danger">
+                                <td colspan="7"><%=errors%></td>
+                            </tr>
+                    <%}%>
                     <thead>
                     <tr>
                         <th class="th-sm">Day</th>
                         <th class="th-sm">Open Time</th>
                         <th class="th-sm">Close Time</th>
-                        <th></th>
 
                     </tr>
                     </thead>
                     <tbody>
                         <% for (int j = 0 ; j<dayNames.size(); j ++){%>
                         <tr>
-                            <form action="editTimeGivenDay" method="POST" name="editSingleTable" id="editSingleTable">
+                            <form action="selectEditVenueDetails" method="POST" name="editSingleTable" id="editSingleTable">
 
                                 <div class="form-group">
                                     <input type="hidden" name="day" value="<%=dayNames.size()-1%>">
@@ -80,7 +87,7 @@
                                     </td>
 
                                     <td>
-                                        <select class="form-control" name="openTime">
+                                        <select class="form-control" name="<%=dayNames.get(j)%>OpenTime">
                                             <option value="<%=venueDetails.getOpenTimes().get(j)%>"><%=venueDetails.getOpenTimes().get(j)%></option>
                                             <%
                                                 for (LocalTime localTime : timeIncrementsList){%>
@@ -91,7 +98,7 @@
                                     </td>
 
                                     <td>
-                                        <select class="form-control" name="closeTIme">
+                                        <select class="form-control" name="<%=dayNames.get(j)%>CloseTime">
                                             <option value="<%=venueDetails.getCloseTimes().get(j)%>"><%=venueDetails.getCloseTimes().get(j)%></option>
                                             <%
                                                 for (LocalTime localTime : timeIncrementsList){%>
@@ -100,15 +107,17 @@
                                             %>
                                         </select>
                                     </td>
-                                    <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit <%=dayNames.get(j)%></button></td>
                                 </div>
-                            </form>
 
 
                         </tr>
                         <%}%>
                     </tbody>
                 </table>
+                <button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Times</button>
+
+                </form>
+
             </div>
         </div>
 
