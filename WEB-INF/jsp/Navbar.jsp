@@ -31,10 +31,6 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/viewAllBookings">View Bookings</a>
-            </li>
-
-            <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/createSection">Edit Sections</a>
             </li>
 
@@ -42,11 +38,21 @@
                 <a class="nav-link" href="${pageContext.request.contextPath}/selectSectionAddTable">Edit Tables</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/selectEditVenueDetails">Edit Venue Details</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/editOpenCloseTimes">Edit Open/Close Times</a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/viewAllBookings">Edit Bookings</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/editVenueDetails">Edit Venue Details</a>
+            </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a>
             </li>
+
         </ul>
     </div>
 </nav>

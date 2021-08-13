@@ -13,10 +13,12 @@ public class User implements Serializable {
         password = null;
     }
     User(String username, Integer password){
-        this.username =username;
-        this.password = password;
-        this.name = UserDatabaseInterface.getStaffName(username,password);
-        this.staffID = UserDatabaseInterface.getStaffID(username,password);
+        User tempUser = UserDatabaseInterface.getUserDetails(username,password);
+        this.username = username;
+        this.name = tempUser.getName();
+        this.staffID = tempUser.staffID;
+        this.venueID = tempUser.getVenueID();
+
     }
 
     public String getName() {

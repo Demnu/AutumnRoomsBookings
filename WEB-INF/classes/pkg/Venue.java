@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.time.Duration;
 
-public class VenueDetails {
+public class Venue {
     private String venueName;
     private int venueID;
     private LocalTime timeVenueOpens;
@@ -17,11 +17,11 @@ public class VenueDetails {
     private ArrayList<ChangedDateTimes> changedDateTimes;
     private int maxCovers;
 
-    public VenueDetails(String venueName) {
+    public Venue(String venueName) {
 
     }
 
-    public VenueDetails() {
+    public Venue() {
 
     }
 
@@ -31,7 +31,7 @@ public class VenueDetails {
         return timeVenueCloses;
     }
 
-    public VenueDetails(LocalTime timeVenueOpens, LocalTime timeVenueCloses) {
+    public Venue(LocalTime timeVenueOpens, LocalTime timeVenueCloses) {
         this.timeVenueOpens = timeVenueOpens;
         this.timeVenueCloses = timeVenueCloses;
         timeIncrements = new ArrayList<LocalTime>();

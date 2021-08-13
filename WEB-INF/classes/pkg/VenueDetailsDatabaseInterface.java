@@ -6,18 +6,19 @@ import java.util.ArrayList;
 
 public class VenueDetailsDatabaseInterface {
 
-    public static VenueDetails getVenueDetails(String venueName){
-        VenueDetails tempVenue = new VenueDetails();
+    public static Venue getOpenCloseTimes(int venueID){
+        Venue tempVenue = new Venue();
         ArrayList<LocalTime> openTimes = new ArrayList<>();
         ArrayList<LocalTime> closeTimes = new ArrayList<>();
-        String query = "SELECT* FROM VenueDetails WHERE venueName =?";
+        String query = "SELECT* FROM VenueDetails WHERE venueID =?";
         try(Connection connection = ConfigBean.getConnection();){
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, venueName);
+            preparedStatement.setInt(1, venueID);
             ResultSet result = preparedStatement.executeQuery();
             while(result.next()){
                 tempVenue.setVenueID(1);
+
                 tempVenue.setVenueName(result.getString(2));
                 openTimes.add(result.getTime(3).toLocalTime());
                 closeTimes.add(result.getTime(4).toLocalTime());
@@ -36,6 +37,7 @@ public class VenueDetailsDatabaseInterface {
                 tempVenue.setOpenTimes(openTimes);
                 tempVenue.setCloseTimes(closeTimes);
                 tempVenue.setMaxCovers(result.getInt(17));
+
             }
             result.close();
             preparedStatement.close();
@@ -48,6 +50,33 @@ public class VenueDetailsDatabaseInterface {
         }
         return null;
     }
+
+    public static Venue getVenueDetails(int venueID){
+        Venue tempVenue = new Venue();
+        String query = "SELECT* FROM VenueDetails WHERE venueID =?";
+        try(Connection connection = ConfigBean.getConnection();){
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, venueID);
+            ResultSet result = preparedStatement.executeQuery();
+
+            while(result.next()){
+                tempVenue.setVenueID(1);
+                tempVenue.setVenueName(result.getString(2));
+                tempVenue.setMaxCovers(result.getInt(17));
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+            return tempVenue;
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return null;
+    }
+
 
     public static void editVenueTimes(int venueID, Time mondayOpenTime, Time mondayCloseTime, Time tuesdayOpenTime, Time tuesdayCloseTime, Time wednesdayOpenTime, Time wednesdayCloseTime, Time thursdayOpenTime, Time thursdayCloseTime, Time fridayOpenTime, Time fridayCloseTime, Time saturdayOpenTime, Time saturdayCloseTime, Time sundayOpenTime, Time sundayCloseTime) {
         try {
@@ -78,6 +107,23 @@ public class VenueDetailsDatabaseInterface {
             e.printStackTrace();
         }
 
+    }
+
+    public static void editMaxCovers(int venueID, Integer maxCovers) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE VenueDetails SET maximumCovers=? WHERE venueID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setInt(1, maxCovers);
+            s.setInt(2, venueID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -1,16 +1,13 @@
 <%@ page contentType="text/html;"%>
 <%@ page import="java.util.*" %>
 <%@ page import="pkg.User" %>
-<%@ page import="pkg.VenueDetails" %>
+<%@ page import="pkg.Venue" %>
 <%@ page import="pkg.Functions" %>
 <%@ page import="java.time.LocalTime" %>
 
 <%
     User user = (User) session.getAttribute("user");
-    VenueDetails venueDetails = (VenueDetails) request.getAttribute("venueDetails");
-    ArrayList<LocalTime>timeIncrementsList = Functions.getTimeIncrementsFrom0To24Hours();
-    ArrayList<String> dayNames = Functions.getDayNames();
-    ArrayList<String> errors = (ArrayList<String>) request.getAttribute("errors");
+    Venue venueDetails = (Venue) request.getAttribute("venueDetails");
 %>
 <!DOCTYPE html>
 <html>
@@ -27,104 +24,53 @@
 <div class="container">
     <div class="card w-100">
         <div class="card-header">
-            <h2>Welcome <%=user.getName()%> to the Autumn Rooms Booking System</h2>
+            <h2>Edit Venue Details</h2>
         </div>
         <div class="card-body">
             <div class="row">
-                <h4>All Bookings</h4>
+
+                <h4>Details</h4>
                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 
-                    <thead>
+                    <tbody>
                     <tr>
-                        <th class="th-sm">Venue Name</th>
-                        <th class="th-sm">Maximum Covers</th>
+                        <form action="selectEditVenueDetails" method="POST" name="editVenueName" id="editVenueName">
+                            <td>
+                                Venue Name
+                            </td>
+                            <td>
+                                <input name="maxCovers" class="form-control" type="text" value="<%=venueDetails.getVenueName()%>">
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Venue Name</button>
+                            </td>
+                        </form>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            Maximum Covers
+                        </td>
+                        <form action="selectEditVenueDetails" method="POST" name="editMaxCovers" id="editMaxCovers">
+                        <td>
+                            <div class="form-group">
+                                    <input name="maxCovers" class="form-control" type="number" value="<%=venueDetails.getMaxCovers()%>">
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Max Covers</button>
+                        </td>
+                        </form>
 
                     </tr>
-                    </thead>
-                    <tbody>
-
-                    <form action="editSingleSection" method="POST" name="editSectionForm" id="editSectionForm">
-                        <tr>
-                            <td>
-                                <%=venueDetails.getVenueName()%>
-                            </td>
-
-                            <td>
-                                <%=venueDetails.getMaxCovers()%>
-                            </td>
-
-                        </tr>
-                    </form>
                     </tbody>
                 </table>
-            </div>
-            <div class="row">
-                <h4>All Bookings</h4>
-                <table id="openAndCloseTimes" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-                    <%
-                        if (errors != null){%>
-                            <tr class="bg-danger">
-                                <td colspan="7"><%=errors%></td>
-                            </tr>
-                    <%}%>
-                    <thead>
-                    <tr>
-                        <th class="th-sm">Day</th>
-                        <th class="th-sm">Open Time</th>
-                        <th class="th-sm">Close Time</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <% for (int j = 0 ; j<dayNames.size(); j ++){%>
-                        <tr>
-                            <form action="selectEditVenueDetails" method="POST" name="editSingleTable" id="editSingleTable">
-
-                                <div class="form-group">
-                                    <input type="hidden" name="day" value="<%=dayNames.size()-1%>">
-                                    <td>
-                                        <%=dayNames.get(j)%>
-                                    </td>
-
-                                    <td>
-                                        <select class="form-control" name="<%=dayNames.get(j)%>OpenTime">
-                                            <option value="<%=venueDetails.getOpenTimes().get(j)%>"><%=venueDetails.getOpenTimes().get(j)%></option>
-                                            <%
-                                                for (LocalTime localTime : timeIncrementsList){%>
-                                                    <option value="<%=localTime%>"><%=localTime%></option>
-                                            <%  }
-                                            %>
-                                        </select>
-                                    </td>
-
-                                    <td>
-                                        <select class="form-control" name="<%=dayNames.get(j)%>CloseTime">
-                                            <option value="<%=venueDetails.getCloseTimes().get(j)%>"><%=venueDetails.getCloseTimes().get(j)%></option>
-                                            <%
-                                                for (LocalTime localTime : timeIncrementsList){%>
-                                            <option value="<%=localTime%>"><%=localTime%></option>
-                                            <%  }
-                                            %>
-                                        </select>
-                                    </td>
-                                </div>
-
-
-                        </tr>
-                        <%}%>
-                    </tbody>
-                </table>
-                <button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Times</button>
-
-                </form>
-
             </div>
         </div>
-
-
+    <a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/">Back</a>
+    </div>
     </div>
     <br>
-    <a class="btn btn-primary" href="<%=request.getContextPath()%>/">Back</a>
 
 </div>
 </body>

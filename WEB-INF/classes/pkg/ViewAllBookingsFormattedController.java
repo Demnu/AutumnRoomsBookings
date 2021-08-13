@@ -51,7 +51,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         //Get Venues Open time and Close time for today
         LocalTime openTime = LocalTime.of(8,0,0);
         LocalTime closeTime = LocalTime.of(15,0,0);
-        VenueDetails venueDetails = new VenueDetails(openTime,closeTime);
+        Venue venueDetails = new Venue(openTime,closeTime);
         //Get time increments for day
         ArrayList<LocalTime> timeIncrements = venueDetails.getTimeIncrements();
 
