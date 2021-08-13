@@ -26,7 +26,6 @@ public class EditOpenCloseTimesController extends HttpServlet {
 
         Venue openCloseTimes = VenueDetailsDatabaseInterface.getOpenCloseTimes(user.getVenueID());
         openCloseTimes.setChangedDateTimes();
-        System.out.println(openCloseTimes.getCloseTimes().get(0));
         request.setAttribute("openCloseTimes",openCloseTimes);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/EditOpenCloseTimes.jsp");
         dispatcher.forward(request, response);
@@ -103,9 +102,9 @@ public class EditOpenCloseTimesController extends HttpServlet {
             }
 
 
-        Venue venueDetails = VenueDetailsDatabaseInterface.getVenueDetails(user.getVenueID());
-        venueDetails.setChangedDateTimes();
-        request.setAttribute("openCloseTimes",venueDetails);
+        Venue openCloseTimes = VenueDetailsDatabaseInterface.getOpenCloseTimes(user.getVenueID());
+        openCloseTimes.setChangedDateTimes();
+        request.setAttribute("openCloseTimes",openCloseTimes);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/EditOpenCloseTimes.jsp");
         dispatcher.forward(request, response);
         return;

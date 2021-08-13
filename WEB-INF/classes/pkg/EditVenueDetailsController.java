@@ -40,9 +40,8 @@ public class EditVenueDetailsController extends HttpServlet {
         Integer maxCovers = Integer.parseInt(maxCoversStr);
         VenueDetailsDatabaseInterface.editMaxCovers(1,maxCovers);
         Venue venueDetails = VenueDetailsDatabaseInterface.getVenueDetails(user.getVenueID());
-        venueDetails.setChangedDateTimes();
         request.setAttribute("venueDetails",venueDetails);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/EditOpenCloseTimes.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/EditVenueDetails.jsp");
         dispatcher.forward(request, response);
         return;
 

@@ -74,6 +74,7 @@ CREATE TABLE changedDate(
                             changedOpenTime TIME NOT NULL,
                             changedCloseTime TIME NOT NULL,
                             venueID int,
+                            description VARCHAR(64) NOT NULL,
                             PRIMARY KEY (changedDateID),
                             FOREIGN KEY (venueID) REFERENCES VenueDetails(venueID)
 );

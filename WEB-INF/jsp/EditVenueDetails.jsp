@@ -28,16 +28,14 @@
         </div>
         <div class="card-body">
             <div class="row">
-
-                <h4>Details</h4>
                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 
                     <tbody>
                     <tr>
-                        <form action="selectEditVenueDetails" method="POST" name="editVenueName" id="editVenueName">
-                            <td>
+                        <form action="editVenueDetails" method="POST" name="editVenueName" id="editVenueName">
+                            <th>
                                 Venue Name
-                            </td>
+                            </th>
                             <td>
                                 <input name="maxCovers" class="form-control" type="text" value="<%=venueDetails.getVenueName()%>">
                             </td>
@@ -48,10 +46,10 @@
                     </tr>
 
                     <tr>
-                        <td>
+                        <th>
                             Maximum Covers
-                        </td>
-                        <form action="selectEditVenueDetails" method="POST" name="editMaxCovers" id="editMaxCovers">
+                        </th>
+                        <form action="editVenueDetails" method="POST" name="editMaxCovers" id="editMaxCovers">
                         <td>
                             <div class="form-group">
                                     <input name="maxCovers" class="form-control" type="number" value="<%=venueDetails.getMaxCovers()%>">

@@ -1,6 +1,9 @@
 package pkg;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ChangedDateDatabaseInterface {
     public static ArrayList<ChangedDateTimes> getChangedDateTimes(int venueID){
@@ -14,14 +17,17 @@ public class ChangedDateDatabaseInterface {
             ResultSet result = preparedStatement.executeQuery();
             while(result.next()){
                 tempChangedDateTime = new ChangedDateTimes();
+                tempChangedDateTime.setChangedDateID(result.getInt(1));
                 tempChangedDateTime.setChangedDate(result.getDate(2).toLocalDate());
                 tempChangedDateTime.setChangedOpenTime(result.getTime(3).toLocalTime());
                 tempChangedDateTime.setChangedCloseTime(result.getTime(4).toLocalTime());
-
+                tempChangedDateTime.setDescription(result.getString(6));
+                tempList.add(tempChangedDateTime);
             }
             result.close();
             preparedStatement.close();
-            connection.close();
+            Collections.sort(tempList);
+            return tempList;
         }
         catch(SQLException e){
             System.err.println(e.getMessage());
@@ -30,47 +36,49 @@ public class ChangedDateDatabaseInterface {
         return null;
     }
 
-    public static Integer getStaffID(String username, Integer password) {
-        String query = "SELECT staffID FROM Staff WHERE username =? AND password=?";
-        try(Connection connection = ConfigBean.getConnection();){
+    public static void saveChangedDate(LocalDate changedDate, LocalTime openTime, LocalTime endTime, String description, int venueID) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "INSERT INTO changedDate (changedDate,changedOpenTime,changedCloseTime,venueID,description) VALUES (?,?,?,?,?) ";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setDate(1, Date.valueOf(changedDate));
+            s.setTime(2, Time.valueOf(openTime));
+            s.setTime(3,Time.valueOf(endTime));
+            s.setInt(4,venueID);
+            s.setString(5,description);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            System.out.println("test");
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, username);
-            preparedStatement.setInt(2, password);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                return result.getInt(1);
-            }
-            result.close();
-            preparedStatement.close();
+            s.close();
             connection.close();
+            //Create entry in TableBooking
+            //Get generated bookingID
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("fail");
+
         }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return null;
+
     }
 
-    public static String getStaffNameInputtedStaffID(int staffID) {
-        String query = "SELECT username FROM Staff WHERE staffID =?";
-        try(Connection connection = ConfigBean.getConnection();){
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, staffID);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                return result.getString(1);
-            }
-            result.close();
+    public static void deleteChangedDate(int changedDateID) {
+        String query = "DELETE FROM changedDate WHERE changedDateID=?";
+        try (Connection connection = ConfigBean.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query); //step 2
+            preparedStatement.setInt(1, changedDateID);
+            preparedStatement.execute();
             preparedStatement.close();
             connection.close();
-        }
-        catch(SQLException e){
+        } //step 1
+
+        catch (SQLException e) {
             System.err.println(e.getMessage());
             System.err.println(e.getStackTrace());
+
         }
-        return null;
     }
 }
 
