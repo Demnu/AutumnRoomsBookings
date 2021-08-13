@@ -45,7 +45,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1"> <i class="bi bi-search"></i></span>
                     </div>
-                    <input type="text" class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Enter details to search" title="Enter details to search" value="Holiday">
+                    <input type="text" class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Enter details to search" title="Enter details to search">
                 </div>
 
                 <form>

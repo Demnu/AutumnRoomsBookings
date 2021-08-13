@@ -30,6 +30,7 @@
         };
     </script>
 
+
 </head>
 <body>
 <jsp:include page="Navbar.jsp"/>
@@ -45,7 +46,7 @@
                 <h4>Please enter all of the details</h4>
                 <form action="editSingleDate" method="POST" name="editSingleTable" id="editSingleTable">
 
-                <table id="openAndCloseTimes" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                <table id="openAndCloseTimes" class="table table-borderless table-sm" cellspacing="0" width="100%">
                     <%
                         if (errors != null){%>
                     <tr class="bg-danger">
