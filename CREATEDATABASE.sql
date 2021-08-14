@@ -20,7 +20,7 @@ CREATE TABLE Section (
 CREATE TABLE ServableTable (
                                tableID INT NOT NULL AUTO_INCREMENT,
                                sectionID int NOT NULL,
-                               tableNumber int NOT NULL,
+                               tableNumber VARCHAR(64) NOT NULL,
                                seats int NOT NULL,
                                PRIMARY KEY (tableID),
                                FOREIGN KEY (sectionID) REFERENCES Section(sectionID)
@@ -77,4 +77,19 @@ CREATE TABLE changedDate(
                             description VARCHAR(64) NOT NULL,
                             PRIMARY KEY (changedDateID),
                             FOREIGN KEY (venueID) REFERENCES VenueDetails(venueID)
+);
+
+CREATE TABLE JoinedTables(
+                             joinedTablesID INT NOT NULL auto_increment,
+                             numberSeats INT NOT NULL,
+                             sectionID INT NOT NULL,
+                             FOREIGN KEY (sectionID) REFERENCES Section(sectionID),
+                             PRIMARY KEY (joinedTablesID)
+);
+
+CREATE TABLE JoinedTablesQ(
+                              joinedTablesID INT NOT NULL,
+                              tableID INT NOT NULL,
+                              FOREIGN KEY (joinedTablesID) REFERENCES JoinedTables(joinedTablesID),
+                              FOREIGN KEY (tableID) REFERENCES ServableTable(tableID)
 );

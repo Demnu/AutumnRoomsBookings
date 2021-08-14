@@ -22,6 +22,12 @@ public class EditSingleTableController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        //Check if user is logged in
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
+            dispatcher.forward(request, response);
+        }
 
         //Received by ShowTablesFromSection.jsp seatNumber tableID
         String sectionIDStr = (String) request.getParameter("sectionID");
@@ -39,7 +45,7 @@ public class EditSingleTableController extends HttpServlet {
         request.setAttribute("sectionName",sectionName);
         request.setAttribute("sectionID",sectionID);
         request.setAttribute("servableTableList",servableTableList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ShowTablesFromSection.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateTableGivenSectionID.jsp");
         dispatcher.forward(request, response);
         return;
 

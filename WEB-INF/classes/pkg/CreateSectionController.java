@@ -110,7 +110,7 @@ public class CreateSectionController extends HttpServlet {
         ArrayList<Section> sectionList = new ArrayList<Section>();
         sectionList = SectionDatabaseInterface.getAllSections();
         request.setAttribute("sectionList",sectionList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ServableTable-PickSection.jsp");
         dispatcher.forward(request, response);
         return;
 

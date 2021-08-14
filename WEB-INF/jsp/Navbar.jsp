@@ -35,7 +35,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/selectSectionAddTable">Edit Tables</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/viewAllTablesInSection">Section Hub</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/editOpenCloseTimes">Edit Open/Close Times</a>

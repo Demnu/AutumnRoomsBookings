@@ -109,6 +109,34 @@ public class SectionDatabaseInterface {
         }
         return sectionList;
     }
+
+    public static Section getSectionGivenSectionID(int sectionID){
+        Section section= new Section();
+        String query = "SELECT* FROM Section WHERE sectionID=?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, sectionID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                section.setSectionID(result.getInt(1));
+                section.setName(result.getString(2));
+                section.setDescription(result.getString(3));
+                section.setMaxCapacity(result.getInt(4));
+                section.setMaxTimeOfBooking(result.getTime(5));
+                section.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
+                section.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(section.getSectionID()));
+                section.setJoinedTables(JoinedTablesDatabaseInterface.getAllJoinedServeableTablesGivenSectionID(sectionID));
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return section;
+    }
     public static void deleteSection (int sectionID) {
         String query = "DELETE FROM Section WHERE sectionID=?";
         //TODO Development: Delete tables assigned to deleted section
@@ -138,10 +166,13 @@ public class SectionDatabaseInterface {
             s.executeUpdate();
             s.close();
             connection.close();
+            System.out.println("Success " + maxTimeOfBooking);
             return  true;
 
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Failure " + maxTimeOfBooking);
+
         }
         return false;
     }

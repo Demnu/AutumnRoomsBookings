@@ -1,19 +1,17 @@
 <%@ page contentType="text/html;"%>
 <%@ page import="java.util.*" %>
-<%@ page import="pkg.User" %>
-<%@ page import="pkg.ChangedDateTimes" %>
-<%@ page import="pkg.Functions" %>
 <%@ page import="java.time.LocalTime" %>
+<%@ page import="pkg.*" %>
 
 <%
     User user = (User) session.getAttribute("user");
-    ArrayList<ChangedDateTimes> changedDateTimes = (ArrayList<ChangedDateTimes>) request.getAttribute("changedDateTimes");
+    Section section = (Section) request.getAttribute("section");
     ArrayList<String> errors = (ArrayList<String>) request.getAttribute("errors");
 %>
 <!DOCTYPE html>
-<html onload="myFunction()">
+<html>
 <head>
-    <title>View All Changed Dates</title>
+    <title>Joined Tables in <%=section.getName()%></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -31,7 +29,7 @@
 <div class="container">
     <div class="card w-100">
         <div class="card-header">
-            <h2>Open and Close Times of Changed Dates</h2>
+            <h2>Joined Tables in Section: <%=section.getName()%></h2>
         </div>
         <div class="card-body">
 
@@ -40,7 +38,7 @@
             </div>
             <br>
             <div class="row">
-                <h4>Open and Close Times</h4>
+
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1"> <i class="bi bi-search"></i></span>
@@ -50,44 +48,48 @@
 
                 <form>
 
-                <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-                    <thead>
-                    <tr class="header">
-                        <th class="th-sm">Date</th>
-                        <th class="th-sm">Description</th>
-                        <th class="th-sm">Open Time</th>
-                        <th class="th-sm">Close Time</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <% for (ChangedDateTimes changedDate : changedDateTimes){%>
-                        <tr>
-                                <td>
-                                    <%=changedDate.getChangedDate()%>
-                                </td>
-                                <td>
-                                    <%=changedDate.getDescription()%>
-                                </td>
-                                <td>
-                                    <%=changedDate.getChangedOpenTime()%>
-                                </td>
-                                <td>
-                                    <%=changedDate.getChangedCloseTime()%>
-                                </td>
-                            <td> <a class="btn btn-outline-danger form-check" style="width: 100%" href="<%=request.getContextPath()%>/deleteChangedDate?changedDateID=<%=changedDate.getChangedDateID()%>">Delete Date</a></td>
-
-                                    <%}%>
+                    <table id="myTable"  class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                        <thead>
+                        <tr class="header">
+                            <th class="th-sm">Tables Joined</th>
+                            <th class="th-sm">Number Of Seats</th>
+                            <th></th>
                         </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <% for (JoinedTables joinedTable : section.getJoinedTables()){%>
+                        <tr>
+                            <td>
+                                <div style="display: flex; justify-content: center; flex-direction: column">
+                                    <%for (ServableTable servableTable : joinedTable.getJoinedTablesList()){%>
+                                    <div>Table - <b><%=servableTable.getTableNumber()%></b></div>
+                                    <%}%>
+                                </div>
+
+
+                            </td>
+                            <td>
+                                <%=joinedTable.getNumberSeats()%>
+                            </td>
+                            <td style=" height: 100%">
+                                <div>
+                                    <a class="btn btn-outline-danger form-check" style="width: 100%;" href="<%=request.getContextPath()%>/deleteJoinedTable?joinedTableID=<%=joinedTable.getJoinedTablesID()%>">Delete Joined Table</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
                 </form>
             </div>
 
         </div>
         <!--//TODO Enchancement: Make an undo button -->
         <br>
-        <a class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/editOpenCloseTimes">Back</a>
+        <form action="viewAllTablesInSection" method="POST" name="selectTableToBook" id="selectTableToBook">
+            <input type="hidden" name="chosenSectionID" value="<%=section.getSectionID()%>">
+            <button class="btn btn-outline-secondary" style="width: 100%" type="submit">Back</button>
+        </form>
 
     </div>
     <br>

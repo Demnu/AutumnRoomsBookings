@@ -26,6 +26,7 @@ public class EditSingleSectionController extends HttpServlet {
         //Received by CreateSection.jsp Edit Button
         String sectionIDStr = (request.getParameter("editSingleSectionID"));
         String maxCapacityStr = (String) request.getParameter("maxCapacity");
+        System.out.println(maxCapacityStr);
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
         String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
         Integer sectionID = Integer.parseInt(sectionIDStr);
@@ -113,10 +114,10 @@ public class EditSingleSectionController extends HttpServlet {
             SectionDatabaseInterface.updateMaxTimeOfBooking(sectionID,tempTime);
         }
         SectionDatabaseInterface.updateMaxCapacity(sectionID,maxCapacity);
-        ArrayList<Section> sectionList = new ArrayList<Section>();
-        sectionList = SectionDatabaseInterface.getAllSections();
-        request.setAttribute("sectionList",sectionList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateSection.jsp");
+
+
+        session.setAttribute("sectionID",sectionID);
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ShowTablesFromSection.jsp");
         dispatcher.forward(request, response);
         return;
 

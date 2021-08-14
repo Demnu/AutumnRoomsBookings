@@ -9,6 +9,7 @@ public class Section {
     private Time maxTimeOfBooking;
     private Time timeRequiredAfterBookingIsFinishedTime;
     private ArrayList<ServableTable> servableTables;
+    private ArrayList<JoinedTables> joinedTables;
 
     Section(){
 
@@ -19,6 +20,7 @@ public class Section {
         this.maxCapacity = maxCapacity;
         this.maxTimeOfBooking = maxTimeOfBooking;
         this.timeRequiredAfterBookingIsFinishedTime = timeRequiredAfterBookingIsFinishedTime;
+        joinedTables = new ArrayList<>();
     }
 
     public void setSectionID(int sectionID) {
@@ -89,5 +91,13 @@ public class Section {
 
     public Time getTimeRequiredAfterBookingIsFinishedTime() {
         return timeRequiredAfterBookingIsFinishedTime;
+    }
+
+    public ArrayList<JoinedTables> getJoinedTables() {
+        return joinedTables;
+    }
+
+    public void setJoinedTables(ArrayList<JoinedTables> joinedTables) {
+        this.joinedTables = joinedTables;
     }
 }

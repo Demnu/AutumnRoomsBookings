@@ -109,6 +109,35 @@ public class ServableTableDatabaseInterface {
         }
         return tableList;
     }
+    public static ServableTable getTableGivenID(int tableID){
+        ServableTable tempServableTable = new ServableTable();
+        String query = "SELECT* FROM ServableTable WHERE tableID=?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, tableID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                tempServableTable.setTableID(result.getInt(1));
+                tempServableTable.setSectionID(result.getInt(2));
+                tempServableTable.setTableNumber(result.getInt(3));
+                tempServableTable.setSeats(result.getInt(4));
+                //get max time for seat
+                tempServableTable.setMaxTimeOfBooking(SectionDatabaseInterface.getMaxTimeOfSectionInputtedSectionID(result.getInt(2)));
+                //get section name for table
+                tempServableTable.setSectionName(SectionDatabaseInterface.getSectionName(result.getInt(2)));
+                //get timeRequiredAfterBookingIsFinished for table
+                tempServableTable.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(result.getInt(2)));
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return tempServableTable;
+    }
     public static void deleteServableTable(int tableID) {
         String query = "DELETE FROM ServableTable WHERE tableID=?";
         try (Connection connection = ConfigBean.getConnection()) {
