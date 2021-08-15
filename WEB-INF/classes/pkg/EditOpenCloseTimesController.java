@@ -41,7 +41,7 @@ public class EditOpenCloseTimesController extends HttpServlet {
             dispatcher.forward(request, response);
         }
         ArrayList<String> errors = new ArrayList<>();
-        //Received by ShowTablesFromSection.jsp seatNumber tableID
+        //Received by SectionHub.jsp seatNumber tableID
         String mondayOpenTimeStr = (request.getParameter("MondayOpenTime"));
         String mondayCloseTimeStr = (request.getParameter("MondayCloseTime"));
         String tuesdayOpenTimeStr = (request.getParameter("TuesdayOpenTime"));

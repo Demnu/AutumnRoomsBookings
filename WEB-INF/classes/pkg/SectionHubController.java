@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/viewAllTablesInSection")
-public class ViewAllTablesInSectionController extends HttpServlet {
+@WebServlet("/sectionHub")
+public class SectionHubController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -23,11 +23,11 @@ public class ViewAllTablesInSectionController extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
             dispatcher.forward(request, response);
         }
-        //Forward the Section List to ServableTable-PickSection.jsp
+        //Forward the Section List to SectionHub.jsp
         ArrayList<Section> sectionList = new ArrayList<Section>();
         sectionList = SectionDatabaseInterface.getAllSections();
         request.setAttribute("sectionList",sectionList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ServableTable-PickSection.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/SectionHub.jsp");
         dispatcher.forward(request, response);
         return;
     }
@@ -40,13 +40,13 @@ public class ViewAllTablesInSectionController extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
             dispatcher.forward(request, response);
         }
-        //Received by ServableTable-PickSection.jsp: Section ID
+        //Received by SectionHub.jsp: Section ID
         String sectionIDStr = (request.getParameter("chosenSectionID"));
         Integer sectionID = Integer.parseInt(sectionIDStr);
         Section section = SectionDatabaseInterface.getSectionGivenSectionID(sectionID);
         request.setAttribute("section",section);
 
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ShowTablesFromSection.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/SectionHub.jsp");
         dispatcher.forward(request, response);
         return;
 

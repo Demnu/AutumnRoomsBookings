@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/editSingleTable")
-public class EditSingleTableController extends HttpServlet {
+@WebServlet("/editTable")
+public class EditTableController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -29,7 +29,7 @@ public class EditSingleTableController extends HttpServlet {
             dispatcher.forward(request, response);
         }
 
-        //Received by ShowTablesFromSection.jsp seatNumber tableID
+        //Received by SectionHub.jsp seatNumber tableID
         String sectionIDStr = (String) request.getParameter("sectionID");
         String tableIDStr = (request.getParameter("tableID"));
         String seatsNumberStr = (String) request.getParameter("seatsNumber");
@@ -39,13 +39,10 @@ public class EditSingleTableController extends HttpServlet {
 
 
         ServableTableDatabaseInterface.updateSeatsNumber(tableID,seatsNumber);
-        String sectionName = SectionDatabaseInterface.getSectionName(sectionID);
-        ArrayList<ServableTable> servableTableList;
-        servableTableList = ServableTableDatabaseInterface.getAllServeableTables(sectionID);
-        request.setAttribute("sectionName",sectionName);
-        request.setAttribute("sectionID",sectionID);
-        request.setAttribute("servableTableList",servableTableList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateTableGivenSectionID.jsp");
+        Section section = SectionDatabaseInterface.getSectionGivenSectionID(sectionID);
+
+        request.setAttribute("section",section);
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Tables.jsp");
         dispatcher.forward(request, response);
         return;
 

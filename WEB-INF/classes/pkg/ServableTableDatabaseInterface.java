@@ -174,13 +174,13 @@ public class ServableTableDatabaseInterface {
         return false;
     }
 
-    public static boolean updateMaxCapacity(int sectionID, int maxCapacity) {
+    public static boolean updateMaxCoversSection(int sectionID, int maxCoversSection) {
         try {
             // creates prepared statement and sets its values
             String query = "UPDATE Section SET maxCapacity=? WHERE sectionID=?";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
-            s.setInt(1, maxCapacity);
+            s.setInt(1, maxCoversSection);
             s.setInt(2, sectionID);
             // executes the statement and closes statement and connection
             s.executeUpdate();

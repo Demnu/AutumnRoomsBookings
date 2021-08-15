@@ -1,12 +1,15 @@
 package pkg;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.*;
 public class Section {
     private int sectionID;
     private String name;
     private String description;
-    private Integer maxCapacity;
+    private Integer maxCoversSection;
     private Time maxTimeOfBooking;
+    private LocalTime maxTimeOfBookingLocalTime;
+    private LocalTime timeRequiredAfterBookingIsFinishedLocalTime;
     private Time timeRequiredAfterBookingIsFinishedTime;
     private ArrayList<ServableTable> servableTables;
     private ArrayList<JoinedTables> joinedTables;
@@ -14,10 +17,10 @@ public class Section {
     Section(){
 
     }
-    Section(int sectionID, String name, String description, Integer maxCapacity, Time maxTimeOfBooking, Time timeRequiredAfterBookingIsFinishedTime){
+    Section(int sectionID, String name, String description, Integer maxCoversSection, Time maxTimeOfBooking, Time timeRequiredAfterBookingIsFinishedTime){
         this.name = name;
         this.description = description;
-        this.maxCapacity = maxCapacity;
+        this.maxCoversSection = maxCoversSection;
         this.maxTimeOfBooking = maxTimeOfBooking;
         this.timeRequiredAfterBookingIsFinishedTime = timeRequiredAfterBookingIsFinishedTime;
         joinedTables = new ArrayList<>();
@@ -35,12 +38,13 @@ public class Section {
         this.description = description;
     }
 
-    public void setMaxCapacity(Integer maxCapacity) {
-        this.maxCapacity = maxCapacity;
+    public void setMaxCoversSection(Integer maxCoversSection) {
+        this.maxCoversSection = maxCoversSection;
     }
 
     public void setMaxTimeOfBooking(Time maxTimeOfBooking) {
         this.maxTimeOfBooking = maxTimeOfBooking;
+        maxTimeOfBookingLocalTime = maxTimeOfBooking.toLocalTime();
     }
 
     public int getSectionID() {
@@ -49,6 +53,7 @@ public class Section {
 
     public void setTimeRequiredAfterBookingIsFinishedTime(Time timeRequiredAfterBookingIsFinishedTime) {
         this.timeRequiredAfterBookingIsFinishedTime = timeRequiredAfterBookingIsFinishedTime;
+        timeRequiredAfterBookingIsFinishedLocalTime = timeRequiredAfterBookingIsFinishedTime.toLocalTime();
     }
 
     public void setServableTables(ArrayList<ServableTable> servableTables) {
@@ -69,8 +74,8 @@ public class Section {
         return sectionList;
     }
 
-    public Integer getMaxCapacity() {
-        return maxCapacity;
+    public Integer getMaxCoversSection() {
+        return maxCoversSection;
     }
 
     public Time getMaxTimeOfBooking() {
@@ -99,5 +104,21 @@ public class Section {
 
     public void setJoinedTables(ArrayList<JoinedTables> joinedTables) {
         this.joinedTables = joinedTables;
+    }
+
+    public LocalTime getMaxTimeOfBookingLocalTime() {
+        return maxTimeOfBookingLocalTime;
+    }
+
+    public void setMaxTimeOfBookingLocalTime(LocalTime maxTimeOfBookingLocalTime) {
+        this.maxTimeOfBookingLocalTime = maxTimeOfBookingLocalTime;
+    }
+
+    public LocalTime getTimeRequiredAfterBookingIsFinishedLocalTime() {
+        return timeRequiredAfterBookingIsFinishedLocalTime;
+    }
+
+    public void setTimeRequiredAfterBookingIsFinishedLocalTime(LocalTime timeRequiredAfterBookingIsFinishedTimeLocalTime) {
+        this.timeRequiredAfterBookingIsFinishedLocalTime = timeRequiredAfterBookingIsFinishedTimeLocalTime;
     }
 }

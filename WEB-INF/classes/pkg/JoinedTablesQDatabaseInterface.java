@@ -25,9 +25,49 @@ public class JoinedTablesQDatabaseInterface {
         }
         catch(SQLException e){
             System.out.println("Cannot get servable tables for joinedTablesID=: " + joinedTablesID);
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
             System.err.println(e.getStackTrace());
         }
         return servableTables;
+    }
+
+    public static void addServableTablesInputtedJoinedTableID(int joinedTableID, ArrayList<Integer> servableTableIDs) {
+        for (Integer servableTableID : servableTableIDs){
+            try {
+                // creates prepared statement and sets its values
+                String query = "INSERT INTO JoinedTablesQ (joinedTablesID,tableID) VALUES (?,?) ";
+                Connection connection = ConfigBean.getConnection();
+                PreparedStatement s = connection.prepareStatement(query);
+                s.setInt(1, joinedTableID);
+                s.setInt(2, servableTableID);
+                // executes the statement and closes statement and connection
+                s.executeUpdate();
+                s.close();
+                connection.close();
+            } catch (Exception e) {
+                System.out.println("Failed adding table to JoinedTablesQ");
+                System.out.println(e.getMessage());
+                System.out.println(e.getStackTrace());
+            }
+        }
+    }
+    public static void deleteJoinedTables(Integer joinedTableID, ArrayList<ServableTable> joinedTables) {
+
+        for (ServableTable servableTable : joinedTables){
+            String query = "DELETE FROM JoinedTablesQ WHERE joinedTablesID=? AND tableID=?";
+            try (Connection connection = ConfigBean.getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement(query); //step 2
+                preparedStatement.setInt(1, joinedTableID);
+                preparedStatement.setInt(2, servableTable.getTableID());
+                preparedStatement.execute();
+                preparedStatement.close();
+                connection.close();
+            } //step 1
+            catch (SQLException e) {
+                System.err.println(e.getMessage());
+                System.err.println(e.getStackTrace());
+            }
+        }
+
     }
 }

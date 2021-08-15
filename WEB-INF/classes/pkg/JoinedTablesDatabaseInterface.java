@@ -32,12 +32,71 @@ public class JoinedTablesDatabaseInterface {
         }
         return joinedTables;
     }
+    public static void createJoinedTable(Integer sectionID,Integer numberSeats, ArrayList<Integer> servableTableIDs) {
+        boolean completed = false;
+        try {
+            // creates prepared statement and sets its values
+            String query = "INSERT INTO JoinedTables (numberSeats,sectionID) VALUES (?,?) ";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setInt(1, numberSeats);
+            s.setInt(2, sectionID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+            completed = true;
 
-    public static void deleteServableTable(int tableID) {
-        String query = "DELETE FROM ServableTable WHERE tableID=?";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (completed){
+            int joinedTableID = 100000000;
+            String query = "SELECT* FROM JoinedTables WHERE sectionID=?";
+            try(Connection connection = ConfigBean.getConnection();){
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setInt(1, sectionID);
+                ResultSet result = preparedStatement.executeQuery();
+                while(result.next()){
+                    joinedTableID = result.getInt(1);
+                }
+                result.close();
+                preparedStatement.close();
+                connection.close();
+            }
+            catch(SQLException e){
+                System.err.println(e.getMessage());
+                System.err.println(e.getStackTrace());
+            }
+            JoinedTablesQDatabaseInterface.addServableTablesInputtedJoinedTableID(joinedTableID,servableTableIDs);
+
+        }
+    }
+    public static void updateSeatsNumber(int joinedTablesID, int numberSeats) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE JoinedTables SET numberSeats=? WHERE joinedTablesID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setInt(1, numberSeats);
+            s.setInt(2, joinedTablesID);
+
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteJoinedTable(Integer joinedTablesID, ArrayList<ServableTable>joinedTables) {
+        JoinedTablesQDatabaseInterface.deleteJoinedTables(joinedTablesID,joinedTables);
+        String query = "DELETE FROM JoinedTables WHERE joinedTablesID=?";
         try (Connection connection = ConfigBean.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query); //step 2
-            preparedStatement.setInt(1, tableID);
+            preparedStatement.setInt(1, joinedTablesID);
             preparedStatement.execute();
             preparedStatement.close();
             connection.close();
@@ -48,24 +107,5 @@ public class JoinedTablesDatabaseInterface {
             System.err.println(e.getStackTrace());
 
         }
-    }
-    public static boolean updateSeatsNumber(int tableID, int seats) {
-        try {
-            // creates prepared statement and sets its values
-            String query = "UPDATE ServableTable SET seats=? WHERE tableID=?";
-            Connection connection = ConfigBean.getConnection();
-            PreparedStatement s = connection.prepareStatement(query);
-            s.setInt(1, seats);
-            s.setInt(2, tableID);
-            // executes the statement and closes statement and connection
-            s.executeUpdate();
-            s.close();
-            connection.close();
-            return  true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

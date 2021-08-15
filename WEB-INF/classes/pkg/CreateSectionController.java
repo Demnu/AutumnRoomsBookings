@@ -41,10 +41,10 @@ public class CreateSectionController extends HttpServlet {
         //Received by CreateSection.jsp: Section Name and Brief Description
         String sectionName = (String) request.getParameter("sectionName");
         String sectionDesc = (String) request.getParameter("sectionDesc");
-        String maxCapacityStr = (String) request.getParameter("maxCapacity");
+        String maxCoversSectionStr = (String) request.getParameter("maxCoversSection");
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
         String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
-        Integer maxCapacity = Integer.parseInt(maxCapacityStr);
+        Integer maxCoversSection = Integer.parseInt(maxCoversSectionStr);
         Integer maxTimeOfBooking = Integer.parseInt(hourMinsStr);
         Integer timeRequiredAfterBookingIsFinished = Integer.parseInt(timeRequiredAfterBookingIsFinishedStr);
         Time timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
@@ -104,13 +104,13 @@ public class CreateSectionController extends HttpServlet {
             timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
         }
         //Authenticate section details and save to database
-        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCapacity,tempTime, timeRequiredAfterBookingIsFinishedTime)){
+        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCoversSection,tempTime, timeRequiredAfterBookingIsFinishedTime)){
 
         }
         ArrayList<Section> sectionList = new ArrayList<Section>();
         sectionList = SectionDatabaseInterface.getAllSections();
         request.setAttribute("sectionList",sectionList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ServableTable-PickSection.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/SectionHub.jsp");
         dispatcher.forward(request, response);
         return;
 

@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Show Tables From Section</title>
+    <title><%=section.getName()%> Section</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -39,33 +39,74 @@
             <div class="card w-100">
                 <div class="card-body">
                     <div class="row">
+                        <h4 style="text-align: center">Actions</h4>
+                        <table id="dtBasicExample" class="table table-borderless  table-sm" cellspacing="0" width="100%" style='table-layout:fixed'>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <a class="btn btn-outline-primary d-block btn-user w-100" href="<%=request.getContextPath()%>/viewTables?sectionID=<%=section.getSectionID()%>">Tables</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-primary d-block btn-user w-100" href="<%=request.getContextPath()%>/viewJoinedTables?sectionID=<%=section.getSectionID()%>">Joined Tables</a>
+                                </td>
+
+                            </tr>
+<%--                            <tr>--%>
+<%--                                <td>--%>
+<%--                                    <a class="test btn btn-outline-primary w-100" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">View Tables</a>--%>
+<%--                                </td>--%>
+<%--                                <td>--%>
+<%--                                    <a class="test btn btn-outline-primary w-100" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">View Join Tables</a>--%>
+
+<%--                                </td>--%>
+<%--                            </tr>--%>
+                            <tr>
+                                <td colspan="2">
+                                    <a class="btn btn-outline-danger d-block btn-user w-100" href="<%=request.getContextPath()%>/addServableTableGivenSectionID?chosenSectionID=<%=section.getSectionID()%>">Delete Section</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <a class="btn btn-outline-secondary" style="width: 100%" href="<%=request.getContextPath()%>/sectionHub">Back</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card w-100">
+                <div class="card-body">
+                    <div class="row">
                         <h4 style="text-align: center">Section Details</h4>
-                        <form>
+                        <div class="input-group">
                             <table id="" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                                 <thead>
                                 <tr class="header">
                                     <th class="th-sm">Description</th>
                                     <th class="th-sm">Amount of Tables</th>
                                     <th class="th-sm">Amount of Seats</th>
-                                    <th class="th-sm">Max Capacity</th>
-                                    <th class="th-sm">Max Time for Bookings</th>
-                                    <th class="th-sm">Time Required to Reset After Booking is Finished</th>
+                                    <th class="th-sm">Max Covers</th>
+                                    <th class="th-sm">Max Time for Bookings HH/MM</th>
+                                    <th class="th-sm">Time Required to Reset After Booking is Finished HH/MM</th>
                                     <th class="th-sm"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                <form action="editSingleSection" method="POST" name="editSectionForm" id="editSectionForm">
+                                <form action="editSection" method="POST" name="editSectionForm" id="editSectionForm">
                                     <tr>
-                                        <input type="hidden" name="editSingleSectionID" value="<%=section.getSectionID()%>">
+                                        <input type="hidden" name="sectionID" value="<%=section.getSectionID()%>">
                                         <td><%=section.getDescription()%></td>
                                         <td><%=section.getServableTables().size()%></td>
                                         <td><%=section.getAmountSeats()%></td>
                                         <td>
-                                            <input type="number" name="maxCapacity" id="maxCapacity" class="form-control" min="1" max="150" value="<%=section.getMaxCapacity()%>"/>
+                                            <input type="number" name="maxCoversSection" id="maxCoversSection" class="form-control" min="1" max="150" value="<%=section.getMaxCoversSection()%>"/>
                                         <td>
                                             <select name="maxTimeOfBooking" id="maxTimeOfBooking" class="form-control">
-                                                <option value="<%=section.getMaxTimeOfBooking()%>"><%=section.getMaxTimeOfBooking()%></option>
+                                                <option value="<%=section.getMaxTimeOfBooking()%>"><%=section.getMaxTimeOfBookingLocalTime()%></option>
                                                 <% for (LocalTime timeIncrement : timeIncrements){%>
                                                 <option value="<%=timeIncrement%>"><%=timeIncrement%></option>
                                                 <%}%>
@@ -73,7 +114,7 @@
                                         </td>
                                         <td>
                                             <select name="timeRequiredAfterBookingIsFinished" id="timeRequiredAfterBookingIsFinished" class="form-control">
-                                                <option value="0"><%=section.getTimeRequiredAfterBookingIsFinishedTime()%></option>
+                                                <option value="<%=section.getTimeRequiredAfterBookingIsFinishedTime()%>"><%=section.getTimeRequiredAfterBookingIsFinishedLocalTime()%></option>
                                                 <% for (LocalTime timeIncrement : timeIncrements){%>
                                                 <option value="<%=timeIncrement%>"><%=timeIncrement%></option>
                                                 <%}%>
@@ -84,49 +125,7 @@
                                 </form>
                                 </tbody>
                             </table>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="card w-100">
-                <div class="card-body">
-                    <div class="row">
-                        <h4 style="text-align: center">Actions</h4>
-                        <table id="dtBasicExample" class="table table-borderless  table-sm" cellspacing="0" width="100%" style='table-layout:fixed'>
-
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <a class="btn btn-outline-primary d-block btn-user w-100" href="<%=request.getContextPath()%>/addServableTableGivenSectionID?chosenSectionID=<%=section.getSectionID()%>">Modify Tables for Section</a>
-                                </td>
-                                <td>
-                                    <a class="btn btn-outline-primary d-block btn-user w-100" href="<%=request.getContextPath()%>/viewAllJoinedTablesGivenSection?sectionID=<%=section.getSectionID()%>">Modify Join Tables</a>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a class="test btn btn-outline-primary w-100" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">View Tables</a>
-                                </td>
-                                <td>
-                                    <a class="test btn btn-outline-primary w-100" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">View Join Tables</a>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <a class="btn btn-outline-danger d-block btn-user w-100" href="<%=request.getContextPath()%>/addServableTableGivenSectionID?chosenSectionID=<%=section.getSectionID()%>">Delete Section</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <a class="btn btn-outline-secondary" style="width: 100%" href="<%=request.getContextPath()%>/viewAllTablesInSection">Back</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -221,5 +220,35 @@
         </div>
     </div>
 </div>
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, table, tr, td, i, occurrence;
+
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            occurrence = false; // Only reset to false once per row.
+            td = tr[i].getElementsByTagName("td");
+            for(var j=0; j< td.length; j++){
+                currentTd = td[j];
+                if (currentTd ) {
+                    if (currentTd.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        occurrence = true;
+                    }
+                }
+            }
+            if(!occurrence){
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+</script>
 </body>
 </html>

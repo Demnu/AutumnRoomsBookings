@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/deleteSingleTable")
-public class DeleteSingleTableController extends HttpServlet {
+@WebServlet("/deleteTable")
+public class DeleteTableController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -30,15 +30,9 @@ public class DeleteSingleTableController extends HttpServlet {
             Integer tableID = Integer.parseInt(tableIDStr);
             ServableTableDatabaseInterface.deleteServableTable(tableID);
         }
-
-
-        String sectionName = SectionDatabaseInterface.getSectionName(sectionID);
-        ArrayList<ServableTable> servableTableList;
-        servableTableList = ServableTableDatabaseInterface.getAllServeableTables(sectionID);
-        request.setAttribute("sectionName",sectionName);
-        request.setAttribute("sectionID",sectionID);
-        request.setAttribute("servableTableList",servableTableList);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/CreateTableGivenSectionID.jsp");
+        Section section = SectionDatabaseInterface.getSectionGivenSectionID(sectionID);
+        request.setAttribute("section",section);
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Tables.jsp");
         dispatcher.forward(request, response);
         return;
     }

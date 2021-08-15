@@ -39,9 +39,9 @@
 
                             <tbody>
                             <% for (Section section : sectionList){ %>
-                            <form action="viewAllTablesInSection" method="POST" name="selectSectionAddTable" id="selectSectionAddTable">
+                            <form action="viewSection" method="GET" name="selectSectionAddTable" id="selectSectionAddTable">
                                 <tr>
-                                    <input type="hidden" name="chosenSectionID" value="<%=section.getSectionID()%>">
+                                    <input type="hidden" name="sectionID" value="<%=section.getSectionID()%>">
                                     <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit"><%=section.getName()%></button></td>
                                 </tr>
                             </form>
@@ -109,5 +109,35 @@
         </div>
     </div>
 </div>
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, table, tr, td, i, occurrence;
+
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            occurrence = false; // Only reset to false once per row.
+            td = tr[i].getElementsByTagName("td");
+            for(var j=0; j< td.length; j++){
+                currentTd = td[j];
+                if (currentTd ) {
+                    if (currentTd.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        occurrence = true;
+                    }
+                }
+            }
+            if(!occurrence){
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+</script>
 </body>
 </html>

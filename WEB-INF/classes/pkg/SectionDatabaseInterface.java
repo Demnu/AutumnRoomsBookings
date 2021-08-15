@@ -3,7 +3,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 public class SectionDatabaseInterface {
-    public static boolean saveSection(String sectionName, String description, int maxCapacity, Time maxTimeOfBooking, Time timeRequiredAfterBookingIsFinished) {
+    public static boolean saveSection(String sectionName, String description, int maxCoversSection, Time maxTimeOfBooking, Time timeRequiredAfterBookingIsFinished) {
         try {
             // creates prepared statement and sets its values
             String query = "INSERT INTO Section (sectionName,description,maxCapacity,maxTimeOfBooking,timeRequiredAfterBookingIsFinished) VALUES (?,?,?,?,?) ";
@@ -11,7 +11,7 @@ public class SectionDatabaseInterface {
             PreparedStatement s = connection.prepareStatement(query);
             s.setString(1, sectionName);
             s.setString(2, description);
-            s.setInt(3, maxCapacity);
+            s.setInt(3, maxCoversSection);
             s.setTime(4, maxTimeOfBooking);
             s.setTime(5, timeRequiredAfterBookingIsFinished);
             // executes the statement and closes statement and connection
@@ -93,7 +93,7 @@ public class SectionDatabaseInterface {
                 tempSection.setSectionID(result.getInt(1));
                 tempSection.setName(result.getString(2));
                 tempSection.setDescription(result.getString(3));
-                tempSection.setMaxCapacity(result.getInt(4));
+                tempSection.setMaxCoversSection(result.getInt(4));
                 tempSection.setMaxTimeOfBooking(result.getTime(5));
                 tempSection.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
                 tempSection.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(tempSection.getSectionID()));
@@ -121,7 +121,7 @@ public class SectionDatabaseInterface {
                 section.setSectionID(result.getInt(1));
                 section.setName(result.getString(2));
                 section.setDescription(result.getString(3));
-                section.setMaxCapacity(result.getInt(4));
+                section.setMaxCoversSection(result.getInt(4));
                 section.setMaxTimeOfBooking(result.getTime(5));
                 section.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
                 section.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(section.getSectionID()));
@@ -177,13 +177,13 @@ public class SectionDatabaseInterface {
         return false;
     }
 
-    public static boolean updateMaxCapacity(int sectionID, int maxCapacity) {
+    public static boolean updateMaxCoversSection(int sectionID, int maxCoversSection) {
         try {
             // creates prepared statement and sets its values
             String query = "UPDATE Section SET maxCapacity=? WHERE sectionID=?";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
-            s.setInt(1, maxCapacity);
+            s.setInt(1, maxCoversSection);
             s.setInt(2, sectionID);
             // executes the statement and closes statement and connection
             s.executeUpdate();

@@ -40,7 +40,7 @@ public class ViewAllChangedDateTimesController extends HttpServlet {
             dispatcher.forward(request, response);
         }
         ArrayList<String> errors = new ArrayList<>();
-        //Received by ShowTablesFromSection.jsp seatNumber tableID
+        //Received by Section.jsp seatNumber tableID
         String mondayOpenTimeStr = (request.getParameter("MondayOpenTime"));
         String mondayCloseTimeStr = (request.getParameter("MondayCloseTime"));
         String tuesdayOpenTimeStr = (request.getParameter("TuesdayOpenTime"));

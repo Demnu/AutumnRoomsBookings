@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/viewAllJoinedTablesGivenSection")
-public class ViewAllJoinedTablesGivenSectionController extends HttpServlet {
+@WebServlet("/viewJoinedTables")
+public class ViewJoinedTablesController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -23,13 +23,13 @@ public class ViewAllJoinedTablesGivenSectionController extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Login.jsp");
             dispatcher.forward(request, response);
         }
-        //Received by ShowTablesFromSection.jsp:
+        //Received by Section.jsp:
         String sectionIDStr = (request.getParameter("sectionID"));
         String sectionName = (request.getParameter("sectionName"));
         Integer sectionID = Integer.parseInt(sectionIDStr);
         Section section = SectionDatabaseInterface.getSectionGivenSectionID(sectionID);
         request.setAttribute("section",section);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ShowAllJoinedTablesGivenSection.jsp");
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/JoinedTables.jsp");
         dispatcher.forward(request, response);
         return;
 
