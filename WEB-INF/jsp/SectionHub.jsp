@@ -2,9 +2,12 @@
 <%@ page import="java.util.*" %>
 <%@ page import="pkg.User" %>
 <%@ page import="pkg.Section" %>
+<%@ page import="pkg.Functions" %>
+<%@ page import="java.time.LocalTime" %>
 <%
     User user = (User) session.getAttribute("user");
     ArrayList<Section> sectionList = (ArrayList<Section>) request.getAttribute("sectionList");
+    ArrayList<LocalTime> timeIncrements = Functions.getTimeIncrementsFrom0To24Hours();
 %>
 <!DOCTYPE html>
 <html>
@@ -60,34 +63,27 @@
                                                             <br>
                                                             <label for="sectionDesc" class="mt-2">Description of Section:</label>
                                                             <textarea required id="sectionDesc" name="sectionDesc" form="ReportForm" class="form-control " placeholder="Enter a brief description for the section"></textarea><br>
-                                                            <label for="maxCapacity">Maximum People allowed in the Section:</label>
-                                                            <input required type="number" name="maxCapacity" id="maxCapacity" class="form-control" min="1" max="150"/>
+                                                            <label for="maxCoversSection">Maximum People allowed in the Section:</label>
+                                                            <input required type="number" name="maxCoversSection" id="maxCoversSection" class="form-control" min="1" max="150"/>
                                                             <br>
                                                             <label for="maxTimeOfBooking">Maximum time HH/MM allowed for a booking:</label>
                                                             <select name="maxTimeOfBooking" id="maxTimeOfBooking" class="form-control">
-                                                                <option value="1">0:15</option>
-                                                                <option value="2">0:30</option>
-                                                                <option value="3">0:45</option>
-                                                                <option value="4">1:00</option>
-                                                                <option value="5">1:15</option>
-                                                                <option value="6">1:30</option>
-                                                                <option value="7">1:45</option>
-                                                                <option value="8">2:00</option>
-                                                                <option value="9">0:00</option>
+                                                                    <%for (LocalTime localTime : timeIncrements){%>
+                                                                <option value="<%=localTime%>"><%=localTime%></option>
+                                                                <% }
+                                                                %>
                                                             </select>
                                                             <br>
-                                                            <label for="timeRequiredAfterBookingIsFinished">Time Required (HH/MM) to Reset After Booking is Finished</label>
+                                                            <label for="timeRequiredAfterBookingIsFinished">Time Required (HH/MM) to Reset After Booking is Finished:</label>
                                                             <select name="timeRequiredAfterBookingIsFinished" id="timeRequiredAfterBookingIsFinished" class="form-control">
-                                                                <option value="1">0:00</option>
-                                                                <option value="1">0:15</option>
-                                                                <option value="2">0:30</option>
-                                                                <option value="3">0:45</option>
-                                                                <option value="4">1:00</option>
-                                                                <option value="5">1:15</option>
-                                                                <option value="6">1:30</option>
-                                                                <option value="7">1:45</option>
-                                                                <option value="8">2:00</option>
+                                                                <%for (LocalTime localTime : timeIncrements){%>
+                                                                <option value="<%=localTime%>"><%=localTime%></option>
+                                                                <% }
+                                                                %>
                                                             </select><br>
+                                                            <label for="timeConstrained">Check the box if the section is time constrained</label>
+                                                            <input class="form-check" style=" width: 50px; height: 50px" type="checkbox" id="timeConstrained" name="timeConstrained" value="timeConstrained">
+                                                            <br>
                                                             <input type="submit" class="btn btn-primary w-100" value="Create Section">
                                                         </form>
                                                     </div>

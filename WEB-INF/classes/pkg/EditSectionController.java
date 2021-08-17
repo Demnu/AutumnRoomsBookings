@@ -23,16 +23,21 @@ public class EditSectionController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        System.out.println("test");
-
         //Received by Section.jsp Edit Button
         String sectionIDStr = (request.getParameter("sectionID"));
         String maxCoversSectionStr = (String) request.getParameter("maxCoversSection");
         String maxTimeOfBookingStr = (String) request.getParameter("maxTimeOfBooking");
+        String timeConstrainedStr = (String) request.getParameter("timeConstrained");
         String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
         Integer sectionID = Integer.parseInt(sectionIDStr);
         Integer maxCoversSection = Integer.parseInt(maxCoversSectionStr);
-        boolean maxTimeOfBookingChanged = true;
+        boolean timeConstrained = false;
+        if (timeConstrainedStr!=null){
+            timeConstrained = true;
+
+        }
+
+
 
         LocalTime maxTimeOfBooking = LocalTime.parse(maxTimeOfBookingStr);
         SectionDatabaseInterface.updateMaxTimeOfBooking(sectionID,Time.valueOf(maxTimeOfBooking));
@@ -40,6 +45,7 @@ public class EditSectionController extends HttpServlet {
         LocalTime timeRequiredAfterBooking = LocalTime.parse(timeRequiredAfterBookingIsFinishedStr);
         SectionDatabaseInterface.updateTimeRequiredAfterBookingIsFinished(sectionID,Time.valueOf(timeRequiredAfterBooking));
 
+        SectionDatabaseInterface.updateTimeConstrained(sectionID, timeConstrained);
         SectionDatabaseInterface.updateMaxCoversSection(sectionID,maxCoversSection);
 
         Section section = SectionDatabaseInterface.getSectionGivenSectionID(sectionID);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,70 +42,22 @@ public class CreateSectionController extends HttpServlet {
         //Received by CreateSection.jsp: Section Name and Brief Description
         String sectionName = (String) request.getParameter("sectionName");
         String sectionDesc = (String) request.getParameter("sectionDesc");
+        String timeConstrainedStr = (String) request.getParameter("timeConstrained");
         String maxCoversSectionStr = (String) request.getParameter("maxCoversSection");
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
         String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
         Integer maxCoversSection = Integer.parseInt(maxCoversSectionStr);
-        Integer maxTimeOfBooking = Integer.parseInt(hourMinsStr);
-        Integer timeRequiredAfterBookingIsFinished = Integer.parseInt(timeRequiredAfterBookingIsFinishedStr);
-        Time timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
-        Time tempTime = new Time(0,0,0);
-        if(maxTimeOfBooking==1){
-            tempTime = new Time(0,15,0);
-        }
-        else if (maxTimeOfBooking==2){
-            tempTime = new Time(0,30,0);
-        }
-        else if (maxTimeOfBooking==3){
-            tempTime = new Time(0,45,0);
+        LocalTime maxTimeOfBooking = LocalTime.parse(hourMinsStr);
+        LocalTime timeRequiredAfterBookingIsFinished = LocalTime.parse(timeRequiredAfterBookingIsFinishedStr);
+        boolean timeConstrained = false;
+        if (timeConstrainedStr!=null){
+            timeConstrained = true;
         }
 
-        else if (maxTimeOfBooking==4){
-            tempTime = new Time(1,0,0);
-        }
-        else if (maxTimeOfBooking==5){
-            tempTime = new Time(1,15,0);
-        }
-        else if (maxTimeOfBooking==6){
-            tempTime = new Time(1,30,0);
-        }
-        else if (maxTimeOfBooking==7){
-            tempTime = new Time(1,45,0);
-        }
-        else if (maxTimeOfBooking==8){
-            tempTime = new Time(2,0,0);
-        }
 
-        if(timeRequiredAfterBookingIsFinished==1){
-            timeRequiredAfterBookingIsFinishedTime = new Time(0,15,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==2){
-            timeRequiredAfterBookingIsFinishedTime = new Time(0,30,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==3){
-            timeRequiredAfterBookingIsFinishedTime = new Time(0,45,0);
-        }
 
-        else if (timeRequiredAfterBookingIsFinished==4){
-            timeRequiredAfterBookingIsFinishedTime = new Time(1,0,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==5){
-            timeRequiredAfterBookingIsFinishedTime = new Time(1,15,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==6){
-            timeRequiredAfterBookingIsFinishedTime = new Time(1,30,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==7){
-            timeRequiredAfterBookingIsFinishedTime = new Time(1,45,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==8){
-            timeRequiredAfterBookingIsFinishedTime = new Time(2,0,0);
-        }
-        else if (timeRequiredAfterBookingIsFinished==9){
-            timeRequiredAfterBookingIsFinishedTime = new Time(0,0,0);
-        }
         //Authenticate section details and save to database
-        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCoversSection,tempTime, timeRequiredAfterBookingIsFinishedTime)){
+        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCoversSection,maxTimeOfBooking, timeRequiredAfterBookingIsFinished,timeConstrained)){
 
         }
         ArrayList<Section> sectionList = new ArrayList<Section>();

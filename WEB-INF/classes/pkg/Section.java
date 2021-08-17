@@ -13,6 +13,9 @@ public class Section {
     private Time timeRequiredAfterBookingIsFinishedTime;
     private ArrayList<ServableTable> servableTables;
     private ArrayList<JoinedTables> joinedTables;
+    private  ArrayList<LocalTime> startTimes;
+    private  ArrayList<LocalTime> endTimes;
+    private boolean timeConstrained;
 
     Section(){
 
@@ -120,5 +123,29 @@ public class Section {
 
     public void setTimeRequiredAfterBookingIsFinishedLocalTime(LocalTime timeRequiredAfterBookingIsFinishedTimeLocalTime) {
         this.timeRequiredAfterBookingIsFinishedLocalTime = timeRequiredAfterBookingIsFinishedTimeLocalTime;
+    }
+
+    public boolean isTimeConstrained() {
+        return timeConstrained;
+    }
+
+    public void setTimeConstrained(boolean timeConstrained) {
+        this.timeConstrained = timeConstrained;
+    }
+
+    public ArrayList<LocalTime> getStartTimes() {
+        return startTimes;
+    }
+
+    public void setStartTimes(ArrayList<LocalTime> startTimes) {
+        this.startTimes = startTimes;
+    }
+
+    public ArrayList<LocalTime> getEndTimes() {
+        return endTimes;
+    }
+
+    public void setEndTimes(ArrayList<LocalTime> endTimes) {
+        this.endTimes = endTimes;
     }
 }

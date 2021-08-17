@@ -15,6 +15,20 @@ CREATE TABLE Section (
                          maxCapacity int,
                          maxTimeOfBooking TIME,
                          timeRequiredAfterBookingIsFinished TIME,
+                         startTimeMonday TIME,
+                          endTimeMonday TIME,
+                        startTimeTuesday TIME,
+                          endTimeTuesday TIME,
+                          startTimeWednesday TIME,
+                          endTimeWednesday TIME,
+                          startTimeThursday TIME,
+                          endTimeThursday TIME,
+                          startTimeFriday TIME,
+                          endTimeFriday TIME,
+                          startTimeSaturday TIME,
+                          endTimeSaturday TIME,
+                          startTimeSunday TIME,
+                          endTimeSunday TIME,
                          PRIMARY KEY (sectionID)
 );
 CREATE TABLE ServableTable (

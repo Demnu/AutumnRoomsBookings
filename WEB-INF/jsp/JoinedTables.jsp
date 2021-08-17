@@ -101,7 +101,6 @@
                                     <input type="text" class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Enter details to search" title="Enter details to search">
                                 </div>
                                 <div class="input-group">
-
                                     <table id="myTable"  class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" >
                                         <thead>
                                         <tr class="header">

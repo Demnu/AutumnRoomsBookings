@@ -49,7 +49,6 @@ public class ChangedDateDatabaseInterface {
             s.setString(5,description);
             // executes the statement and closes statement and connection
             s.executeUpdate();
-            System.out.println("test");
 
             s.close();
             connection.close();
@@ -57,7 +56,6 @@ public class ChangedDateDatabaseInterface {
             //Get generated bookingID
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("fail");
 
         }
 

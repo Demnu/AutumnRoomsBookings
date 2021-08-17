@@ -99,6 +99,15 @@ public class VenueDetailsDatabaseInterface {
             s.setTime(13, sundayOpenTime);
             s.setTime(14, sundayCloseTime);
             s.setInt(15,venueID);
+            ArrayList<Section> sections = SectionDatabaseInterface.getAllSections();
+            for (Section section : sections){
+                if (!section.isTimeConstrained()){
+                    SectionDatabaseInterface.editStartEndTimes(section.getSectionID(),mondayOpenTime,  mondayCloseTime,  tuesdayOpenTime,  tuesdayCloseTime,  wednesdayOpenTime,  wednesdayCloseTime,  thursdayOpenTime,  thursdayCloseTime,  fridayOpenTime,  fridayCloseTime,  saturdayOpenTime,  saturdayCloseTime,  sundayOpenTime,  sundayCloseTime);
+                }
+                else{
+
+                }
+            }
             // executes the statement and closes statement and connection
             s.executeUpdate();
             s.close();

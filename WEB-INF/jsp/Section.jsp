@@ -1,15 +1,15 @@
 <%@ page contentType="text/html;"%>
 <%@ page import="java.util.*" %>
-<%@ page import="pkg.User" %>
-<%@ page import="pkg.ServableTable" %>
-<%@ page import="pkg.Section" %>
-<%@ page import="pkg.Functions" %>
-<%@ page import="pkg.JoinedTables" %>
 <%@ page import="java.time.LocalTime" %>
+<%@ page import="pkg.*" %>
 <%
     User user = (User) session.getAttribute("user");
     Section section = (Section) request.getAttribute("section");
     ArrayList<LocalTime> timeIncrements = (ArrayList<LocalTime>) Functions.getTimeIncrementsFrom0To24Hours();
+    ArrayList<String> errors = (ArrayList<String>) request.getAttribute("errors");
+    ArrayList<String> dayNames = Functions.getDayNames();
+    ArrayList<LocalTime> timeIncrementsList = Functions.getTimeIncrementsFrom0To24Hours();
+    Venue venueDetails = VenueDetailsDatabaseInterface.getOpenCloseTimes(1);
 
 %>
 <!DOCTYPE html>
@@ -62,7 +62,7 @@
 <%--                            </tr>--%>
                             <tr>
                                 <td colspan="2">
-                                    <a class="btn btn-outline-danger d-block btn-user w-100" href="<%=request.getContextPath()%>/addServableTableGivenSectionID?chosenSectionID=<%=section.getSectionID()%>">Delete Section</a>
+                                    <a class="btn btn-outline-danger d-block btn-user w-100" href="<%=request.getContextPath()%>/deleteSection?sectionID=<%=section.getSectionID()%>">Delete Section</a>
                                 </td>
                             </tr>
                             <tr>
@@ -76,6 +76,7 @@
                 </div>
             </div>
         </div>
+        <br>
         <div class="container">
             <div class="card w-100">
                 <div class="card-body">
@@ -91,7 +92,7 @@
                                     <th class="th-sm">Max Covers</th>
                                     <th class="th-sm">Max Time for Bookings HH/MM</th>
                                     <th class="th-sm">Time Required to Reset After Booking is Finished HH/MM</th>
-                                    <th class="th-sm"></th>
+                                    <th class="th-sm">Time Constrained</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -120,6 +121,15 @@
                                                 <%}%>
                                             </select>
                                         </td>
+                                        <td>
+                                            <% if (section.isTimeConstrained()){%>
+                                            <input class="form-check" style="margin: auto; width: 25px; height: 25px" type="checkbox" name="timeConstrained" value="timeConstrained" checked>
+                                            <%}%>
+
+                                            <% if (!section.isTimeConstrained()){%>
+                                            <input class="form-check" style="margin: auto; width: 25px; height: 25px" type="checkbox" name="timeConstrained" value="timeConstrained">
+                                            <%}%>
+                                        </td>
                                         <td><button class="btn btn-outline-primary d-block btn-user w-100" type="submit">Edit Section</button></td>
                                     </tr>
                                 </form>
@@ -127,9 +137,98 @@
                             </table>
                         </div>
                     </div>
+                    <% if (section.isTimeConstrained()){%>
+                    <div class="card-body">
+                        <div class="row">
+                            <h4>Start and End Times of Section</h4>
+                            <table id="openAndCloseTimes" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                                <%
+                                    if (errors != null){%>
+                                <tr class="bg-danger">
+                                    <td colspan="7"><%=errors%></td>
+                                </tr>
+                                <%}%>
+                                <thead>
+                                <tr>
+                                    <th style="width: 60px" class="th-sm">Day</th>
+                                    <th style="width: 100px">Open Time</th>
+                                    <th style="width: 100px;">Close Time</th>
+                                    <th class="th-sm">Start Time</th>
+                                    <th class="th-sm">End Time</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% for (int j = 0 ; j<dayNames.size(); j ++){%>
+                                <tr>
+                                    <form action="editStartEndTimes" method="POST" name="editSingleTable" id="editSingleTable">
+
+                                        <div class="form-group">
+                                            <input type="hidden" name="sectionID" value="<%=section.getSectionID()%>">
+
+                                            <input type="hidden" name="day" value="<%=dayNames.size()-1%>">
+                                            <th>
+                                                <%=dayNames.get(j)%>
+                                            </th>
+                                            <td>
+                                                <%=venueDetails.getOpenTimes().get(j)%>
+                                            </td>
+
+                                            <td>
+                                                <%=venueDetails.getCloseTimes().get(j)%>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control" name="<%=dayNames.get(j)%>OpenTime">
+                                                    <% if (section.getStartTimes().get(j).equals(LocalTime.parse("00:01"))){%>
+                                                    <option value="00:01">N/A</option>
+                                                    <%}%>
+                                                    <% if (!section.getStartTimes().get(j).equals(LocalTime.parse("00:01"))){%>
+                                                    <option value="<%=section.getStartTimes().get(j)%>"><%=section.getStartTimes().get(j)%></option>
+                                                    <option value="00:01">N/A</option>
+                                                    <%}%>
+                                                    <%
+                                                        for (LocalTime localTime : timeIncrementsList){%>
+                                                    <option value="<%=localTime%>"><%=localTime%></option>
+                                                    <%  }
+                                                    %>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control" name="<%=dayNames.get(j)%>CloseTime">
+                                                    <% if (section.getEndTimes().get(j).equals(LocalTime.parse("00:01"))){%>
+                                                    <option value="00:01">N/A</option>
+                                                    <%}%>
+                                                    <% if (!section.getEndTimes().get(j).equals(LocalTime.parse("00:01"))){%>
+                                                    <option value="<%=section.getEndTimes().get(j)%>"><%=section.getEndTimes().get(j)%></option>
+                                                    <option value="00:01">N/A</option>
+                                                    <%}%>
+                                                    <%
+                                                        for (LocalTime localTime : timeIncrementsList){%>
+                                                    <option value="<%=localTime%>"><%=localTime%></option>
+                                                    <%  }
+                                                    %>
+                                                </select>
+                                            </td>
+                                        </div>
+
+                                            <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                        <input class="form-control" type="reset" value="Reset Changes">
+                        <br>
+                        <button class="btn btn-primary d-block btn-user w-100" type="submit">Edit Times</button>
+                        </form>
+                        <br>
+                        <a class="btn btn-outline-danger d-block btn-user w-100" href="<%=request.getContextPath()%>/resetStartAndEndTimes?sectionID=<%=section.getSectionID()%>">Reset Times to Open and Close Times</a>
+
+                    </div>
                 </div>
             </div>
         </div>
+        <%}%>
         <br>
 
         <div class="collapse multi-collapse" id="multiCollapseExample1">
@@ -213,12 +312,15 @@
                             </form>
                         </div>
                     </div>
-                    <a class="test btn btn-outline-secondary w-100" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Collapse</a>
 
+                    <a class="test btn btn-outline-secondary w-100" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Collapse</a>
                 </div>
+
             </div>
         </div>
     </div>
+    <a class="btn btn-outline-secondary" style="width: 100%" href="<%=request.getContextPath()%>/sectionHub">Back</a>
+
 </div>
 <script>
     function myFunction() {
