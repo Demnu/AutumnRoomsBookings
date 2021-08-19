@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 
 @WebServlet("/checkBookingAvailability")
-public class CheckBookingAvailabilityStaffController extends HttpServlet {
+public class oldCheckBookingAvailabilityStaffController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

@@ -1,6 +1,7 @@
 package pkg;
 import java.sql.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 public class TableBookingsDatabaseInterface {
     public static ArrayList getTableIDsInputtedBookingID(int bookingID){
@@ -46,5 +47,35 @@ public class TableBookingsDatabaseInterface {
         }
         return false;
     }
+//    public static ServableTable tableBookingInformationBookedOnGivenDateAvailableTable(LocalDate dateOfBooking, ServableTable availableTable){
+//        ArrayList<Integer> bookingIDs = new ArrayList<>();
+//        int counter = 0;
+//        boolean found = false;
+//        String query = "SELECT* FROM TableBooking WHERE tableID=?";
+//        try(Connection connection = ConfigBean.getConnection();){
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setInt(1, availableTable.getTableID());
+//            ResultSet result = preparedStatement.executeQuery();
+//            while(result.next()){
+//                Booking tempBooking = BookingDatabaseInterface.getBookingInputtedDateBookingID(dateOfBooking,result.getInt(3));
+//                bookingIDs.add(tempBooking.getBookingID());
+//                if (tempBooking!=null){
+//                    bookingIDs.add(tempBooking.getBookingID());
+////                    availableTable.addBookingOnDay(tempBooking);
+//                }
+//
+//
+//            }
+//            availableTable.setTimeIncrementsBookedOutForDay();
+//            result.close();
+//            preparedStatement.close();
+//            connection.close();
+//        }
+//        catch(SQLException e){
+//            System.err.println(e.getMessage());
+//            System.err.println(e.getStackTrace());
+//        }
+//        return availableTable;
+//    }
 }
 

@@ -18,8 +18,14 @@ public class Booking implements Comparable{
     private int numberOfPeople;
     private boolean confirmed;
     private ArrayList<ServableTable> assignedTables;
-    private Time timeRequiredAfterBookingIsFinished;
+    private LocalTime timeRequiredAfterBookingIsFinished;
     private String staffName;
+    private int tableID;
+    private int joinedTablesID;
+    private int sectionID;
+    boolean hasSingleTable;
+    private String tableNumber;
+    private String joinedTableNumber;
 
     public ArrayList<ServableTable> getAssignedTables() {
         return assignedTables;
@@ -68,7 +74,7 @@ public class Booking implements Comparable{
         this.timeBooked = timeBooked;
     }
 
-    public void setTimeRequiredAfterBookingIsFinished(Time timeRequiredAfterBookingIsFinished) {
+    public void setTimeRequiredAfterBookingIsFinished(LocalTime timeRequiredAfterBookingIsFinished) {
         this.timeRequiredAfterBookingIsFinished = timeRequiredAfterBookingIsFinished;
     }
 
@@ -122,7 +128,7 @@ public class Booking implements Comparable{
         this.confirmed = confirmed;
     }
 
-    public Time getTimeRequiredAfterBookingIsFinished() {
+    public LocalTime getTimeRequiredAfterBookingIsFinished() {
         return timeRequiredAfterBookingIsFinished;
     }
 
@@ -160,7 +166,63 @@ public class Booking implements Comparable{
             currentMinute +=15;
 
         }
+        //add time required after booking to increments
+        int factorOf15 = (timeRequiredAfterBookingIsFinished.getHour()*60+timeRequiredAfterBookingIsFinished.getMinute())/15;
+        tempLocalTime = timeIncrementsForBooking.get(timeIncrementsForBooking.size()-1);
+        for (int i = 0 ; i<factorOf15;i++){
+
+            tempLocalTime = tempLocalTime.plusMinutes(15);
+            timeIncrementsForBooking.add(tempLocalTime);
+        }
         return  timeIncrementsForBooking;
+    }
+
+    public int getTableID() {
+        return tableID;
+    }
+
+    public void setTableID(int tableID) {
+        this.tableID = tableID;
+    }
+
+    public int getJoinedTablesID() {
+        return joinedTablesID;
+    }
+
+    public void setJoinedTablesID(int joinedTablesID) {
+        this.joinedTablesID = joinedTablesID;
+    }
+
+    public int getSectionID() {
+        return sectionID;
+    }
+
+    public void setSectionID(int sectionID) {
+        this.sectionID = sectionID;
+    }
+
+    public boolean isHasSingleTable() {
+        return hasSingleTable;
+    }
+
+    public void setHasSingleTable(boolean hasSingleTable) {
+        this.hasSingleTable = hasSingleTable;
+    }
+
+    public String getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(String tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
+    public String getJoinedTableNumber() {
+        return joinedTableNumber;
+    }
+
+    public void setJoinedTableNumber(String joinedTableNumber) {
+        this.joinedTableNumber = joinedTableNumber;
     }
 
     @Override

@@ -11,10 +11,10 @@ public class Venue {
     private int venueID;
     private LocalTime timeVenueOpens;
     private LocalTime timeVenueCloses;
-    private ArrayList<LocalTime> timeIncrements;
-    private ArrayList<LocalTime> openTimes;
-    private ArrayList<LocalTime> closeTimes;
-    private ArrayList<ChangedDateTimes> changedDateTimes;
+    private ArrayList<LocalTime> timeIncrements = new ArrayList<>();
+    private ArrayList<LocalTime> openTimes= new ArrayList<>();
+    private ArrayList<LocalTime> closeTimes= new ArrayList<>();
+    private ArrayList<ChangedDateTimes> changedDateTimes= new ArrayList<>();
     private int maxCovers;
 
     public Venue(String venueName) {

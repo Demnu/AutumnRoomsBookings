@@ -151,18 +151,19 @@ public class SectionDatabaseInterface {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet result = preparedStatement.executeQuery();
             while(result.next()){
+                Section section = new Section();
                 ArrayList<LocalTime> startTimes = new ArrayList<>();
                 ArrayList<LocalTime> endTimes = new ArrayList<>();
-                Section tempSection = new Section();
-                tempSection.setSectionID(result.getInt(1));
-                tempSection.setName(result.getString(2));
-                tempSection.setDescription(result.getString(3));
-                tempSection.setMaxCoversSection(result.getInt(4));
-                tempSection.setMaxTimeOfBooking(result.getTime(5));
-                tempSection.setTimeConstrained(result.getBoolean(21));
-                tempSection.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
-                tempSection.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(tempSection.getSectionID()));
-
+                section.setSectionID(result.getInt(1));
+                section.setName(result.getString(2));
+                section.setDescription(result.getString(3));
+                section.setMaxCoversSection(result.getInt(4));
+                section.setMaxTimeOfBooking(result.getTime(5));
+                section.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
+                Boolean timeConstrained = result.getBoolean(21);
+                section.setTimeConstrained(timeConstrained);
+                section.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(result.getInt(1)));
+                section.setJoinedTables(JoinedTablesDatabaseInterface.getAllJoinedServeableTablesGivenSectionID(result.getInt(1)));
                 startTimes.add(result.getTime(7).toLocalTime());
                 endTimes.add(result.getTime(8).toLocalTime());
                 startTimes.add(result.getTime(9).toLocalTime());
@@ -177,10 +178,10 @@ public class SectionDatabaseInterface {
                 endTimes.add(result.getTime(18).toLocalTime());
                 startTimes.add(result.getTime(19).toLocalTime());
                 endTimes.add(result.getTime(20).toLocalTime());
-                tempSection.setStartTimes(startTimes);
-                tempSection.setEndTimes(endTimes);
+                section.setStartTimes(startTimes);
+                section.setEndTimes(endTimes);
 
-                sectionList.add(tempSection);
+                sectionList.add(section);
             }
             result.close();
             preparedStatement.close();

@@ -66,10 +66,16 @@
 
                                     <td>
                                         <select class="form-control" name="<%=dayNames.get(j)%>OpenTime">
+                                            <% if (venueDetails.getOpenTimes().get(j).equals(LocalTime.parse("00:01"))){%>
+                                            <option value="00:01">Closed</option>
+                                            <%}%>
+                                            <% if (!venueDetails.getOpenTimes().get(j).equals(LocalTime.parse("00:01"))){%>
                                             <option value="<%=venueDetails.getOpenTimes().get(j)%>"><%=venueDetails.getOpenTimes().get(j)%></option>
+                                            <option value="00:01">Closed</option>
+                                            <%}%>
                                             <%
                                                 for (LocalTime localTime : timeIncrementsList){%>
-                                                    <option value="<%=localTime%>"><%=localTime%></option>
+                                            <option value="<%=localTime%>"><%=localTime%></option>
                                             <%  }
                                             %>
                                         </select>
@@ -77,7 +83,13 @@
 
                                     <td>
                                         <select class="form-control" name="<%=dayNames.get(j)%>CloseTime">
+                                            <% if (venueDetails.getCloseTimes().get(j).equals(LocalTime.parse("00:01"))){%>
+                                            <option value="00:01">Closed</option>
+                                            <%}%>
+                                            <% if (!venueDetails.getCloseTimes().get(j).equals(LocalTime.parse("00:01"))){%>
                                             <option value="<%=venueDetails.getCloseTimes().get(j)%>"><%=venueDetails.getCloseTimes().get(j)%></option>
+                                            <option value="00:01">Closed</option>
+                                            <%}%>
                                             <%
                                                 for (LocalTime localTime : timeIncrementsList){%>
                                             <option value="<%=localTime%>"><%=localTime%></option>

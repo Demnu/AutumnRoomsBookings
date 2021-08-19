@@ -80,6 +80,7 @@
                                     </td>
                                     <td>
                                         <select class="form-control" name="openTime" required>
+                                            <option value="00:01">Closed</option>
                                             <%
                                                 for (LocalTime localTime : timeIncrementsList){%>
                                             <option value="<%=localTime%>"><%=localTime%></option>
@@ -89,6 +90,7 @@
                                     </td>
                                     <td>
                                         <select class="form-control" name="closeTime" required>
+                                            <option value="00:01">Closed</option>
                                             <%
                                                 for (LocalTime localTime : timeIncrementsList){%>
                                             <option value="<%=localTime%>"><%=localTime%></option>

@@ -1,6 +1,7 @@
 package pkg;
 import java.sql.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 public class BookingDatabaseInterface {
     public static ArrayList<Booking> getAllBookingsInputtedDate(Date dateOfBooking){
@@ -35,13 +36,112 @@ public class BookingDatabaseInterface {
         for (int i =0; i<bookingList.size();i++){
             tableIDsAssignedToFoundBooking = TableBookingsDatabaseInterface.getTableIDsInputtedBookingID(bookingList.get(i).getBookingID());
             for (int j = 0 ; j<tableIDsAssignedToFoundBooking.size();j++){
-                bookingList.get(i).setAssignedTables(ServableTableDatabaseInterface.getAllServableTablesInBooking((Integer) tableIDsAssignedToFoundBooking.get(j)));
+                bookingList.get(i).setAssignedTables(tableIDsAssignedToFoundBooking);
             }
         }
         return bookingList;
     }
 
+//    public static Booking getBookingInputtedDateBookingID(LocalDate dateOfBooking, int bookingID){
+//        String query = "SELECT* FROM Booking WHERE dateOfBooking=? AND bookingID=?";
+//        try(Connection connection = ConfigBean.getConnection();){
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setDate(1, Date.valueOf(dateOfBooking));
+//            preparedStatement.setInt(2, bookingID);
+//            ResultSet result = preparedStatement.executeQuery();
+//            while(result.next()){
+//                Booking tempBooking = new Booking();
+//                tempBooking.setBookingID(result.getInt(1));
+//                tempBooking.setStaffID(result.getInt(2));
+//                tempBooking.setDateBooked(result.getDate(3));
+//                tempBooking.setTimeBooked(result.getTime(4));
+//                tempBooking.setDateOfBooking(result.getDate(5));
+//                tempBooking.setStartTimeOfBooking(result.getTime(6));
+//                tempBooking.setEndTimeOfBooking(result.getTime(7));
+//                tempBooking.setNumberOfPeople(result.getInt(8));
+//                tempBooking.setConfirmed(result.getBoolean(9));
+//                return tempBooking;
+//            }
+//            result.close();
+//            preparedStatement.close();
+//            connection.close();
+//        }
+//        catch(SQLException e){
+//            System.err.println(e.getMessage());
+//            System.err.println(e.getStackTrace());
+//        }
+//
+//        return null;
+//    }
+    public static ArrayList<Booking> getBookingsInputtedDateTableID(LocalDate dateOfBooking, int tableID){
+        ArrayList<Booking> bookings = new ArrayList<>();
+        String query = "SELECT* FROM Booking WHERE dateOfBooking=? AND tableID=?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDate(1, Date.valueOf(dateOfBooking));
+            preparedStatement.setInt(2, tableID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                Booking tempBooking = new Booking();
+                tempBooking.setBookingID(result.getInt(1));
+                tempBooking.setStaffID(result.getInt(2));
+                tempBooking.setDateBooked(result.getDate(3));
+                tempBooking.setTimeBooked(result.getTime(4));
+                tempBooking.setDateOfBooking(result.getDate(5));
+                tempBooking.setStartTimeOfBooking(result.getTime(6));
+                tempBooking.setEndTimeOfBooking(result.getTime(7));
+                tempBooking.setNumberOfPeople(result.getInt(8));
+                tempBooking.setConfirmed(result.getBoolean(9));
+                tempBooking.setTableID(result.getInt(10));
+                bookings.add(tempBooking);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return bookings;
 
+    }
+    public static ArrayList<Booking> getBookingsInputtedDateJoinedTablesID(LocalDate dateOfBooking, int joinedTablesID){
+        ArrayList<Booking> bookings = new ArrayList<>();
+        String query = "SELECT* FROM Booking WHERE dateOfBooking=? AND joinedTablesID=?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDate(1, Date.valueOf(dateOfBooking));
+            preparedStatement.setInt(2, joinedTablesID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                Booking tempBooking = new Booking();
+                tempBooking.setBookingID(result.getInt(1));
+                tempBooking.setStaffID(result.getInt(2));
+                tempBooking.setDateBooked(result.getDate(3));
+                tempBooking.setTimeBooked(result.getTime(4));
+                tempBooking.setDateOfBooking(result.getDate(5));
+                tempBooking.setStartTimeOfBooking(result.getTime(6));
+                tempBooking.setEndTimeOfBooking(result.getTime(7));
+                tempBooking.setNumberOfPeople(result.getInt(8));
+                tempBooking.setConfirmed(result.getBoolean(9));
+                tempBooking.setTableID(result.getInt(10));
+                bookings.add(tempBooking);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        if (bookings.isEmpty()){
+            return null;
+        }
+        return bookings;
+
+    }
 
     public static boolean saveBooking(Integer staffID, Date dateBooked, Time timeBooked, Date dateOfBooking, Time startTimeOfBooking, Time endTimeOfBooking, int numberOfPeople, boolean confirmed, ArrayList tableIDsBooking) {
         try {

@@ -32,6 +32,32 @@ public class JoinedTablesDatabaseInterface {
         }
         return joinedTables;
     }
+    public static ArrayList<JoinedTables> getAllJoinedServeableTables() {
+        ArrayList<JoinedTables> joinedTables = new ArrayList<>();
+        String query = "SELECT* FROM JoinedTables";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                JoinedTables joinedTable = new JoinedTables();
+                joinedTable.setJoinedTablesID(result.getInt(1));
+                joinedTable.setNumberSeats(result.getInt(2));
+                joinedTable.setSectionID(result.getInt(3));
+                joinedTable.setJoinedTablesList(JoinedTablesQDatabaseInterface.getJoinedServableJoinedTablesGivenJoinedTablesID(result.getInt(1)));
+                joinedTable.setMaxTimeOfBooking(SectionDatabaseInterface.getMaxTimeOfSectionInputtedSectionID(joinedTable.getSectionID()));
+                joinedTable.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(joinedTable.getSectionID()));
+                joinedTables.add(joinedTable);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return joinedTables;
+    }
     public static void createJoinedTable(Integer sectionID,Integer numberSeats, ArrayList<Integer> servableTableIDs) {
         boolean completed = false;
         try {

@@ -70,7 +70,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
                     if (allTables.get(k).getTableID()==currentBooking.getAssignedTables().get(j).getTableID()){
                         //Get all time increments for specific booking
                         indexsForTablesWithBookings.add(k);
-                        allTables.get(k).setTimeIncrementsBookedOutForDay(currentBooking.getTimeIncrementsForBooking());
+//                        allTables.get(k).setTimeIncrementsBookedOutForDay(currentBooking.getTimeIncrementsForBooking()); HAVE TO FIX THIS
                         allTables.get(k).setBookingsOnDay(currentBooking);
                     }
                 }

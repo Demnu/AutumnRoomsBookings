@@ -51,7 +51,7 @@
                             <%}%>
                                 <tr>
                                     <td>
-                                        <a class="test btn btn-outline-primary w-100" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Create New Section</a>
+                                        <a class="test btn btn-outline-primary w-100" data-toggle="collapse" href="#multiCollapseExample1" role="button">Create New Section</a>
                                         <div class="collapse multi-collapse" id="multiCollapseExample1">
                                             <div class="card w-100">
                                                 <div class="card-body">

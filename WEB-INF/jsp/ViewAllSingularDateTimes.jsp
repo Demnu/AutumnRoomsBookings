@@ -70,10 +70,20 @@
                                     <%=changedDate.getDescription()%>
                                 </td>
                                 <td>
+                                    <% if (changedDate.getChangedOpenTime().equals(LocalTime.parse("00:01"))){%>
+                                    <option value="00:01">Closed</option>
+                                    <%}%>
+                                    <% if (!changedDate.getChangedOpenTime().equals(LocalTime.parse("00:01"))){%>
                                     <%=changedDate.getChangedOpenTime()%>
+                                    <%}%>
                                 </td>
                                 <td>
+                                    <% if (changedDate.getChangedOpenTime().equals(LocalTime.parse("00:01"))){%>
+                                    <option value="00:01">Closed</option>
+                                    <%}%>
+                                    <% if (!changedDate.getChangedOpenTime().equals(LocalTime.parse("00:01"))){%>
                                     <%=changedDate.getChangedCloseTime()%>
+                                    <%}%>
                                 </td>
                             <td> <a class="btn btn-outline-danger form-check" style="width: 100%" href="<%=request.getContextPath()%>/deleteChangedDate?changedDateID=<%=changedDate.getChangedDateID()%>">Delete Date</a></td>
 

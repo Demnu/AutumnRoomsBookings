@@ -1,5 +1,6 @@
 package pkg;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 public class ServableTableDatabaseInterface {
     public static boolean saveServableTable(int sectionID, int tableNumber, int seats) {
@@ -127,6 +128,9 @@ public class ServableTableDatabaseInterface {
                 tempServableTable.setSectionName(SectionDatabaseInterface.getSectionName(result.getInt(2)));
                 //get timeRequiredAfterBookingIsFinished for table
                 tempServableTable.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(result.getInt(2)));
+                //get bookings on day
+                return tempServableTable;
+
             }
             result.close();
             preparedStatement.close();

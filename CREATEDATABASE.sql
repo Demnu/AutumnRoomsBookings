@@ -49,8 +49,13 @@ CREATE TABLE Booking(
                         endTimeOfBooking TIME NOT NULL,
                         numberOfPeople int NOT NULL,
                         confirmed boolean,
+                        tableID int,
+                        joinedTablesID int,
                         PRIMARY KEY (bookingID),
-                        FOREIGN KEY (staffID) REFERENCES Staff(staffID)
+                        FOREIGN KEY (staffID) REFERENCES Staff(staffID),
+                        FOREIGN KEY (tableID) REFERENCES ServableTable(tableID),
+                        FOREIGN KEY (joinedTablesID) REFERENCES JoinedTables(joinedTablesID)
+
 );
 CREATE TABLE TableBookings(
                               tableBookingID INT NOT NULL AUTO_INCREMENT,

@@ -57,12 +57,10 @@ public class EditSingleDateController extends HttpServlet {
 
         ChangedDateDatabaseInterface.saveChangedDate(startDateLocalDate,openTime,endTime,description,user.getVenueID());
         long daysBetween = Duration.between(startDate, endDate).toDays();
-        System.out.println(daysBetween);
 
         for (int i = 0 ; i<daysBetween; i++){
             startDateLocalDate = startDateLocalDate.plusDays(1);
             ChangedDateDatabaseInterface.saveChangedDate(startDateLocalDate,openTime,endTime,description,user.getVenueID());
-            System.out.println(startDateLocalDate);
         }
 
         ArrayList<ChangedDateTimes> changedDateTimes = ChangedDateDatabaseInterface.getChangedDateTimes(user.getVenueID());

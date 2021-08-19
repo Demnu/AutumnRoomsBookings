@@ -89,6 +89,7 @@
                                     <th class="th-sm">Description</th>
                                     <th class="th-sm">Amount of Tables</th>
                                     <th class="th-sm">Amount of Seats</th>
+                                    <th class="th-sm">Amount of Joined Tables</th>
                                     <th class="th-sm">Max Covers</th>
                                     <th class="th-sm">Max Time for Bookings HH/MM</th>
                                     <th class="th-sm">Time Required to Reset After Booking is Finished HH/MM</th>
@@ -103,6 +104,7 @@
                                         <td><%=section.getDescription()%></td>
                                         <td><%=section.getServableTables().size()%></td>
                                         <td><%=section.getAmountSeats()%></td>
+                                        <td><%=section.getJoinedTables().size()%></td>
                                         <td>
                                             <input type="number" name="maxCoversSection" id="maxCoversSection" class="form-control" min="1" max="150" value="<%=section.getMaxCoversSection()%>"/>
                                         <td>

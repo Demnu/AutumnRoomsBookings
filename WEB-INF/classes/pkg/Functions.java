@@ -34,4 +34,16 @@ public class Functions {
         dayNames.add("Sunday");
         return dayNames;
     }
+
+    public static ArrayList<LocalTime> getTimeIncrementsForDay(){
+        ArrayList<LocalTime> timeIncrementsList = new ArrayList<>();
+        LocalTime tempLocalTime = LocalTime.of(0,0,0);
+        for (int i = 0 ; i < 96; i++){
+            timeIncrementsList.add(tempLocalTime);
+            LocalTime temp2LocalTime = tempLocalTime.plusMinutes(15);
+            tempLocalTime = temp2LocalTime;
+        }
+        return timeIncrementsList;
+    }
+
 }
