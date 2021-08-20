@@ -10,6 +10,7 @@ public class ServableTable {
     private int sectionID;
     private int tableNumber;
     private int seats;
+    private LocalTime timeAllowedToStayAfterSectionClosed;
     private Time maxTimeOfBooking;
     private String sectionName;
     private Time timeRequiredAfterBookingIsFinished;
@@ -176,11 +177,28 @@ public class ServableTable {
         System.out.println();
         LocalTime lengthOfBooking = maxTimeOfBooking.toLocalTime();
         LocalTime timeToReset = timeRequiredAfterBookingIsFinished.toLocalTime();
+
+        LocalTime endTime = availableTimeIncrements.get(availableTimeIncrements.size()-1);
+        int minsTimeAllowedAfterClose = timeAllowedToStayAfterSectionClosed.getMinute() + timeAllowedToStayAfterSectionClosed.getHour()*60;
+        int factorOf15Close = minsTimeAllowedAfterClose/15;
+        LocalTime timePastClose = availableTimeIncrements.get(availableTimeIncrements.size()-1).plusMinutes(minsTimeAllowedAfterClose);
+        ArrayList<LocalTime> allowedTimesPastClose = new ArrayList<>();
+        LocalTime tempLocalTime = endTime;
+        ArrayList<LocalTime> allowedTimes = new ArrayList<>();
+        for (LocalTime localTime : availableTimeIncrements){
+            allowedTimes.add(localTime);
+        }
+
+        for (int i = 0 ; i <factorOf15Close; i++){
+            tempLocalTime =  tempLocalTime.plusMinutes(15);
+            allowedTimes.add(tempLocalTime);
+        }
+
+
         int minutes = lengthOfBooking.getHour()*60 + lengthOfBooking.getMinute() + timeToReset.getHour()*60 + timeToReset.getMinute();
         int factorOf15 = minutes/15;
         ArrayList<Booking> possibleBookingsForTable = new ArrayList<>();
         boolean bookingPossible = true;
-        LocalTime endTime;
 
         for (LocalTime startTime : availableTimeIncrements){
             LocalTime tempTime = startTime;
@@ -194,9 +212,8 @@ public class ServableTable {
             int count = 0;
 
             for (LocalTime bookingTimeIncrement : bookingTimeIncrements){
-                for (LocalTime availableTimeIncrement : availableTimeIncrements){
+                for (LocalTime availableTimeIncrement : allowedTimes){
                     if (availableTimeIncrement.compareTo(bookingTimeIncrement)==0){
-
                         count++;
                     }
                 }
@@ -219,11 +236,17 @@ public class ServableTable {
 
             }
             else {
+                //check for possible bookings that go past close time
+                if (timeAllowedToStayAfterSectionClosed.compareTo(LocalTime.of(0,0))!=0){
+
+                }
+
                 System.out.println("Not Possible: ");
                 System.out.println(bookingTimeIncrements.get(0));
                 System.out.println(endTime);
                 System.out.println();
             }
+
 
 
         }
@@ -246,6 +269,13 @@ public class ServableTable {
         }
     }
 
+    public LocalTime getTimeAllowedToStayAfterSectionClosed() {
+        return timeAllowedToStayAfterSectionClosed;
+    }
+
+    public void setTimeAllowedToStayAfterSectionClosed(LocalTime timeAllowedToStayAfterSectionClosed) {
+        this.timeAllowedToStayAfterSectionClosed = timeAllowedToStayAfterSectionClosed;
+    }
 
     public ArrayList<Booking> getPossibleBookings() {
         return possibleBookings;

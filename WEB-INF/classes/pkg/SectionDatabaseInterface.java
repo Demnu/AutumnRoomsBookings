@@ -422,5 +422,25 @@ public class SectionDatabaseInterface {
         }
         return false;
     }
+
+
+    public static LocalTime getTimeAllowedToStayAfterSectionClosed(int sectionID) {
+        try(Connection connection = ConfigBean.getConnection();){
+            String query = "Select timeAllowedToStayAfterSectionClosed FROM Section WHERE sectionID =?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, sectionID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                return result.getTime(1).toLocalTime();
+            }
+            result.close();
+            preparedStatement.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 

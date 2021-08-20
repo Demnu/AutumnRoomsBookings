@@ -98,6 +98,8 @@ public class ServableTableDatabaseInterface {
                 tempServableTable.setSectionName(SectionDatabaseInterface.getSectionName(result.getInt(2)));
                 //get timeRequiredAfterBookingIsFinished for table
                 tempServableTable.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(result.getInt(2)));
+                //get timeAllowedToStayAfterSectionClosed
+                tempServableTable.setTimeAllowedToStayAfterSectionClosed(SectionDatabaseInterface.getTimeAllowedToStayAfterSectionClosed(result.getInt(2)));
                 tableList.add(tempServableTable);
             }
             result.close();

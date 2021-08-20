@@ -5,6 +5,7 @@
 <%@ page import="java.time.LocalTime" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="pkg.TimeIncrementBooking" %>
+<%@ page import="pkg.TimeIncrementSection" %>
 <%
     User user = (User) session.getAttribute("user");
     ArrayList<Section> sectionList = (ArrayList<Section>) request.getAttribute("sectionList");
@@ -62,7 +63,58 @@
                                             <button class="btn btn-outline-danger d-block btn-user w-100" type="submit"><del><%=table.get(i+j).getTimeIncrement()%></del></button>
                                         <%}%>
                                         <%if(!table.get(i+j).isEmpty() && !table.get(i+j).isClosed()){%>
-                                            <button class="btn btn-outline-primary d-block btn-user w-100" type="submit"><%=table.get(i+j).getTimeIncrement()%></button>
+                                            <%if (table.get(i+j).reachedMax()){%>
+                                                <button class="btn btn-outline-danger d-block btn-user w-100" type="submit">
+                                                    <div style="display: flex; justify-content: space-between">
+                                                        <div style="width: 33%">
+
+                                                        </div>
+                                                        <div style="width: 33%;">
+                                                            <%=table.get(i+j).getTimeIncrement()%>
+
+                                                        </div>
+                                                        <div style=" font-size: 12px; width: 33%">
+
+                                                            <%=table.get(i+j).getAmountCovers()%>/<%=table.get(i+j).getVenueCovers()%> Covers
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            <%}
+                                            else if(table.get(i+j).willGoPastMaxCovers(numberOfPeople)){%>
+                                                <button class="btn btn-outline-danger d-block btn-user w-100" type="submit">
+                                                    <div style="display: flex; justify-content: space-between">
+                                                        <div style="width: 33%">
+
+                                                        </div>
+                                                        <div style="width: 33%;">
+                                                            <%=table.get(i+j).getTimeIncrement()%>
+
+                                                        </div>
+                                                        <div style=" font-size: 12px; width: 33%">
+
+                                                            <%=table.get(i+j).getAmountCovers()%>/<%=table.get(i+j).getVenueCovers()%> Covers
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            <%}
+                                            else{%>
+                                                <button class="btn btn-outline-primary d-block btn-user w-100" type="submit">
+                                                    <div style="display: flex; justify-content: space-between">
+                                                        <div style="width: 33%">
+
+                                                        </div>
+                                                        <div style="width: 33%;">
+                                                            <%=table.get(i+j).getTimeIncrement()%>
+
+                                                        </div>
+                                                        <div style=" font-size: 12px; width: 33%">
+
+                                                            <%=table.get(i+j).getAmountCovers()%>/<%=table.get(i+j).getVenueCovers()%> Covers
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            <%}%>
+
                                         <%}%>
                                     </td>
                                     <%}%>
@@ -87,6 +139,7 @@
                 </div>
             </div>
         </div>
+        <br>
     </div>
 </div>
 <script>

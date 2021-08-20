@@ -8,10 +8,12 @@ public class TimeIncrementSection {
     private int sectionID;
     private String sectionName;
     private ArrayList<Booking> bookingsInSectionTimeIncrement = new ArrayList<>();
-
-    public TimeIncrementSection(int sectionID, String sectionName) {
+    private int maxCovers;
+    private int amountCovers = 0;
+    public TimeIncrementSection(int sectionID, String sectionName, int maxCovers) {
         this.sectionID = sectionID;
         this.sectionName = sectionName;
+        this.maxCovers = maxCovers;
     }
 
     public int getSectionID() {
@@ -48,5 +50,25 @@ public class TimeIncrementSection {
 
     public void addBooking(Booking booking) {
         bookingsInSectionTimeIncrement.add(booking);
+    }
+
+    public int getMaxCovers() {
+        return maxCovers;
+    }
+
+    public void setMaxCovers(int maxCovers) {
+        this.maxCovers = maxCovers;
+    }
+
+    public int getAmountCovers() {
+        return amountCovers;
+    }
+
+    public void setAmountCovers(int amountCovers) {
+        this.amountCovers = amountCovers;
+    }
+
+    public void addAmountCovers(int numberOfPeople) {
+        this.amountCovers+=numberOfPeople;
     }
 }

@@ -46,6 +46,7 @@ public class JoinedTablesDatabaseInterface {
                 joinedTable.setJoinedTablesList(JoinedTablesQDatabaseInterface.getJoinedServableJoinedTablesGivenJoinedTablesID(result.getInt(1)));
                 joinedTable.setMaxTimeOfBooking(SectionDatabaseInterface.getMaxTimeOfSectionInputtedSectionID(joinedTable.getSectionID()));
                 joinedTable.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(joinedTable.getSectionID()));
+                joinedTable.setTimeAllowedToStayAfterSectionClosed(SectionDatabaseInterface.getTimeAllowedToStayAfterSectionClosed(result.getInt(3)));
                 joinedTables.add(joinedTable);
             }
             result.close();

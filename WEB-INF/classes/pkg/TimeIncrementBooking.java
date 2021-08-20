@@ -7,6 +7,8 @@ public class TimeIncrementBooking implements Comparable<TimeIncrementBooking> {
     private LocalTime timeIncrement;
     private ArrayList<TimeIncrementSection> sections;
     private boolean isClosed = false;
+    private int venueCovers;
+    private int amountCovers=0;
 
 
     TimeIncrementBooking(LocalTime timeIncrement, ArrayList<TimeIncrementSection> sections){
@@ -47,11 +49,42 @@ public class TimeIncrementBooking implements Comparable<TimeIncrementBooking> {
         return true;
     }
 
+    public int getVenueCovers() {
+        return venueCovers;
+    }
+
+    public void setVenueCovers(int venueCovers) {
+        this.venueCovers = venueCovers;
+    }
+
+    public int getAmountCovers() {
+        return amountCovers;
+    }
+
+    public void setAmountCovers() {
+        for (TimeIncrementSection timeIncrementSection : sections){
+            amountCovers+= timeIncrementSection.getAmountCovers();
+        }
+    }
+
     public boolean isClosed() {
         return isClosed;
     }
 
     public void setClosed(boolean closed) {
         isClosed = closed;
+    }
+
+    public boolean reachedMax(){
+        if (amountCovers>=venueCovers){
+            return true;
+        }
+        return false;
+    }
+    public boolean willGoPastMaxCovers(int numPeople){
+        if((amountCovers+numPeople)>venueCovers){
+            return true;
+        }
+        return false;
     }
 }

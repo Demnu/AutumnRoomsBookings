@@ -16,7 +16,31 @@ public class Section {
     private ArrayList<JoinedTables> joinedTables;
     private  ArrayList<LocalTime> startTimes;
     private  ArrayList<LocalTime> endTimes;
+    private  LocalTime startTime;
+    private  LocalTime endTime;
     private boolean timeConstrained;
+    private ArrayList<LocalTime> timeIncrements = new ArrayList<>();
+    private int maxCovers;
+
+    public void setTimeIncrements() {
+        int openHour = startTime.getHour();
+        int openMinute = startTime.getMinute();
+        LocalTime tempLocalTime = LocalTime.of(openHour,openMinute);
+        int closeHour = endTime.getHour();
+        int closeMinute = endTime.getMinute();
+        int hoursOpened = closeHour - openHour;
+        int minutesOpened = closeMinute - openMinute;
+        int totalMinutes = (hoursOpened*60) + minutesOpened;
+        int currentMinute = 0;
+
+
+        while(currentMinute<=totalMinutes){
+            timeIncrements.add(tempLocalTime);
+            tempLocalTime = tempLocalTime.plusMinutes(15);
+            currentMinute +=15;
+
+        }
+    }
 
     Section(){
 
@@ -156,5 +180,33 @@ public class Section {
 
     public void setTimeAllowedToStayAfterSectionClosed(LocalTime timeAllowedToStayAfterSectionClosed) {
         this.timeAllowedToStayAfterSectionClosed = timeAllowedToStayAfterSectionClosed;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public ArrayList<LocalTime> getTimeIncrements() {
+        return timeIncrements;
+    }
+
+    public int getMaxCovers() {
+        return maxCovers;
+    }
+
+    public void setMaxCovers(int maxCovers) {
+        this.maxCovers = maxCovers;
     }
 }
