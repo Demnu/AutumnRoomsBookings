@@ -46,9 +46,11 @@ public class CreateSectionController extends HttpServlet {
         String maxCoversSectionStr = (String) request.getParameter("maxCoversSection");
         String hourMinsStr = (String) request.getParameter("maxTimeOfBooking");
         String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
+        String timeAllowedToStayAfterSectionIsClosedStr = (String) request.getParameter("timeAllowedToStayAfterSectionIsClosed");
         Integer maxCoversSection = Integer.parseInt(maxCoversSectionStr);
         LocalTime maxTimeOfBooking = LocalTime.parse(hourMinsStr);
         LocalTime timeRequiredAfterBookingIsFinished = LocalTime.parse(timeRequiredAfterBookingIsFinishedStr);
+        LocalTime timeAllowedToStayAfterSectionIsClosed = LocalTime.parse(timeAllowedToStayAfterSectionIsClosedStr);
         boolean timeConstrained = false;
         if (timeConstrainedStr!=null){
             timeConstrained = true;
@@ -57,7 +59,7 @@ public class CreateSectionController extends HttpServlet {
 
 
         //Authenticate section details and save to database
-        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCoversSection,maxTimeOfBooking, timeRequiredAfterBookingIsFinished,timeConstrained)){
+        if (SectionDatabaseInterface.saveSection(sectionName,sectionDesc,maxCoversSection,maxTimeOfBooking, timeRequiredAfterBookingIsFinished,timeConstrained,timeAllowedToStayAfterSectionIsClosed)){
 
         }
         ArrayList<Section> sectionList = new ArrayList<Section>();

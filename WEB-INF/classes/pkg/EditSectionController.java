@@ -28,6 +28,7 @@ public class EditSectionController extends HttpServlet {
         String maxCoversSectionStr = (String) request.getParameter("maxCoversSection");
         String maxTimeOfBookingStr = (String) request.getParameter("maxTimeOfBooking");
         String timeConstrainedStr = (String) request.getParameter("timeConstrained");
+        String timeAllowedToStayAfterSectionIsClosedStr = (String) request.getParameter("timeAllowedToStayAfterSectionIsClosed");
         String timeRequiredAfterBookingIsFinishedStr = (String) request.getParameter("timeRequiredAfterBookingIsFinished");
         Integer sectionID = Integer.parseInt(sectionIDStr);
         Integer maxCoversSection = Integer.parseInt(maxCoversSectionStr);
@@ -37,6 +38,8 @@ public class EditSectionController extends HttpServlet {
 
         }
 
+        LocalTime timeAllowedToStayAfterSectionIsClosed = LocalTime.parse(timeAllowedToStayAfterSectionIsClosedStr);
+        SectionDatabaseInterface.updateTimeAllowedToStayAfterSectionIsClosed(sectionID,timeAllowedToStayAfterSectionIsClosed);
 
 
         LocalTime maxTimeOfBooking = LocalTime.parse(maxTimeOfBookingStr);

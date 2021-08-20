@@ -4,10 +4,10 @@ import java.sql.Date;
 import java.time.LocalTime;
 import java.util.*;
 public class SectionDatabaseInterface {
-    public static boolean saveSection(String sectionName, String description, int maxCoversSection, LocalTime maxTimeOfBooking, LocalTime timeRequiredAfterBookingIsFinished,boolean timeConstrained) {
+    public static boolean saveSection(String sectionName, String description, int maxCoversSection, LocalTime maxTimeOfBooking, LocalTime timeRequiredAfterBookingIsFinished, boolean timeConstrained, LocalTime timeAllowedToStayAfterSectionIsClosed) {
         try {
             // creates prepared statement and sets its values
-            String query = "INSERT INTO Section (sectionName,description,maxCapacity,maxTimeOfBooking,timeRequiredAfterBookingIsFinished,startTimeMonday,endTimeMonday,startTimeTuesday,endTimeTuesday,startTimeWednesday,endTimeWednesday,startTimeThursday,endTimeThursday,startTimeFriday,endTimeFriday,startTimeSaturday,endTimeSaturday,startTimeSunday,endTimeSunday,timeConstrained) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+            String query = "INSERT INTO Section (sectionName,description,maxCapacity,maxTimeOfBooking,timeRequiredAfterBookingIsFinished,startTimeMonday,endTimeMonday,startTimeTuesday,endTimeTuesday,startTimeWednesday,endTimeWednesday,startTimeThursday,endTimeThursday,startTimeFriday,endTimeFriday,startTimeSaturday,endTimeSaturday,startTimeSunday,endTimeSunday,timeConstrained,timeAllowedToStayAfterSectionClosed) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
             Connection connection = ConfigBean.getConnection();
             PreparedStatement s = connection.prepareStatement(query);
             s.setString(1, sectionName);
@@ -31,6 +31,7 @@ public class SectionDatabaseInterface {
 
             }
             s.setBoolean(20,timeConstrained);
+            s.setTime(21,Time.valueOf(timeAllowedToStayAfterSectionIsClosed) );
             // executes the statement and closes statement and connection
             s.executeUpdate();
             s.close();
@@ -97,50 +98,6 @@ public class SectionDatabaseInterface {
         }
         return "EMPTY";
     }
-    public static Venue getOpenCloseTimes(int venueID){
-        Venue tempVenue = new Venue();
-        ArrayList<LocalTime> openTimes = new ArrayList<>();
-        ArrayList<LocalTime> closeTimes = new ArrayList<>();
-        String query = "SELECT* FROM VenueDetails WHERE venueID =?";
-        try(Connection connection = ConfigBean.getConnection();){
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, venueID);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next()){
-                tempVenue.setVenueID(1);
-
-                tempVenue.setVenueName(result.getString(2));
-                openTimes.add(result.getTime(3).toLocalTime());
-                closeTimes.add(result.getTime(4).toLocalTime());
-                openTimes.add(result.getTime(5).toLocalTime());
-                closeTimes.add(result.getTime(6).toLocalTime());
-                openTimes.add(result.getTime(7).toLocalTime());
-                closeTimes.add(result.getTime(8).toLocalTime());
-                openTimes.add(result.getTime(9).toLocalTime());
-                closeTimes.add(result.getTime(10).toLocalTime());
-                openTimes.add(result.getTime(11).toLocalTime());
-                closeTimes.add(result.getTime(12).toLocalTime());
-                openTimes.add(result.getTime(13).toLocalTime());
-                closeTimes.add(result.getTime(14).toLocalTime());
-                openTimes.add(result.getTime(15).toLocalTime());
-                closeTimes.add(result.getTime(16).toLocalTime());
-                tempVenue.setOpenTimes(openTimes);
-                tempVenue.setCloseTimes(closeTimes);
-                tempVenue.setMaxCovers(result.getInt(17));
-
-            }
-            result.close();
-            preparedStatement.close();
-            connection.close();
-            return tempVenue;
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-            System.err.println(e.getStackTrace());
-        }
-        return null;
-    }
 
     public static ArrayList<Section> getAllSections(){
         ArrayList<Section> sectionList = new ArrayList<Section>();
@@ -164,6 +121,7 @@ public class SectionDatabaseInterface {
                 section.setTimeConstrained(timeConstrained);
                 section.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(result.getInt(1)));
                 section.setJoinedTables(JoinedTablesDatabaseInterface.getAllJoinedServeableTablesGivenSectionID(result.getInt(1)));
+                section.setTimeAllowedToStayAfterSectionClosed(result.getTime(22).toLocalTime());
                 startTimes.add(result.getTime(7).toLocalTime());
                 endTimes.add(result.getTime(8).toLocalTime());
                 startTimes.add(result.getTime(9).toLocalTime());
@@ -211,6 +169,8 @@ public class SectionDatabaseInterface {
                 section.setMaxTimeOfBooking(result.getTime(5));
                 section.setTimeRequiredAfterBookingIsFinishedTime(result.getTime(6));
                 Boolean timeConstrained = result.getBoolean(21);
+                section.setTimeAllowedToStayAfterSectionClosed(result.getTime(22).toLocalTime());
+
                 section.setTimeConstrained(timeConstrained);
                 section.setServableTables(ServableTableDatabaseInterface.getAllServeableTables(section.getSectionID()));
                 section.setJoinedTables(JoinedTablesDatabaseInterface.getAllJoinedServeableTablesGivenSectionID(sectionID));
@@ -440,6 +400,27 @@ public class SectionDatabaseInterface {
             e.printStackTrace();
         }
 
+    }
+
+
+    public static boolean updateTimeAllowedToStayAfterSectionIsClosed(Integer sectionID, LocalTime timeAllowedToStayAfterSectionIsClosed) {
+        try {
+            // creates prepared statement and sets its values
+            String query = "UPDATE Section SET timeAllowedToStayAfterSectionClosed=? WHERE sectionID=?";
+            Connection connection = ConfigBean.getConnection();
+            PreparedStatement s = connection.prepareStatement(query);
+            s.setTime(1, Time.valueOf(timeAllowedToStayAfterSectionIsClosed) );
+            s.setInt(2, sectionID);
+            // executes the statement and closes statement and connection
+            s.executeUpdate();
+            s.close();
+            connection.close();
+            return  true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

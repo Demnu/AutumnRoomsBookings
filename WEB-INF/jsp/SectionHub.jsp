@@ -80,7 +80,15 @@
                                                                 <option value="<%=localTime%>"><%=localTime%></option>
                                                                 <% }
                                                                 %>
-                                                            </select><br>
+                                                            </select>
+                                                            <br>
+                                                            <label for="timeConstrained">Time Allowed to Stay After Section Is Closed</label>
+                                                            <select name="timeAllowedToStayAfterSectionIsClosed" id="timeAllowedToStayAfterSectionIsClosed" class="form-control">
+                                                                <% for (LocalTime timeIncrement : timeIncrements){%>
+                                                                <option value="<%=timeIncrement%>"><%=timeIncrement%></option>
+                                                                <%}%>
+                                                            </select>
+                                                            <br>
                                                             <label for="timeConstrained">Check the box if the section is time constrained</label>
                                                             <input class="form-check" style=" width: 50px; height: 50px" type="checkbox" id="timeConstrained" name="timeConstrained" value="timeConstrained">
                                                             <br>

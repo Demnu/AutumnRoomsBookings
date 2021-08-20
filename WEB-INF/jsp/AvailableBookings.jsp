@@ -2,7 +2,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="pkg.User" %>
 <%@ page import="pkg.Section" %>
-<%@ page import="pkg.Functions" %>
 <%@ page import="java.time.LocalTime" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="pkg.TimeIncrementBooking" %>
@@ -47,41 +46,42 @@
             <div class="card w-100">
                 <div class="card-body">
                     <div class="row">
-                            <h4 style="text-align: center"><em><%=date%> : <%=numberOfPeople%> People <%=openHour%> <%=closeTime%></em></h4>
+                            <h4 style="text-align: center"><em><%=date%> : <%=numberOfPeople%> People</em></h4>
                     </div>
                     <br>
-                    <table>
-                        <%for (int i = 0 ; i<table.size() ; i++){
+                    <table class="table table-borderless">
+                        <% for (int i = 0; i < table.size(); i++){
                             if (table.get(i).getTimeIncrement().getMinute()==0){%>
                                 <tr>
-                                    <td><%=table.get(i).getTimeIncrement()%></td>
-                                    <%i++;%>
-                                    <td><%=table.get(i).getTimeIncrement()%></td>
-                                    <%i++;%>
-                                    <td><%=table.get(i).getTimeIncrement()%></td>
-                                    <%i++;%>
-                                    <td><%=table.get(i).getTimeIncrement()%></td>
+                                    <% for (int j = 0; j < 4 ; j++){%>
+                                    <td>
+                                        <%if(table.get(i+j).isClosed()){%>
+                                            <button class="btn btn-outline-danger d-block btn-user w-100" type="submit">Closed</button>
+                                        <%}%>
+                                        <%if(table.get(i+j).isEmpty() && !table.get(i+j).isClosed()){%>
+                                            <button class="btn btn-outline-danger d-block btn-user w-100" type="submit"><del><%=table.get(i+j).getTimeIncrement()%></del></button>
+                                        <%}%>
+                                        <%if(!table.get(i+j).isEmpty() && !table.get(i+j).isClosed()){%>
+                                            <button class="btn btn-outline-primary d-block btn-user w-100" type="submit"><%=table.get(i+j).getTimeIncrement()%></button>
+                                        <%}%>
+                                    </td>
+                                    <%}%>
                                 </tr>
                             <%}
-                        }
-                        %>
-
-
+                        }%>
 
                     </table>
 
+<%--                    <div class="row" style="display: flex; flex-wrap: wrap ;padding: 5px !important; justify-content: left">--%>
+<%--                        <%  int counter = 0;--%>
+<%--                            for (TimeIncrementBooking timeIncrementBooking : table){%>--%>
 
-
-                    <div class="row" style="display: flex; flex-wrap: wrap ;padding: 5px !important; justify-content: left">
-                        <%  int counter = 0;
-                            for (TimeIncrementBooking timeIncrementBooking : table){%>
-
-                                <a style="margin: 5px !important; width: 30%" class="test btn btn-outline-primary" data-toggle="collapse" href="#multiCollapse<%=counter%>" role="button"><%=timeIncrementBooking.getTimeIncrement()%></a>
-                                <div class="collapse multi-collapse" id="multiCollapse<%=counter%>">
-                                    test
-                                </div>
-                        <%counter++; }%>
-                    </div>
+<%--                                <a style="margin: 5px !important; width: 25%" class="test btn btn-outline-primary" data-toggle="collapse" href="#multiCollapse<%=counter%>" role="button"><%=timeIncrementBooking.getTimeIncrement()%></a>--%>
+<%--                                <div class="collapse multi-collapse" id="multiCollapse<%=counter%>">--%>
+<%--                                    test--%>
+<%--                                </div>--%>
+<%--                        <%counter++; }%>--%>
+<%--                    </div>--%>
 
 
                 </div>

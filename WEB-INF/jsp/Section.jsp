@@ -93,6 +93,7 @@
                                     <th class="th-sm">Max Covers</th>
                                     <th class="th-sm">Max Time for Bookings HH/MM</th>
                                     <th class="th-sm">Time Required to Reset After Booking is Finished HH/MM</th>
+                                    <th class="th-sm">Time Allowed To Stay After Section is Closed</th>
                                     <th class="th-sm">Time Constrained</th>
                                 </tr>
                                 </thead>
@@ -118,6 +119,14 @@
                                         <td>
                                             <select name="timeRequiredAfterBookingIsFinished" id="timeRequiredAfterBookingIsFinished" class="form-control">
                                                 <option value="<%=section.getTimeRequiredAfterBookingIsFinishedTime()%>"><%=section.getTimeRequiredAfterBookingIsFinishedLocalTime()%></option>
+                                                <% for (LocalTime timeIncrement : timeIncrements){%>
+                                                <option value="<%=timeIncrement%>"><%=timeIncrement%></option>
+                                                <%}%>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="timeAllowedToStayAfterSectionIsClosed" id="timeAllowedToStayAfterSectionIsClosed" class="form-control">
+                                                <option value="<%=section.getTimeAllowedToStayAfterSectionClosed()%>"><%=section.getTimeAllowedToStayAfterSectionClosed()%></option>
                                                 <% for (LocalTime timeIncrement : timeIncrements){%>
                                                 <option value="<%=timeIncrement%>"><%=timeIncrement%></option>
                                                 <%}%>

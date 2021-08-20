@@ -227,6 +227,7 @@ public class ServableTable {
 
 
         }
+        //add hour zero
         this.possibleBookings = possibleBookingsForTable;
     }
 

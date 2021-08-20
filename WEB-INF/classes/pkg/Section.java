@@ -9,6 +9,7 @@ public class Section {
     private Integer maxCoversSection;
     private Time maxTimeOfBooking;
     private LocalTime maxTimeOfBookingLocalTime;
+    private LocalTime timeAllowedToStayAfterSectionClosed;
     private LocalTime timeRequiredAfterBookingIsFinishedLocalTime;
     private Time timeRequiredAfterBookingIsFinishedTime;
     private ArrayList<ServableTable> servableTables;
@@ -147,5 +148,13 @@ public class Section {
 
     public void setEndTimes(ArrayList<LocalTime> endTimes) {
         this.endTimes = endTimes;
+    }
+
+    public LocalTime getTimeAllowedToStayAfterSectionClosed() {
+        return timeAllowedToStayAfterSectionClosed;
+    }
+
+    public void setTimeAllowedToStayAfterSectionClosed(LocalTime timeAllowedToStayAfterSectionClosed) {
+        this.timeAllowedToStayAfterSectionClosed = timeAllowedToStayAfterSectionClosed;
     }
 }

@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -224,6 +225,9 @@ public class CheckAvailabilityController extends HttpServlet {
                 System.out.println("1");
                 TimeIncrementBooking timeIncrementBooking = new TimeIncrementBooking();
                 timeIncrementBooking.setTimeIncrement(timeIncrements);
+                if (timeIncrementBooking.getTimeIncrement().compareTo(venue.getTimeIncrements().get(venue.getTimeIncrements().size()-1))==0){
+                    timeIncrementBooking.setClosed(true);
+                }
                 ArrayList<TimeIncrementSection> timeIncrementSections = new ArrayList<>();
                 for (Section section :  sections){
                     System.out.println("2");
@@ -259,9 +263,56 @@ public class CheckAvailabilityController extends HttpServlet {
                 }
                 timeIncrementBooking.setSections(timeIncrementSections);
                 timeIncrementBookings.add(timeIncrementBooking);
+
+
+                }
+            if (timeIncrementBookings.get(0).getTimeIncrement().getMinute()!=0){
+                int minute = timeIncrementBookings.get(0).getTimeIncrement().getMinute();
+                int hour = timeIncrementBookings.get(0).getTimeIncrement().getHour();
+                LocalTime tempLocalTime = LocalTime.of(hour,0);
+                System.out.println("Adding");
+                System.out.println(tempLocalTime);
+
+                ArrayList<TimeIncrementSection> sectionList = new ArrayList<>();
+                TimeIncrementBooking tempTimeIncrementBooking = new TimeIncrementBooking(tempLocalTime,sectionList);
+                tempTimeIncrementBooking.setClosed(true);
+                timeIncrementBookings.add(tempTimeIncrementBooking);
+                int factorOf15 = minute/15;
+                System.out.println(factorOf15);
+                for (int i = 0 ; i<factorOf15-1 ; i++){
+                    tempLocalTime = tempLocalTime.plusMinutes(15);
+                    System.out.println(tempLocalTime);
+                    tempTimeIncrementBooking = new TimeIncrementBooking(tempLocalTime,sectionList);
+                    tempTimeIncrementBooking.setClosed(true);
+                    timeIncrementBookings.add(tempTimeIncrementBooking);
+                }
             }
-            request.setAttribute("timeIncrementsForDay",venue.getTimeIncrements());
+            Collections.sort(timeIncrementBookings);
+            if (timeIncrementBookings.get(timeIncrementBookings.size()-1).getTimeIncrement().getMinute()==0){
+                ArrayList<TimeIncrementSection> sectionList = new ArrayList<>();
+                int minute = timeIncrementBookings.get(timeIncrementBookings.size()-1).getTimeIncrement().getMinute();
+                int hour = timeIncrementBookings.get(timeIncrementBookings.size()-1).getTimeIncrement().getHour();
+                LocalTime tempLocalTime = LocalTime.of(hour,minute);
+                for (int i = 0 ; i<3 ; i++){
+                    tempLocalTime = tempLocalTime.plusMinutes(15);
+                    System.out.println(tempLocalTime + " added");
+                    TimeIncrementBooking tempTimeIncrementBooking = new TimeIncrementBooking(tempLocalTime,sectionList);
+                    tempTimeIncrementBooking.setClosed(true);
+                    timeIncrementBookings.add(tempTimeIncrementBooking);
+
+                }
+
+            }
+            Collections.sort(timeIncrementBookings);
+            for (TimeIncrementBooking timeIncrementBooking : timeIncrementBookings){
+                System.out.println(timeIncrementBooking.getTimeIncrement());
+            }
+
             request.setAttribute("table",timeIncrementBookings);
+            }
+
+
+            request.setAttribute("timeIncrementsForDay",venue.getTimeIncrements());
 
 //            for (TimeIncrementBooking timeIncrementBooking : timeIncrementBookings ){
 //                System.out.println(timeIncrementBooking.getTimeIncrement());
@@ -278,7 +329,6 @@ public class CheckAvailabilityController extends HttpServlet {
 //                }
 //            }
 
-        }
 
         request.setAttribute("dateOfBooking",dateOfBooking);
         request.setAttribute("numberOfPeople",numberOfPeople);

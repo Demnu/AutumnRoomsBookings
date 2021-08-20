@@ -29,6 +29,7 @@ CREATE TABLE Section (
                           endTimeSaturday TIME,
                           startTimeSunday TIME,
                           endTimeSunday TIME,
+                         timeAllowedToStayAfterSectionClosed TIME,
                          PRIMARY KEY (sectionID)
 );
 CREATE TABLE ServableTable (
