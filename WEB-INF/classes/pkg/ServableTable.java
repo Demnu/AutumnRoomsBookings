@@ -19,9 +19,66 @@ public class ServableTable {
     private ArrayList<Booking> bookingsOnDay = new ArrayList<Booking>();
     private ArrayList<Integer> bookingIDsOnDay = new ArrayList<>();
     private ArrayList<Booking> possibleBookings = new ArrayList<>();
+    private ArrayList<BookingTime> allBookedTimeIncrementsForDay = new ArrayList<>();
+
+    private ArrayList<BookingTime> timesBookedDuringDay = new ArrayList<>();
+
+    public ArrayList<Booking> getPossibleBookings() {
+        return possibleBookings;
+    }
+
+    public void setPossibleBookings(ArrayList<Booking> possibleBookings) {
+        this.possibleBookings = possibleBookings;
+    }
+
+
+    public ArrayList<BookingTime> getAllBookedTimeIncrementsForDay() {
+        return allBookedTimeIncrementsForDay;
+    }
+
+    public void setAllBookedTimeIncrementsForDay(ArrayList<BookingTime> allBookedTimeIncrementsForDay) {
+        this.allBookedTimeIncrementsForDay = allBookedTimeIncrementsForDay;
+    }
+
+    public void setBookedTimesBookedOutForDay() {
+        for (Booking booking : bookingsOnDay){
+            for (BookingTime bookingTime : booking.getBookingTimes()){
+                boolean saved = false;
+                for (BookingTime savedBookingTime : timesBookedDuringDay){
+                    if (savedBookingTime.getTimeIncrement().compareTo(bookingTime.getTimeIncrement())==0){
+                        saved = true;
+                       if (bookingTime.isStartTime()){
+                           savedBookingTime.setIsStartTime(true);
+                       }
+                        if (bookingTime.isEndTime()){
+                            savedBookingTime.setIsEndTime(true);
+                        }
+                        if (bookingTime.isBetween()){
+                            savedBookingTime.setBetween(true);
+                        }
+                    }
+                }
+                if (!saved){
+                    timesBookedDuringDay.add(bookingTime);
+                }
+            }
+        }
+        for (BookingTime bookingTime : timesBookedDuringDay){
+            System.out.println(bookingTime);
+        }
+    }
     ServableTable(){
 
     }
+
+    public ArrayList<BookingTime> getTimesBookedDuringDay() {
+        return timesBookedDuringDay;
+    }
+
+    public void setTimesBookedDuringDay(ArrayList<BookingTime> timesBookedDuringDay) {
+        this.timesBookedDuringDay = timesBookedDuringDay;
+    }
+
     ServableTable(int tableID, int sectionID, int tableNumber, int seats){
         this.tableID = tableID;
         this.sectionID = sectionID;
@@ -110,8 +167,11 @@ public class ServableTable {
     }
 
     public void setBookingsOnDay(ArrayList<Booking> bookingsOnDay) {
-        System.out.println("Table - " +tableNumber + " Bookings on day: " + bookingsOnDay.size());
-        this.bookingsOnDay = bookingsOnDay;
+        if (bookingsOnDay!=null){
+            System.out.println("Table - " +tableNumber + " Bookings on day: " + bookingsOnDay.size());
+            this.bookingsOnDay = bookingsOnDay;
+        }
+
     }
     public void setTimeIncrementsBookedOutForDay() {
         ArrayList<LocalTime> tempTimeIncrementsBookedOutForToday = new ArrayList<>();
@@ -161,7 +221,7 @@ public class ServableTable {
             for (LocalTime bookedTimeIncrement : timeIncrementsBookedOutForDay){
                 if (venueTimeIncrement.compareTo(bookedTimeIncrement)==0){
                     removedVenueTimeIncrements.add(bookedTimeIncrement);
-                    System.out.println("Removed " + bookedTimeIncrement);
+//                    System.out.println("Removed " + bookedTimeIncrement);
                 }
             }
         }
@@ -172,9 +232,9 @@ public class ServableTable {
 
     public void setPossibleBookings(int numberOfPeople){
         for (LocalTime temp : availableTimeIncrements){
-            System.out.println(temp);
+//            System.out.println(temp);
         }
-        System.out.println();
+//        System.out.println();
         LocalTime lengthOfBooking = maxTimeOfBooking.toLocalTime();
         LocalTime timeToReset = timeRequiredAfterBookingIsFinished.toLocalTime();
 
@@ -233,16 +293,16 @@ public class ServableTable {
                 booking.setNumberOfSeats(seats);
 
                 possibleBookingsForTable.add(booking);
-                System.out.println(bookingTimeIncrements.get(0));
-                System.out.println(bookingTimeIncrements.get(bookingTimeIncrements.size()-1));
-                System.out.println();
+//                System.out.println(bookingTimeIncrements.get(0));
+//                System.out.println(bookingTimeIncrements.get(bookingTimeIncrements.size()-1));
+//                System.out.println();
 
             }
             else {
-                System.out.println("Not Possible: ");
-                System.out.println(bookingTimeIncrements.get(0));
-                System.out.println(endTime);
-                System.out.println();
+//                System.out.println("Not Possible: ");
+//                System.out.println(bookingTimeIncrements.get(0));
+//                System.out.println(endTime);
+//                System.out.println();
             }
 
 
@@ -260,7 +320,7 @@ public class ServableTable {
                 }
             }
             if (duplicate == false){
-                System.out.println(timeIncrement);
+//                System.out.println(timeIncrement);
                 timeIncrementsBookedOutForDay.add(timeIncrement);
             }
         }
@@ -274,11 +334,213 @@ public class ServableTable {
         this.timeAllowedToStayAfterSectionClosed = timeAllowedToStayAfterSectionClosed;
     }
 
-    public ArrayList<Booking> getPossibleBookings() {
-        return possibleBookings;
+
+
+    public void addBookedTimeIncrementsFromJoinedTable(ArrayList<BookingTime> timeIncrementsBookedOutForDayFromJoinedTable) {
+        for (BookingTime bookingTimeFromAnotherTable : timeIncrementsBookedOutForDayFromJoinedTable){
+            boolean duplicate = false;
+            for (BookingTime savedBookingTime : timesBookedDuringDay){
+                if (bookingTimeFromAnotherTable.getTimeIncrement().compareTo(savedBookingTime.getTimeIncrement())==0){
+                    duplicate = true;
+                    if (bookingTimeFromAnotherTable.isStartTime()){
+                        savedBookingTime.setIsStartTime(true);
+                    }
+                    if (bookingTimeFromAnotherTable.isEndTime()){
+                        savedBookingTime.setIsEndTime(true);
+                    }
+                    if (bookingTimeFromAnotherTable.isBetween()){
+                        savedBookingTime.setBetween(true);
+                    }
+                }
+            }
+            if (!duplicate){
+                timesBookedDuringDay.add(bookingTimeFromAnotherTable);
+            }
+        }
+        Collections.sort(timesBookedDuringDay);
+        for (BookingTime bookingTime : timesBookedDuringDay){
+            System.out.println(bookingTime);
+        }
     }
 
-    public void setPossibleBookings(ArrayList<Booking> possibleBookings) {
-        this.possibleBookings = possibleBookings;
+
+    public void setAvailableTimeIncrementsBookedTime(ArrayList<LocalTime> dayTimeIncrements) {
+        ArrayList<BookingTime> sectionBookedTimeIncrements = new ArrayList<>();
+
+        ArrayList<BookingTime> timesAfterClose = new ArrayList<>();
+        LocalTime lengthOfBooking = maxTimeOfBooking.toLocalTime();
+        LocalTime timeToReset = timeRequiredAfterBookingIsFinished.toLocalTime();
+
+
+        //Make section increments into BookingTimeList
+        for (LocalTime timeIncrement : dayTimeIncrements){
+            BookingTime bookingTime = new BookingTime();
+            bookingTime.setTimeIncrement(timeIncrement);
+            sectionBookedTimeIncrements.add(bookingTime);
+        }
+
+        //Add Times past Close
+        LocalTime endTime = dayTimeIncrements.get(dayTimeIncrements.size()-1);
+        int minsTimeAllowedAfterClose = timeAllowedToStayAfterSectionClosed.getMinute() + timeAllowedToStayAfterSectionClosed.getHour()*60;
+        int factorOf15Close = minsTimeAllowedAfterClose/15;
+        LocalTime timePastClose = dayTimeIncrements.get(dayTimeIncrements.size()-1).plusMinutes(minsTimeAllowedAfterClose);
+        LocalTime tempLocalTime = endTime;
+        for (int i = 0 ; i <factorOf15Close; i++){
+            tempLocalTime =  tempLocalTime.plusMinutes(15);
+            BookingTime bookingTime = new BookingTime();
+            bookingTime.setTimeIncrement(tempLocalTime);
+            bookingTime.setAllowedToStayAfterClosed(true);
+            sectionBookedTimeIncrements.add(bookingTime);
+        }
+
+
+        for (BookingTime bookingTime : timesBookedDuringDay){
+            for (BookingTime sectionBookedTimeIncremeent : sectionBookedTimeIncrements){
+                if (bookingTime.compareTo(sectionBookedTimeIncremeent)==0){
+                    sectionBookedTimeIncremeent.setIsStartTime(bookingTime.isStartTime());
+                    sectionBookedTimeIncremeent.setIsEndTime(bookingTime.isEndTime());
+                    sectionBookedTimeIncremeent.setBetween(bookingTime.isBetween());
+                    break;
+                }
+            }
+        }
+
+        this.allBookedTimeIncrementsForDay = sectionBookedTimeIncrements;
+        for (BookingTime bookingTime : sectionBookedTimeIncrements){
+            System.out.println(bookingTime);
+        }
+
     }
+
+    public void setPossibleBookingsBookedTime(int numberOfPeople){
+        ArrayList<Booking>possibleBookingTemp = new ArrayList<>();
+        LocalTime lengthOfBooking = maxTimeOfBooking.toLocalTime();
+        LocalTime timeToReset = timeRequiredAfterBookingIsFinished.toLocalTime();
+        int minutes = lengthOfBooking.getHour()*60 + lengthOfBooking.getMinute() + timeToReset.getHour()*60 + timeToReset.getMinute();
+        int factorOf15 = minutes/15;
+        int incrementsBetweenStartAndEnd = factorOf15 -2;
+
+        for (int i = 0 ; i<allBookedTimeIncrementsForDay.size();i++){
+            boolean bookingPossible = true;
+
+            String errors = "";
+            ArrayList<BookingTime> possibleBookingTimes = new ArrayList<>();
+            BookingTime startOfBooking = allBookedTimeIncrementsForDay.get(i);
+            possibleBookingTimes.add(startOfBooking);
+            LocalTime endOfBooking = startOfBooking.getTimeIncrement().plusMinutes(minutes);
+            LocalTime tempLocalTime = startOfBooking.getTimeIncrement();
+            if(allBookedTimeIncrementsForDay.size()>(i+factorOf15)){
+                for (int j = 1 ; j<factorOf15; j++){
+                    possibleBookingTimes.add(allBookedTimeIncrementsForDay.get(i+j));
+                }
+                System.out.println(possibleBookingTimes);
+                if(possibleBookingTimes.get(0).isStartTime()){
+                    bookingPossible = false;
+                    errors +="2 ";
+                }
+                if (possibleBookingTimes.get(possibleBookingTimes.size()-1).isEndTime()){
+                    bookingPossible = false;
+                    errors +="3 ";
+                }
+                if (bookingPossible){
+                    for (int j = 0 ; j < possibleBookingTimes.size()-1; j++){
+                        BookingTime bookingTime = possibleBookingTimes.get(j);
+                        if(bookingTime.isStartTime()){
+                            bookingPossible = false;
+                            errors +="4 ";
+                        }
+
+                    }
+                }
+                if (bookingPossible){
+                    for (int j = 1 ; j < possibleBookingTimes.size(); j++){
+                        BookingTime bookingTime = possibleBookingTimes.get(j);
+                        if(bookingTime.isEndTime()){
+                            bookingPossible = false;
+                            errors +="5 ";
+                        }
+
+                    }
+                }
+                if (bookingPossible){
+                    for (int j = 0 ; j < possibleBookingTimes.size(); j++){
+                        BookingTime bookingTime = possibleBookingTimes.get(j);
+                        if(bookingTime.isBetween()){
+                            bookingPossible = false;
+                            errors +="6 ";
+                        }
+
+                    }
+                }
+                if (bookingPossible){
+                    System.out.println("Possible");
+                    Booking booking = new Booking();
+                    LocalTime startTime = possibleBookingTimes.get(0).getTimeIncrement();
+                    booking.setStartTimeOfBookingLocalTime(startTime);
+                    int mins = lengthOfBooking.getHour()*60 + lengthOfBooking.getMinute();
+                    LocalTime endTimeExcludingTimeReqToReset = startTime.plusMinutes(mins);
+                    booking.setEndTimeOfBookingLocalTime(endTimeExcludingTimeReqToReset);
+                    booking.setStartTimeOfBookingLocalTime(startTime);
+                    booking.setSectionID(sectionID);
+                    booking.setTableID(tableID);
+                    booking.setTableNumber(String.valueOf(tableNumber));
+                    booking.setHasSingleTable(true);
+                    booking.setNumberOfSeats(seats);
+                    possibleBookingTemp.add(booking);
+                }
+                else {
+                    errors +="1 ";
+                    System.out.println("Not Possible " + errors);
+
+                }
+            }
+
+            else{
+                bookingPossible=false;
+                errors+=("End time is not in array ");
+            }
+//            //check possible booking
+//            if (possibleBookingTimes.get(0).isStartTime()){
+//                bookingPossible=false;
+//                errors+=("Start time duplicate ");
+//            }
+//            if (possibleBookingTimes.get(0).isAllowedToStayAfterClosed()){
+//                bookingPossible=false;
+//                errors+=("Start time is after close ");
+//            }
+//            if (possibleBookingTimes.get(0).isBetween()){
+//                bookingPossible=false;
+//                errors+=("Start time during another Booking ");
+//            }
+//            if (possibleBookingTimes.get(possibleBookingTimes.size()-1).isEndTime()){
+//                bookingPossible=false;
+//                errors+=("End time duplicate ");
+//            }
+//            if (possibleBookingTimes.get(possibleBookingTimes.size()-1).isBetween()){
+//                bookingPossible=false;
+//                errors+=("End time during another booking");
+//            }
+//            if (bookingPossible){
+//                //go through inbetween times
+//                for (int j = 1 ; j<incrementsBetweenStartAndEnd;j++){
+//                    if (possibleBookingTimes.get(j).isStartTime() || possibleBookingTimes.get(j).isEndTime() || possibleBookingTimes.get(j).isBetween()){
+//                        errors+=(possibleBookingTimes.get(j) + " Did not pass");
+//                        bookingPossible = false;
+//                    }
+//                }
+//            }
+//            //saveBooking
+//            if (bookingPossible){
+//                System.out.println(possibleBookingTimes + " is Possible");
+//            }
+//            else{
+//                System.out.println(possibleBookingTimes + " not Possible");
+//                System.out.println(errors);
+//                System.out.println();
+//
+//            }
+        }
+        this.possibleBookings = possibleBookingTemp;
+    }
+
 }

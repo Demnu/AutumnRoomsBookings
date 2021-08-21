@@ -106,6 +106,85 @@ public class BookingDatabaseInterface {
         return bookings;
 
     }
+    public static ArrayList<Booking> getBookingsInputtedDateTableIDSectionID(LocalDate dateOfBooking, int tableID, int sectionID) {
+        ArrayList<Booking> bookings = new ArrayList<>();
+        String query = "SELECT* FROM Booking WHERE dateOfBooking=? AND tableID=?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDate(1, Date.valueOf(dateOfBooking));
+            preparedStatement.setInt(2, tableID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                Booking tempBooking = new Booking();
+                tempBooking.setBookingID(result.getInt(1));
+                tempBooking.setStaffID(result.getInt(2));
+                tempBooking.setDateBooked(result.getDate(3));
+                tempBooking.setTimeBooked(result.getTime(4));
+                tempBooking.setDateOfBooking(result.getDate(5));
+                tempBooking.setStartTimeOfBookingLocalTime(result.getTime(6).toLocalTime());
+                tempBooking.setStartTimeOfBooking(result.getTime(6));
+                tempBooking.setEndTimeOfBookingLocalTime(result.getTime(7).toLocalTime());
+                tempBooking.setEndTimeOfBooking(result.getTime(7));
+                tempBooking.setNumberOfPeople(result.getInt(8));
+                tempBooking.setConfirmed(result.getBoolean(9));
+                tempBooking.setTableID(result.getInt(10));
+                tempBooking.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(sectionID).toLocalTime());
+                tempBooking.setBookingTimes();
+                bookings.add(tempBooking);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        if (bookings.isEmpty()){
+            return null;
+        }
+        return bookings;
+    }
+    public static ArrayList<Booking> getBookingsInputtedDateJoinedTablesIDSectionID(LocalDate dateOfBooking, int joinedTablesID,int sectionID){
+        ArrayList<Booking> bookings = new ArrayList<>();
+        String query = "SELECT* FROM Booking WHERE dateOfBooking=? AND joinedTablesID=?";
+        try(Connection connection = ConfigBean.getConnection();){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDate(1, Date.valueOf(dateOfBooking));
+            preparedStatement.setInt(2, joinedTablesID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                Booking tempBooking = new Booking();
+                tempBooking.setBookingID(result.getInt(1));
+                tempBooking.setStaffID(result.getInt(2));
+                tempBooking.setDateBooked(result.getDate(3));
+                tempBooking.setTimeBooked(result.getTime(4));
+                tempBooking.setDateOfBooking(result.getDate(5));
+                tempBooking.setStartTimeOfBookingLocalTime(result.getTime(6).toLocalTime());
+                tempBooking.setStartTimeOfBooking(result.getTime(6));
+                tempBooking.setEndTimeOfBookingLocalTime(result.getTime(7).toLocalTime());
+                tempBooking.setEndTimeOfBooking(result.getTime(7));
+                tempBooking.setNumberOfPeople(result.getInt(8));
+                tempBooking.setConfirmed(result.getBoolean(9));
+                tempBooking.setTableID(result.getInt(10));
+                tempBooking.setTimeRequiredAfterBookingIsFinished(SectionDatabaseInterface.getTimeRequiredAfterBookingIsFinishedInputtedSectionID(sectionID).toLocalTime());
+                tempBooking.setBookingTimes();
+                bookings.add(tempBooking);
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        if (bookings.isEmpty()){
+            return null;
+        }
+        return bookings;
+
+    }
     public static ArrayList<Booking> getBookingsInputtedDateJoinedTablesID(LocalDate dateOfBooking, int joinedTablesID){
         ArrayList<Booking> bookings = new ArrayList<>();
         String query = "SELECT* FROM Booking WHERE dateOfBooking=? AND joinedTablesID=?";
@@ -243,5 +322,7 @@ public class BookingDatabaseInterface {
         }
         return bookingList;
     }
+
+
 }
 

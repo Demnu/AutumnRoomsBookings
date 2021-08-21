@@ -153,13 +153,21 @@ public class CheckAvailabilityController extends HttpServlet {
         if (!noTables && !inPresentOrPast && !venueClosed) {
             //Get all bookings for remaining single tables
             for (ServableTable availableTable: servableTablesForBooking){
-                availableTable.setBookingsOnDay(BookingDatabaseInterface.getBookingsInputtedDateTableID(dateOfBooking,availableTable.getTableID()));
-                availableTable.setTimeIncrementsBookedOutForDay();
+                //BOOKING TIME VERSION
+                availableTable.setBookingsOnDay(BookingDatabaseInterface.getBookingsInputtedDateTableIDSectionID(dateOfBooking,availableTable.getTableID(),availableTable.getSectionID()));
+                availableTable.setBookedTimesBookedOutForDay();
+
+                //OLD VERSION
+//                availableTable.setBookingsOnDay(BookingDatabaseInterface.getBookingsInputtedDateTableID(dateOfBooking,availableTable.getTableID()));
+//                availableTable.setTimeIncrementsBookedOutForDay();
             }
             //Get all bookings for remaining joined tables
             for(JoinedTables joinedTables : servableJoinedTablesForBooking){
-                joinedTables.setBookingsOnDay(BookingDatabaseInterface.getBookingsInputtedDateJoinedTablesID(dateOfBooking,joinedTables.getJoinedTablesID()));
-                joinedTables.setTimeIncrementsBookedOutForDay();
+                joinedTables.setBookingsOnDay(BookingDatabaseInterface.getBookingsInputtedDateJoinedTablesIDSectionID(dateOfBooking,joinedTables.getJoinedTablesID(),joinedTables.getSectionID()));
+                joinedTables.setBookedTimesBookedOutForDay();
+//
+//                joinedTables.setBookingsOnDay(BookingDatabaseInterface.getBookingsInputtedDateJoinedTablesID(dateOfBooking,joinedTables.getJoinedTablesID()));
+//                joinedTables.setTimeIncrementsBookedOutForDay();
             }
 
             //Add booking times in joined tables booking to their associated tables
@@ -170,12 +178,17 @@ public class CheckAvailabilityController extends HttpServlet {
                 for (JoinedTables availableJoinedTables: servableJoinedTablesForBooking){
                     for (ServableTable joinedTable : availableJoinedTables.getJoinedTablesList()){
                         if (joinedTable.getTableID() == availableTable.getTableID()){
-                            System.out.println("Found Joined Table - " + availableJoinedTables + " : Table - " + availableTable.getTableNumber() );
-                            ArrayList<LocalTime> timeIncrementsFromSingleTable = new ArrayList<>();
-                            timeIncrementsFromSingleTable.addAll(availableTable.getTimeIncrementsBookedOutForDay());
-                            System.out.println("Increments added to " + availableTable.getTableNumber());
-                            availableTable.addTimeIncrementsFromJoinedTable(availableJoinedTables.getTimeIncrementsBookedOutForDay());
+                            System.out.println("BookedTime Increments added to " + availableTable.getTableNumber() + " From Joined Table: " + availableJoinedTables.toString());
 
+                            //BOOKING TIME VERSION
+                            ArrayList<BookingTime> bookingTimeIncrementsFromSingleTable = new ArrayList<>();
+                            bookingTimeIncrementsFromSingleTable.addAll(availableTable.getTimesBookedDuringDay());
+                            availableTable.addBookedTimeIncrementsFromJoinedTable(availableJoinedTables.getTimesBookedDuringDay());
+                            //OLD VERSION
+//                            ArrayList<LocalTime> timeIncrementsFromSingleTable = new ArrayList<>();
+//                            timeIncrementsFromSingleTable.addAll(availableTable.getTimeIncrementsBookedOutForDay());
+//                            System.out.println("Increments added to " + availableTable.getTableNumber());
+//                            availableTable.addTimeIncrementsFromJoinedTable(availableJoinedTables.getTimeIncrementsBookedOutForDay());
                         }
                     }
                 }
@@ -185,57 +198,76 @@ public class CheckAvailabilityController extends HttpServlet {
                 for (ServableTable joinedTable : joinedTables.getJoinedTablesList()){
                     for (ServableTable singleTable : servableTablesForBooking){
                         if (joinedTable.getTableID() == singleTable.getTableID()){
-                            System.out.println("Found Joined Table - " + joinedTables + " : Table - " + singleTable.getTableNumber() );
-                            System.out.println("Increments added to " + joinedTables);
-                            joinedTables.addTimeIncrementsFromSingleTable(singleTable.getTimeIncrementsBookedOutForDay());
+                            System.out.println("BookedTime Increments added to " + joinedTables.toString() + " From Single Table Table: " + singleTable.getTableNumber());
+                            //BOOKING TIME VERSION
+                            joinedTables.addBookedTimeIncrementsFromSingleTable(singleTable.getTimesBookedDuringDay());
+
+//
+//                            //OLD VERSION
+//                            joinedTables.addTimeIncrementsFromSingleTable(singleTable.getTimeIncrementsBookedOutForDay());
                         }
                     }
 
                 }
             }
             //not needed
-            for (ServableTable servableTable : servableTablesForBooking){
-                System.out.println(servableTable.getTableNumber() + " Booked out time increments");
-                for (LocalTime timeIncrement : servableTable.getTimeIncrementsBookedOutForDay()){
-                    System.out.println(timeIncrement);
-                }
-            }
-
-            for (JoinedTables joinedTables : servableJoinedTablesForBooking){
-                System.out.println(joinedTables + " Booked out time increments");
-                for (LocalTime timeIncrement : joinedTables.getTimeIncrementsBookedOutForDay()){
-                    System.out.println(timeIncrement);
-                }
-            }
+//            for (ServableTable servableTable : servableTablesForBooking){
+//                System.out.println(servableTable.getTableNumber() + " Booked out time increments");
+//                for (LocalTime timeIncrement : servableTable.getTimeIncrementsBookedOutForDay()){
+//                    System.out.println(timeIncrement);
+//                }
+//            }
+//
+//            for (JoinedTables joinedTables : servableJoinedTablesForBooking){
+//                System.out.println(joinedTables + " Booked out time increments");
+//                for (LocalTime timeIncrement : joinedTables.getTimeIncrementsBookedOutForDay()){
+//                    System.out.println(timeIncrement);
+//                }
+//            }
             //
 
             //Set times available for joined seats and single seats
             venue.setTimeIncrements();
-            System.out.println("Removing time increments");
             for (ServableTable servableTable : servableTablesForBooking){
-                System.out.println("Table: " + servableTable.getTableNumber());
+                System.out.println("All Time Increments for Table: " + servableTable.getTableNumber());
                 for (Section section : sections){
                     if (servableTable.getSectionID()==section.getSectionID()){
-                        servableTable.setAvailableTimeIncrements(section.getTimeIncrements());
+                        //NEW VERSION
+                        servableTable.setAvailableTimeIncrementsBookedTime(section.getTimeIncrements());
+//                        //OLD VERSION
+//                        servableTable.setAvailableTimeIncrements(section.getTimeIncrements());
+
                     }
                 }
             }
             for (JoinedTables joinedTables : servableJoinedTablesForBooking){
-                System.out.println("Table: " + joinedTables);
+                System.out.println("All Time Increments for Tables: " + joinedTables.toString());
                 for (Section section : sections){
                     if (joinedTables.getSectionID()==section.getSectionID()){
-                        joinedTables.setAvailableTimeIncrements(section.getTimeIncrements());
+                        //NEW VERSION
+                        joinedTables.setAvailableTimeIncrementsBookedTime(section.getTimeIncrements());
+//
+//                        //OLD VERSION
+//                        joinedTables.setAvailableTimeIncrements(section.getTimeIncrements());
                     }
                 }
             }
             //Find available bookings for each single and joined table
             for (ServableTable servableTable : servableTablesForBooking){
                 System.out.println("Table " + servableTable.getTableNumber() + ": Possible Bookings");
-                servableTable.setPossibleBookings(numberOfPeople);
+                //NEW VERSION
+                servableTable.setPossibleBookingsBookedTime(numberOfPeople);
+//
+//                //OLD VERSION
+//                servableTable.setPossibleBookings(numberOfPeople);
             }
             for (JoinedTables joinedTables : servableJoinedTablesForBooking){
                 System.out.println("JoinedTable " + joinedTables + ": Possible Bookings");
-                joinedTables.setPossibleBookings(numberOfPeople);
+                //NEW VERSION
+                joinedTables.setPossibleBookingsBookedTime(numberOfPeople);
+//
+//                //OLD VERSION
+//                joinedTables.setPossibleBookings(numberOfPeople);
             }
 
             ArrayList<TimeIncrementBooking> timeIncrementBookings = new ArrayList<>();
@@ -245,7 +277,7 @@ public class CheckAvailabilityController extends HttpServlet {
 
 
             for (LocalTime timeIncrements : venue.getTimeIncrements()){
-//                System.out.println("1");
+                System.out.println("1");
                 TimeIncrementBooking timeIncrementBooking = new TimeIncrementBooking();
                 timeIncrementBooking.setNumberOfPeople(numberOfPeople);
                 timeIncrementBooking.setVenueCovers(venue.getMaxCovers());
@@ -255,29 +287,29 @@ public class CheckAvailabilityController extends HttpServlet {
                 }
                 ArrayList<TimeIncrementSection> timeIncrementSections = new ArrayList<>();
                 for (Section section :  sections){
-//                    System.out.println("2");
+                    System.out.println("2");
                     TimeIncrementSection timeIncrementSection = new TimeIncrementSection(section.getSectionID(),section.getName(),section.getMaxCoversSection(),section.getMaxTimeOfBooking(),timeIncrements);
                     for (ServableTable servableTable : servableTablesForBooking){
-//                        System.out.println("3");
+                        System.out.println("3");
                         for (Booking booking : servableTable.getPossibleBookings()){
-//                            System.out.println("4");
+                            System.out.println("4");
                             if (booking.getStartTimeOfBookingLocalTime().compareTo(timeIncrements)==0){
-//                                System.out.println("5");
+                                System.out.println("5");
                                 if (booking.getSectionID()==section.getSectionID()){
-//                                    System.out.println("6");
+                                    System.out.println("6");
                                     timeIncrementSection.addBooking(booking);
                                 }
                             }
                         }
                     }
                     for (JoinedTables joinedTables : servableJoinedTablesForBooking){
-//                        System.out.println("8");
+                        System.out.println("8");
                         for (Booking booking : joinedTables.getPossibleBookings()){
-//                            System.out.println("9");
+                            System.out.println("9");
                             if (booking.getStartTimeOfBookingLocalTime().compareTo(timeIncrements)==0){
-//                                System.out.println("10");
+                                System.out.println("10");
                                 if (booking.getSectionID()==section.getSectionID()){
-//                                    System.out.println("11");
+                                    System.out.println("11");
 
                                     timeIncrementSection.addBooking(booking);
                                 }
