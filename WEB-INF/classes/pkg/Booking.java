@@ -26,6 +26,24 @@ public class Booking implements Comparable{
     boolean hasSingleTable;
     private String tableNumber;
     private String joinedTableNumber;
+    private int numberOfSeats;
+    private boolean recommended;
+
+    public int getNumberOfSeats() {
+        return numberOfSeats;
+    }
+
+    public void setNumberOfSeats(int numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
+    }
+
+    public boolean isRecommended() {
+        return recommended;
+    }
+
+    public void setRecommended(boolean recommended) {
+        this.recommended = recommended;
+    }
 
     public ArrayList<ServableTable> getAssignedTables() {
         return assignedTables;

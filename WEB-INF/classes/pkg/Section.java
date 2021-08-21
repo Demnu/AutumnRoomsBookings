@@ -20,7 +20,6 @@ public class Section {
     private  LocalTime endTime;
     private boolean timeConstrained;
     private ArrayList<LocalTime> timeIncrements = new ArrayList<>();
-    private int maxCovers;
 
     public void setTimeIncrements() {
         int openHour = startTime.getHour();
@@ -202,11 +201,7 @@ public class Section {
         return timeIncrements;
     }
 
-    public int getMaxCovers() {
-        return maxCovers;
-    }
 
-    public void setMaxCovers(int maxCovers) {
-        this.maxCovers = maxCovers;
-    }
+
+
 }

@@ -182,7 +182,7 @@ public class JoinedTables {
             }
         }
     }
-    public void setPossibleBookings(){
+    public void setPossibleBookings(int numberOfPeople){
         for (LocalTime temp : availableTimeIncrements){
             System.out.println(temp);
         }
@@ -241,6 +241,7 @@ public class JoinedTables {
                 booking.setJoinedTablesID(joinedTablesID);
                 booking.setTableNumber(toString());
                 booking.setHasSingleTable(false);
+                booking.setNumberOfSeats(numberSeats);
                 possibleBookingsForTable.add(booking);
                 System.out.println(bookingTimeIncrements.get(0));
                 System.out.println(bookingTimeIncrements.get(bookingTimeIncrements.size()-1));
@@ -248,13 +249,7 @@ public class JoinedTables {
 
             }
             else {
-                //check for possible bookings that go past close time
-                if (timeAllowedToStayAfterSectionClosed.compareTo(LocalTime.of(0,0))!=0){
 
-                }
-
-                System.out.println("Not Possible: ");
-                System.out.println(bookingTimeIncrements.get(0));
                 System.out.println(endTime);
                 System.out.println();
             }

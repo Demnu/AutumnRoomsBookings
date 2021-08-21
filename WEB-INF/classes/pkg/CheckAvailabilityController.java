@@ -231,11 +231,11 @@ public class CheckAvailabilityController extends HttpServlet {
             //Find available bookings for each single and joined table
             for (ServableTable servableTable : servableTablesForBooking){
                 System.out.println("Table " + servableTable.getTableNumber() + ": Possible Bookings");
-                servableTable.setPossibleBookings();
+                servableTable.setPossibleBookings(numberOfPeople);
             }
             for (JoinedTables joinedTables : servableJoinedTablesForBooking){
                 System.out.println("JoinedTable " + joinedTables + ": Possible Bookings");
-                joinedTables.setPossibleBookings();
+                joinedTables.setPossibleBookings(numberOfPeople);
             }
 
             ArrayList<TimeIncrementBooking> timeIncrementBookings = new ArrayList<>();
@@ -247,6 +247,7 @@ public class CheckAvailabilityController extends HttpServlet {
             for (LocalTime timeIncrements : venue.getTimeIncrements()){
 //                System.out.println("1");
                 TimeIncrementBooking timeIncrementBooking = new TimeIncrementBooking();
+                timeIncrementBooking.setNumberOfPeople(numberOfPeople);
                 timeIncrementBooking.setVenueCovers(venue.getMaxCovers());
                 timeIncrementBooking.setTimeIncrement(timeIncrements);
                 if (timeIncrementBooking.getTimeIncrement().compareTo(venue.getTimeIncrements().get(venue.getTimeIncrements().size()-1))==0){
@@ -255,7 +256,7 @@ public class CheckAvailabilityController extends HttpServlet {
                 ArrayList<TimeIncrementSection> timeIncrementSections = new ArrayList<>();
                 for (Section section :  sections){
 //                    System.out.println("2");
-                    TimeIncrementSection timeIncrementSection = new TimeIncrementSection(section.getSectionID(),section.getName(),section.getMaxCovers());
+                    TimeIncrementSection timeIncrementSection = new TimeIncrementSection(section.getSectionID(),section.getName(),section.getMaxCoversSection(),section.getMaxTimeOfBooking(),timeIncrements);
                     for (ServableTable servableTable : servableTablesForBooking){
 //                        System.out.println("3");
                         for (Booking booking : servableTable.getPossibleBookings()){
@@ -286,6 +287,7 @@ public class CheckAvailabilityController extends HttpServlet {
                     timeIncrementSections.add(timeIncrementSection);
                 }
                 timeIncrementBooking.setSections(timeIncrementSections);
+                timeIncrementBooking.setRecommended();
                 timeIncrementBookings.add(timeIncrementBooking);
 
 

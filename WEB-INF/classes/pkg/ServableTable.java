@@ -170,7 +170,7 @@ public class ServableTable {
         this.availableTimeIncrements = venueTimeIncrements;
     }
 
-    public void setPossibleBookings(){
+    public void setPossibleBookings(int numberOfPeople){
         for (LocalTime temp : availableTimeIncrements){
             System.out.println(temp);
         }
@@ -225,10 +225,13 @@ public class ServableTable {
                 int mins = lengthOfBooking.getHour()*60 + lengthOfBooking.getMinute();
                 LocalTime endTimeExcludingTimeReqToReset = startTime.plusMinutes(mins);
                 booking.setEndTimeOfBookingLocalTime(endTimeExcludingTimeReqToReset);
+                booking.setStartTimeOfBookingLocalTime(bookingTimeIncrements.get(0));
                 booking.setSectionID(sectionID);
                 booking.setTableID(tableID);
                 booking.setTableNumber(String.valueOf(tableNumber));
                 booking.setHasSingleTable(true);
+                booking.setNumberOfSeats(seats);
+
                 possibleBookingsForTable.add(booking);
                 System.out.println(bookingTimeIncrements.get(0));
                 System.out.println(bookingTimeIncrements.get(bookingTimeIncrements.size()-1));
@@ -236,11 +239,6 @@ public class ServableTable {
 
             }
             else {
-                //check for possible bookings that go past close time
-                if (timeAllowedToStayAfterSectionClosed.compareTo(LocalTime.of(0,0))!=0){
-
-                }
-
                 System.out.println("Not Possible: ");
                 System.out.println(bookingTimeIncrements.get(0));
                 System.out.println(endTime);
@@ -250,7 +248,6 @@ public class ServableTable {
 
 
         }
-        //add hour zero
         this.possibleBookings = possibleBookingsForTable;
     }
 

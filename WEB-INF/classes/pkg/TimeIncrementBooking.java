@@ -9,6 +9,7 @@ public class TimeIncrementBooking implements Comparable<TimeIncrementBooking> {
     private boolean isClosed = false;
     private int venueCovers;
     private int amountCovers=0;
+    int numberOfPeople = 0;
 
 
     TimeIncrementBooking(LocalTime timeIncrement, ArrayList<TimeIncrementSection> sections){
@@ -16,6 +17,64 @@ public class TimeIncrementBooking implements Comparable<TimeIncrementBooking> {
         this.sections = sections;
     }
     public TimeIncrementBooking() {
+    }
+
+    public void setRecommended() {
+
+        boolean noRecommended = true;
+        for (TimeIncrementSection timeIncrementSection : sections){
+            if (timeIncrementSection.isRecommended(numberOfPeople)){
+                noRecommended = false;
+            }
+        }
+        ArrayList<Booking> foundBookings = new ArrayList<>();
+        ArrayList<Booking> bookingsRecommended = new ArrayList<>();
+        int largestNumberOfSeats = 0;
+        if (noRecommended){
+            for (TimeIncrementSection timeIncrementSection : sections){
+                for (Booking booking : timeIncrementSection.getBookingsInSectionTimeIncrement()){
+                    foundBookings.add(booking);
+                    if (booking.getNumberOfSeats()>largestNumberOfSeats){
+                        largestNumberOfSeats = booking.getNumberOfSeats();
+                    }
+                }
+            }
+            System.out.println(" Largest Number of Seats: " + largestNumberOfSeats);
+            boolean foundSeats = false;
+            int counter = numberOfPeople;
+            int smallestNumberOfSeats = 0;
+            for (int i = counter ; i<largestNumberOfSeats ; i++){
+                for (Booking booking : foundBookings){
+                    if (booking.getNumberOfSeats()==i){
+                        smallestNumberOfSeats = i;
+                        System.out.println("Tables made recommended with table size: " + smallestNumberOfSeats);
+
+                        foundSeats = true;
+                    }
+                }
+                if (foundSeats){
+                    break;
+                }
+            }
+            //make bookings recommended
+            for (TimeIncrementSection timeIncrementSection : sections){
+                for (Booking booking : timeIncrementSection.getBookingsInSectionTimeIncrement()){
+                    if (!timeIncrementSection.moreThanCovers(numberOfPeople) && booking.getNumberOfSeats()==smallestNumberOfSeats){
+                        booking.setRecommended(true);
+                        timeIncrementSection.setRecommended(true);
+                    }
+                }
+            }
+
+        }
+    }
+
+    public int getNumberOfPeople() {
+        return numberOfPeople;
+    }
+
+    public void setNumberOfPeople(int numberOfPeople) {
+        this.numberOfPeople = numberOfPeople;
     }
 
     public LocalTime getTimeIncrement() {
@@ -87,4 +146,6 @@ public class TimeIncrementBooking implements Comparable<TimeIncrementBooking> {
         }
         return false;
     }
+
+
 }
