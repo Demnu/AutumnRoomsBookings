@@ -2,6 +2,7 @@ package pkg;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,12 +26,14 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/Index.jsp");
             dispatcher.forward(request, response);
         }
+        DayOfWeek dayOfWeek;
         java.sql.Date dateForBookings;
         LocalDate showDate;
         //Check if user has selected a date
         String inputtedDateStr = request.getParameter("inputtedDate");
         if (inputtedDateStr!=null){
             LocalDate inputtedDate = LocalDate.parse(inputtedDateStr);
+            dayOfWeek = inputtedDate.getDayOfWeek();
 
             int inputDay = inputtedDate.getDayOfMonth();
             int inputMonth = inputtedDate.getMonthValue();
@@ -41,19 +44,21 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         else{
             dateForBookings = new java.sql.Date(System.currentTimeMillis());
             showDate = LocalDate.now();
-
+            dayOfWeek = showDate.getDayOfWeek();
         }
         //Convert showDate to DD/MM/YYYY
         String showDateStr = showDate.getDayOfMonth() +"/"+showDate.getMonthValue() + "/" + showDate.getYear();
         ArrayList<Booking>bookingsOnDay = new ArrayList<Booking>();
         bookingsOnDay = BookingDatabaseInterface.getAllBookingsInputtedDate(dateForBookings);
+        System.out.println(bookingsOnDay.size());
         //TODO Development: Add table in database for venue details
         //Get Venues Open time and Close time for today
-        LocalTime openTime = LocalTime.of(8,0,0);
-        LocalTime closeTime = LocalTime.of(15,0,0);
-        Venue venueDetails = new Venue(openTime,closeTime);
+        Venue venue = VenueDetailsDatabaseInterface.getOpenCloseTimesInputDate(1,dateForBookings.toLocalDate());
+        venue.setTimeIncrements();
+        LocalTime openTime = venue.getTimeVenueOpens();
+        LocalTime closeTime = venue.getTimeVenueCloses();
         //Get time increments for day
-        ArrayList<LocalTime> timeIncrements = venueDetails.getTimeIncrements();
+        ArrayList<LocalTime> timeIncrements = venue.getTimeIncrements();
 
         //Get all tables
         ArrayList<ServableTable> allTables = ServableTableDatabaseInterface.getAllServableTabless();
@@ -80,6 +85,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         Table table = new Table(allTables, timeIncrements);
 
         Functions functions = new Functions();
+        request.setAttribute("dayOfWeek",dayOfWeek.toString());
         request.setAttribute("openTime",openTime);
         request.setAttribute("closeTime",closeTime);
         request.setAttribute("allTables",allTables);

@@ -1,5 +1,7 @@
 package pkg;
 import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -10,6 +12,7 @@ public class VenueDetailsDatabaseInterface {
         Venue tempVenue = new Venue();
         ArrayList<LocalTime> openTimes = new ArrayList<>();
         ArrayList<LocalTime> closeTimes = new ArrayList<>();
+        ChangedDateTimes changedDateTimes = ChangedDateDatabaseInterface.getChangedDateGivenDate(LocalDate.now());
         String query = "SELECT* FROM VenueDetails WHERE venueID =?";
         try(Connection connection = ConfigBean.getConnection();){
 
@@ -38,10 +41,77 @@ public class VenueDetailsDatabaseInterface {
                 tempVenue.setCloseTimes(closeTimes);
                 tempVenue.setMaxCovers(result.getInt(17));
 
+                DayOfWeek dayOfWeekDayOfWeek = LocalDate.now().getDayOfWeek();
+                int dayOfWeek = dayOfWeekDayOfWeek.getValue()-1;
+                //get open and close time for specific date
+                tempVenue.setTimeVenueOpens(openTimes.get(dayOfWeek));
+                tempVenue.setTimeVenueCloses(closeTimes.get(dayOfWeek));
+
             }
             result.close();
             preparedStatement.close();
             connection.close();
+            if (changedDateTimes!=null){
+                System.out.println("Changed Date!");
+                tempVenue.setTimeVenueOpens(changedDateTimes.getChangedOpenTime());
+                tempVenue.setTimeVenueCloses(changedDateTimes.getChangedCloseTime());
+            }
+            return tempVenue;
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return null;
+    }
+    public static Venue getOpenCloseTimesInputDate(int venueID, LocalDate date){
+        Venue tempVenue = new Venue();
+        ArrayList<LocalTime> openTimes = new ArrayList<>();
+        ArrayList<LocalTime> closeTimes = new ArrayList<>();
+        ChangedDateTimes changedDateTimes = ChangedDateDatabaseInterface.getChangedDateGivenDate(date);
+        String query = "SELECT* FROM VenueDetails WHERE venueID =?";
+        try(Connection connection = ConfigBean.getConnection();){
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, venueID);
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                tempVenue.setVenueID(1);
+
+                tempVenue.setVenueName(result.getString(2));
+                openTimes.add(result.getTime(3).toLocalTime());
+                closeTimes.add(result.getTime(4).toLocalTime());
+                openTimes.add(result.getTime(5).toLocalTime());
+                closeTimes.add(result.getTime(6).toLocalTime());
+                openTimes.add(result.getTime(7).toLocalTime());
+                closeTimes.add(result.getTime(8).toLocalTime());
+                openTimes.add(result.getTime(9).toLocalTime());
+                closeTimes.add(result.getTime(10).toLocalTime());
+                openTimes.add(result.getTime(11).toLocalTime());
+                closeTimes.add(result.getTime(12).toLocalTime());
+                openTimes.add(result.getTime(13).toLocalTime());
+                closeTimes.add(result.getTime(14).toLocalTime());
+                openTimes.add(result.getTime(15).toLocalTime());
+                closeTimes.add(result.getTime(16).toLocalTime());
+                tempVenue.setOpenTimes(openTimes);
+                tempVenue.setCloseTimes(closeTimes);
+                tempVenue.setMaxCovers(result.getInt(17));
+
+                DayOfWeek dayOfWeekDayOfWeek = date.getDayOfWeek();
+                int dayOfWeek = dayOfWeekDayOfWeek.getValue()-1;
+                //get open and close time for specific date
+                tempVenue.setTimeVenueOpens(openTimes.get(dayOfWeek));
+                tempVenue.setTimeVenueCloses(closeTimes.get(dayOfWeek));
+
+            }
+            result.close();
+            preparedStatement.close();
+            connection.close();
+            if (changedDateTimes!=null){
+                System.out.println("Changed Date!");
+                tempVenue.setTimeVenueOpens(changedDateTimes.getChangedOpenTime());
+                tempVenue.setTimeVenueCloses(changedDateTimes.getChangedCloseTime());
+            }
             return tempVenue;
         }
         catch(SQLException e){

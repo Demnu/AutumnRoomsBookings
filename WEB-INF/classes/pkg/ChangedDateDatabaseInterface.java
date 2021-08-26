@@ -60,6 +60,33 @@ public class ChangedDateDatabaseInterface {
         }
 
     }
+    public static ChangedDateTimes getChangedDateGivenDate(LocalDate date){
+        ChangedDateTimes tempChangedDateTime;
+        String query = "SELECT* FROM changedDate WHERE venueID =? AND changedDate=?";
+        try(Connection connection = ConfigBean.getConnection();){
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setDate(2, Date.valueOf(date));
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                tempChangedDateTime = new ChangedDateTimes();
+                tempChangedDateTime.setChangedDateID(result.getInt(1));
+                tempChangedDateTime.setChangedDate(result.getDate(2).toLocalDate());
+                tempChangedDateTime.setChangedOpenTime(result.getTime(3).toLocalTime());
+                tempChangedDateTime.setChangedCloseTime(result.getTime(4).toLocalTime());
+                tempChangedDateTime.setDescription(result.getString(6));
+                return tempChangedDateTime;
+            }
+            result.close();
+            preparedStatement.close();
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace());
+        }
+        return null;
+    }
 
 
     public static void deleteChangedDate(int changedDateID) {

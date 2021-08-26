@@ -22,6 +22,23 @@ public class BookingDatabaseInterface {
                 tempBooking.setEndTimeOfBooking(result.getTime(7));
                 tempBooking.setNumberOfPeople(result.getInt(8));
                 tempBooking.setConfirmed(result.getBoolean(9));
+                tempBooking.setTableID(result.getInt(10));
+                tempBooking.setJoinedTablesID(result.getInt(11));
+                if (tempBooking.getTableID()!=0){
+                    ArrayList<ServableTable> servableTables = new ArrayList<>();
+                    servableTables.add(ServableTableDatabaseInterface.getTableGivenID(tempBooking.getTableID()));
+                    tempBooking.setAssignedTables(servableTables);
+                }
+                else{
+                    tempBooking.setAssignedTables(JoinedTablesQDatabaseInterface.getJoinedServableJoinedTablesGivenJoinedTablesID(tempBooking.getJoinedTablesID()));
+                }
+
+                tempBooking.setTimeRequiredAfterBookingIsFinished(tempBooking.getAssignedTables().get(0).getTimeRequiredAfterBookingIsFinished().toLocalTime());
+
+
+
+                //get tables
+                System.out.println(tempBooking.getAssignedTables());
                 bookingList.add(tempBooking);
             }
             result.close();
@@ -31,13 +48,6 @@ public class BookingDatabaseInterface {
         catch(SQLException e){
             System.err.println(e.getMessage());
             System.err.println(e.getStackTrace());
-        }
-        ArrayList tableIDsAssignedToFoundBooking;
-        for (int i =0; i<bookingList.size();i++){
-            tableIDsAssignedToFoundBooking = TableBookingsDatabaseInterface.getTableIDsInputtedBookingID(bookingList.get(i).getBookingID());
-            for (int j = 0 ; j<tableIDsAssignedToFoundBooking.size();j++){
-                bookingList.get(i).setAssignedTables(tableIDsAssignedToFoundBooking);
-            }
         }
         return bookingList;
     }

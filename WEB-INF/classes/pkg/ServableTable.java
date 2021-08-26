@@ -543,4 +543,10 @@ public class ServableTable {
         this.possibleBookings = possibleBookingTemp;
     }
 
+    @Override
+    public String toString() {
+        String str = "";
+        str += "Table: " +  tableNumber;
+        return  str;
+    }
 }

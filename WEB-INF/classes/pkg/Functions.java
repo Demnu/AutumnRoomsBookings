@@ -1,5 +1,7 @@
 package pkg;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -35,6 +37,11 @@ public class Functions {
         return dayNames;
     }
 
+    public static String getDayName(){
+        LocalDate localDate = LocalDate.now();
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+        return dayOfWeek.toString();
+    }
     public static ArrayList<LocalTime> getTimeIncrementsForDay(){
         ArrayList<LocalTime> timeIncrementsList = new ArrayList<>();
         LocalTime tempLocalTime = LocalTime.of(0,0,0);
