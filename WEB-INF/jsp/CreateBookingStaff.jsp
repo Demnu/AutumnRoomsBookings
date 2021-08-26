@@ -53,10 +53,10 @@
 
                 </div>
             </div>
+            <br>
+            <a class="btn btn-outline-secondary" style="width: 100%" href="<%=request.getContextPath()%>/">Back</a>
         </div>
-        <br>
     </div>
-    <a class="btn btn-outline-secondary" style="width: 100%" href="<%=request.getContextPath()%>/">Back</a>
 
 </div>
 </body>
