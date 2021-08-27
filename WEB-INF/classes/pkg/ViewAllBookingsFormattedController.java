@@ -113,6 +113,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         request.setAttribute("showDateStr",showDateStr);
         request.setAttribute("functions",functions);
         request.setAttribute("table",table);
+        request.setAttribute("sections",allSections);
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/jsp/ViewAllBookingsFormatted.jsp");
         dispatcher.forward(request, response);

@@ -9,9 +9,11 @@
     <style>
         body{
             background-image: url("${pageContext.request.contextPath}/imgs/autumnroomsBackground.jpeg");
+            background-size:cover
+
         }
         .card{
-            opacity: 97% !important;
+            opacity: 96% !important;
         }
     </style>
 </head>

@@ -8,9 +8,19 @@ public class Rows {
     private int tableNumber;
     private ArrayList<Booking> bookings;
     private ArrayList<Columns> columns;
+    private int sectionID;
 
-    public Rows(ServableTable servableTable,ArrayList<LocalTime> timeIncrementsLocalTime) {
+    public int getSectionID() {
+        return sectionID;
+    }
+
+    public void setSectionID(int sectionID) {
+        this.sectionID = sectionID;
+    }
+
+    public Rows(ServableTable servableTable, ArrayList<LocalTime> timeIncrementsLocalTime) {
         this.tableNumber = servableTable.getTableNumber();
+        this.sectionID = servableTable.getSectionID();
         columns = new ArrayList<>();
         Columns tempColumn;
         ArrayList<LocalTime> timeIncrementsFilled = new ArrayList<>();
