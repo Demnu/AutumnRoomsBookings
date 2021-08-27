@@ -10,6 +10,9 @@
         body{
             background-image: url("${pageContext.request.contextPath}/imgs/autumnroomsBackground.jpeg");
         }
+        .card{
+            opacity: 97% !important;
+        }
     </style>
 </head>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">

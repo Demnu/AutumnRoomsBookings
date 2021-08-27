@@ -1,13 +1,7 @@
 <%@ page contentType="text/html;"%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.time.*" %>
-<%@ page import="pkg.User" %>
-<%@ page import="pkg.Booking" %>
-<%@ page import="pkg.ServableTable" %>
-<%@ page import="pkg.Functions" %>
-<%@ page import="pkg.Table" %>
-<%@ page import="pkg.Rows" %>
-<%@ page import="pkg.Columns" %>
+<%@ page import="pkg.*" %>
 
 <%
     int k = 0;
@@ -30,6 +24,10 @@
     String dayOfWeek = (String) request.getAttribute("dayOfWeek");
     int openTimeMinutes = openTime.getMinute() + openTime.getHour()*60;
     int closeTimeMinute = closeTime.getHour()*60 + closeTime.getMinute();
+
+    ArrayList<BookingFormattedTimeIncrements> bookingFormattedTimeIncrements = (ArrayList<BookingFormattedTimeIncrements>) request.getAttribute("bookingFormattedTimeIncrements");
+
+
 %>
 <!DOCTYPE html>
 <html>
@@ -44,445 +42,202 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
 
-<%--    <style>--%>
-<%--        html, body{--%>
-<%--            height: 100%;--%>
-<%--            margin: 0; padding: 0;--%>
-<%--            font-family: Arial;--%>
-<%--        }--%>
-
-<%--        .imageBookingEven{--%>
-<%--            width : 100%;--%>
-<%--            height : 2em;--%>
-<%--            float:left;--%>
-<%--            background-color: #166ec4;--%>
-<%--            text-align: center;--%>
-<%--        }--%>
-<%--        .imageBookingOdd{--%>
-<%--            width : 100%;--%>
-<%--            height : 2em;--%>
-<%--            float:left;--%>
-<%--            background-color: #1774cf;--%>
-<%--            text-align: center;--%>
-<%--        }--%>
-<%--        .overlay {--%>
-<%--            width:20px;--%>
-<%--            height : 100%;--%>
-<%--            position : relative--%>
-<%--        }--%>
-
-<%--        .image {--%>
-<%--            width : 100%;--%>
-<%--            height : 100%;--%>
-<%--            float:left;--%>
-<%--            background-color: gold;--%>
-<%--            text-align: center !important;--%>
-
-<%--        }--%>
-<%--        .imageHiddenOdd {--%>
-<%--            width : 100%;--%>
-<%--            height : 100%;--%>
-<%--            float:left;--%>
-<%--            background-color: #fffee0;--%>
-<%--            text-align: center;--%>
-
-<%--        }--%>
-<%--        .imageHiddenEven {--%>
-<%--            width : 100%;--%>
-<%--            height : 100%;--%>
-<%--            float:left;--%>
-<%--            background-color: #f2f1d5;--%>
-<%--            text-align: center;--%>
-
-<%--        }--%>
-<%--        .currentTimeLine {--%>
-<%--            width : 100%;--%>
-<%--            height : 100%;--%>
-<%--            float:left;--%>
-<%--            background-color: gold;--%>
-<%--            text-align: center;--%>
-
-<%--        }--%>
-
-<%--        .bookingIncrement{--%>
-<%--            background-color: dodgerblue--%>
-<%--        }--%>
-
-<%--        th{--%>
-<%--            padding: 0px !important ;--%>
-<%--            margin: 0px !important;--%>
-<%--            border: none !important;--%>
-<%--        }--%>
-<%--        table{--%>
-<%--            padding: 0px !important ;--%>
-<%--            margin: 0px !important;--%>
-<%--        }--%>
-
-<%--        td {--%>
-<%--            padding: 0px !important ;--%>
-<%--            margin: 0px !important;--%>
-<%--            /*border-right: solid 0.01em #c6c6c6 !important;*/--%>
-<%--            /*border-left: solid 0.01em #c6c6c6 !important;*/--%>
-<%--            text-align: center;--%>
-<%--            height: 2em;--%>
-
-<%--        }--%>
-<%--        .hiddenTimeIncrementStartTime{--%>
-
-<%--            visibility: hidden;--%>
-<%--        }--%>
-<%--        .hiddenTimeIncrementEndTime{--%>
-
-<%--            visibility: hidden;--%>
-<%--        }--%>
-<%--        .hiddenTimeIncrement{--%>
-
-<%--            visibility: hidden;--%>
-<%--        }--%>
-<%--        #currentDate{--%>
-<%--            font-size: 32px;--%>
-<%--            font-family: "Arial";--%>
-<%--        }--%>
-<%--        .borderless td {--%>
-<%--            border: none;--%>
-<%--        }--%>
-
-<%--        div.wholeTable{--%>
-<%--            overflow:auto;--%>
-<%--            width:100%;--%>
-<%--            height:500px;--%>
-<%--        }--%>
-
-<%--        th {--%>
-<%--            border-right:1px solid  lightgrey!important;--%>
-<%--        }--%>
-<%--        th {background-color:red;}--%>
-
-<%--        table {--%>
-<%--            width:100%;--%>
-<%--        }--%>
-<%--        td:first-child, th:first-child{--%>
-<%--            position:sticky;--%>
-<%--            left:0;--%>
-<%--            z-index:1;--%>
-<%--            background-color:grey;--%>
-<%--        }--%>
-<%--        thead tr th {--%>
-<%--            position:sticky;--%>
-<%--            top:0;--%>
-<%--        }--%>
-<%--        th:first-child {z-index:2;background-color:red;}--%>
-
-
-<%--        td.timeIncrementBooking{--%>
-<%--            /*border:none !important;*/--%>
-<%--            color: white !important;--%>
-<%--            font-size: 12px;--%>
-<%--            text-align: left !important;--%>
-
-<%--        }--%>
-<%--        .booking{--%>
-<%--            padding: 0px !important;--%>
-<%--        }--%>
-<%--        .progress{--%>
-<%--            border-radius: 0px!important;--%>
-<%--        }--%>
-<%--        .progress-bar{--%>
-<%--            border-radius: 0px !important--%>
-<%--            background-color: gold!important;--%>
-<%--        }--%>
-
-<%--    </style>--%>
-
-    <script>
-
-        var timeIncrements = new Array();
-        var bookingStartTimes = new Array();
-        var bookingEndTimes = new Array();
-        function myFunction() {
-            setInterval(myFunction, 5000);
-
-            var currentDate = new Date();
-
-            var currentDateHours = currentDate.getHours();
-            var currentDateMinutes = currentDate.getMinutes();
-            var currentTime = currentDate.getHours() + ":" + currentDate.getMinutes();
-            for (let i = 0 ; i<timeIncrements.length ; i++){
-                var timeIncrementDate = new Date(timeIncrements[i]);
-
-                var incrementTimeHoursTemp = timeIncrementDate.getHours();
-                var incrementTimeHours;
-                if (incrementTimeHoursTemp<10){
-                    incrementTimeHours = "0"+incrementTimeHoursTemp;
-                }
-                else{
-                    incrementTimeHours = incrementTimeHoursTemp;
-                }
-                var incrementTimeMinutesTemp = timeIncrementDate.getMinutes();
-
-                var incrementTimeMinutes;
-                if (incrementTimeMinutesTemp<10){
-                    incrementTimeMinutes = "0"+incrementTimeMinutesTemp;
-                }
-                else{
-                    incrementTimeMinutes = incrementTimeMinutesTemp;
-                }
-                var incrementTime = incrementTimeHours + ":" + incrementTimeMinutes;
-
-
-
-                if(timeIncrementDate<=currentDate){
-                    $("th.header:contains('" + incrementTime +"')").css("background-color", "gold" );
-                    $("td.timeIncrement:contains('" + incrementTime +"')").css("background-color", "#fffee0");
-                    // $("td.timeIncrementBooking:contains('" + incrementTime +"')").css("background-color", "#1774CF");
-                    $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "0%");
-                    $("td.timeIncrementBooking:contains('endTime" + incrementTime +"')").css("background-color", "#fffee0");
-                    // $('.bookingProgress').css('width', '100%');
-
-                    // $("div.imageBooking:contains('" + incrementTime +"')").css("background-color", "black");
-                    // $("td:nth-child(5)").addClass("darker");
-
-                }
-                else{
-                    var result;
-                    var resultTemp;
-                    if (incrementTimeMinutesTemp == 15){
-                        result = (currentDateMinutes/15)*100;
-                    }
-                    else if (incrementTimeMinutesTemp==30){
-                        currentDateMinutes-=15;
-                        result = (currentDateMinutes/15)*100;
-                    }
-                    else if (incrementTimeMinutesTemp==45){
-                        currentDateMinutes -=30;
-                        result = (currentDateMinutes/15)*100;
-                    }
-                    else if (incrementTimeMinutesTemp==0){
-                        currentDateMinutes-=45;
-                        result = (currentDateMinutes/15)*100;
-                    }
-                    resultTemp = result;
-                    resultTemp -=5;
-                    resultTemp +="%";
-                    result+="%"
-                    $("div.image:contains('" + incrementTime +"')").css("width", result);
-                    $("div.imageHiddenOdd:contains('" + incrementTime +"')").css("width", resultTemp);
-                    $("div.imageHiddenEven:contains('" + incrementTime +"')").css("width", resultTemp);
-                    $("div.imageBookingEven:contains('" + incrementTime +"')").css("width", resultTemp);
-                    $("div.imageBookingOdd:contains('" + incrementTime +"')").css("width", resultTemp);
-                    $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "5%");
-                    $("div.currentTimeLine:contains('" + incrementTime +"')").css("width", "5%");
-                    // document.getElementById("demo1").innerHTML = incrementTime + currentTime + " " +result;'
-
-                    break;
-                }
-            }
-        }
-        function getTimeIncrements(){
-
-            var hoursOpenTime = <%=openTime.getHour()%>;
-            var minutesOpenTime = <%=openTime.getMinute()%>;
-            var hoursCloseTime = <%=closeTime.getHour()%>;
-            var minutesCloseTime = <%=closeTime.getMinute()%>;
-            var startTime = new Date();
-            startTime.setHours(hoursOpenTime);
-            startTime.setMinutes(minutesOpenTime);
-            startTime.setSeconds(0);
-            var endTime = new Date();
-            var tempTime = startTime;
-            endTime.setHours(hoursCloseTime);
-            endTime.setMinutes(minutesCloseTime);
-            endTime.setSeconds(0);
-            var totalHours = hoursCloseTime-hoursOpenTime;
-            var totalMinutes = minutesCloseTime - minutesOpenTime;
-            var totalTimeMinutes = (totalHours*60)+totalMinutes;
-            var currentMinute = 0;
-
-            while(currentMinute<=totalTimeMinutes){
-                timeIncrements.push(tempTime);
-                tempTime = new Date(tempTime.getTime() + 15*60000);
-                currentMinute+=15;
-            }
-        }
-        function getBookingTimeIncrements(){
-
-
-            <%
-            for (Rows row : table.getRows()){
-                    for (Columns column : row.getColumns()){
-                        if (column.isStartOfBooking()){%>
-                            var startTime = new Date();
-                            startTime.setSeconds(0);
-                            var endTime = new Date();
-                            endTime.setSeconds(0);
-                            var hoursStartTime = <%=column.getStartTimeHours()%>;
-                            var minutesStartTime = <%=column.getStartTimeMinutes()%>;
-                            var hoursEndTime = <%=column.getEndTimeHours()%>;
-                            var minutesEndTime = <%=column.getEndTimeMinutes()%>;
-                            startTime.setHours(hoursStartTime)
-                            startTime.setMinutes(minutesStartTime)
-                            endTime.setHours(hoursEndTime)
-                            endTime.setMinutes(minutesEndTime)
-                            bookingStartTimes.push(startTime);
-                            bookingEndTimes.push(endTime);
-                        <%}
-                    }
-            }
-            %>
-
-        }
-        function updateProgressBars(){
-            setInterval(updateProgressBars, 5000);
-            let i = 0;
-            var currentTime = new Date();
-            var timeIncrementDate = new Date(bookingEndTimes[0]);
-
-            var bookingEndTime = new Date(bookingEndTimes[3]);
-            var bookingStartTime = new Date(bookingStartTimes[3]);
-            var totalMinutesOfBooking = (bookingEndTime.getHours()*60 + bookingEndTime.getMinutes())- (bookingStartTime.getHours()*60+bookingStartTime.getMinutes());
-            var totalMinutesCurrentTime = currentTime.getHours()*60 + currentTime.getMinutes();
-            var result = (totalMinutesCurrentTime/totalMinutesOfBooking)*100;
-
-            $(".progress-bar").each(function() {
-                var currentTime = new Date();
-                var bookingEndTime = new Date(bookingEndTimes[i]);
-                var bookingStartTime = new Date(bookingStartTimes[i]);
-                if (currentTime>bookingEndTime){
-                    $(this).css("width","100%")
-                    $(this).removeClass("progress-bar-striped progress-bar-animated")
-                }
-                else if (currentTime<bookingEndTime && currentTime>bookingStartTime){
-                    var totalMinutesOfBooking = (bookingEndTime.getHours()*60 + bookingEndTime.getMinutes())-(bookingStartTime.getHours()*60+bookingStartTime.getMinutes());
-                    var totalMinutesAtStartOfBooking = (bookingStartTime.getHours()*60 + bookingStartTime.getMinutes());
-                    var totalMinutesCurrentTime = currentTime.getHours()*60 + currentTime.getMinutes();
-                    var currentTime = totalMinutesCurrentTime - totalMinutesAtStartOfBooking;
-                    var result = (currentTime/totalMinutesOfBooking)*100;
-                    result +="%"
-                    $(this).css("width", result)
-                    $(this).addClass("progress-bar-striped progress-bar-animated")
-
-                }
-                i = i + 1;
-            });
-
-        }
-
-    </script>
     <style>
         tr {
             line-height: 2px;
             min-height: 2px;
             height: 2px;
         }
-        td,th{
-
+        th.timeIncrements{
+            font-size: 10px;
         }
+        body{
+            height: 100%;
+            min-height: 100%;
+        }
+        footer {
+            clear: both;
+            position: relative;
+            height: 200px;
+            margin-top: -200px;
+        }
+        th.timeIncrements0{
+            background-color: rgb(239, 239, 239) !important;
+        }
+        th.timeIncrements1{
+            background-color: white !important;
+        }
+        /*!* xs < 768 *!*/
+        /*@media screen and (max-width: 768px) {*/
+        /*    th.timeIncrements {*/
+        /*        font-size: 6px;*/
+        /*    }*/
+        /*}*/
 
+        /*!* sm *!*/
+        /*@media screen and (min-width: 1300px) {*/
+        /*    th.timeIncrements {*/
+        /*        font-size: 10px;*/
+        /*    }*/
+        /*}*/
+
+        /*!* md *!*/
+        /*@media screen and (min-width: 1460px) {*/
+        /*    th.timeIncrements {*/
+        /*        font-size: 11px;*/
+        /*    }*/
+        /*}*/
+
+        /*!* lg *!*/
+        /*@media screen and (min-width: 1540px) {*/
+        /*    th.timeIncrements {*/
+        /*        font-size: 12px;*/
+        /*    }*/
+        /*}*/
     </style>
     <script>
         function setLineTime(){
-            setInterval(setLineTime, 2);
+            setInterval(setLineTime, 1000);
             let tdWidth =  parseFloat(document.getElementById("blankTh").offsetWidth);
             $("#lineTime").css("left",tdWidth);
             moveLineTime();
         }
         function moveLineTime(){
-            let tdWidth =  parseFloat(document.getElementById("blankTh").offsetWidth);
-            let tableWidth = document.getElementById("timeIncrementsTable").offsetWidth;
-            tdWidth = tableWidth/<%=timeIncrements.size()+1%>;
+            let dimensions = document.getElementById("blankTh").getBoundingClientRect();
+            var tdWidth = dimensions.width;
+            dimensions = document.getElementById("timeIncrementsTable").getBoundingClientRect();
+            let tableWidth = dimensions.width - tdWidth;
+
             let currentTime = new Date();
             let openTimeMinutes = document.getElementById("openTimeMinutes").innerHTML;
             let closeTimeMinutes = document.getElementById("closeTimeMinutes").innerHTML;
-            let totalMinutes = parseInt(closeTimeMinutes) - parseInt(openTimeMinutes);
+
+            let totalMinutes = parseInt(closeTimeMinutes) - parseInt(openTimeMinutes) + parseInt(15);
             let minutePixel = tableWidth/totalMinutes;
+
+            let totalSeconds = totalMinutes*60;
+            let secondPixel = tableWidth/totalSeconds;
 
             let currentTimeMinusOpenTime = new Date(currentTime.getTime() - openTimeMinutes*60000);
 
             let currentMinutes = currentTimeMinusOpenTime.getMinutes() + currentTimeMinusOpenTime.getHours()*60;
-            // document.getElementById("demo").innerHTML=tdWidth;
-            let left = parseFloat(currentMinutes * minutePixel) + parseFloat(tdWidth);
+            let currentSeconds = currentTimeMinusOpenTime.getMinutes()*60 + currentTimeMinusOpenTime.getHours()*60*60 + currentTimeMinusOpenTime.getSeconds();
 
+            let left = parseFloat(currentSeconds * secondPixel);
+            // document.getElementById("demo").innerHTML=left;
 
-            $("#lineTime").css("left",left-(left*0.02));
+            $("#lineTime").css("left",left+tdWidth-2.5);
         }
-
     </script>
 </head>
-<body onload="getTimeIncrements(),myFunction(),getBookingTimeIncrements(),updateProgressBars(),setLineTime()">
-<%--<body>--%>
+<body onload="setLineTime()">
 <div id="openTimeMinutes" style="visibility: hidden; position: absolute"><%=openTimeMinutes%></div>
 <div id="closeTimeMinutes" style="visibility: hidden;position: absolute"><%=closeTimeMinute%></div>
+<div class="card-header bg-dark text-white">
+    <h5 style="text-align: center"><%=dayOfWeek%></h5>
+    <h6 style="text-align: center"><%=showDateStr%></h6>
+</div>
+<div style="display: flex; justify-content: center;padding: 5px">
+    <div style=" margin: 2px ; margin-right: 50px; left: 10px">
+        <a style="" class=" btn btn-sm btn-primary " href="<%=request.getContextPath()%>/checkAvailability">Create a Booking</a>
+    </div>
+    <div style="margin: 2px">
+        <a style="" class="btn btn-sm btn-outline-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
+    </div>
+    <div style="margin: 2px">
+        <a class="btn btn-outline-primary btn-sm" style="width: 150px " href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
+    </div>
+    <div style="margin: 2px">
+        <a  class="btn  btn-outline-primary bi bi-chevron-right btn-sm" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
+    </div>
+    <div style="width: 124px; margin-left: 50px">
 
-
-<div class="card-header">
-    <h3 style="text-align: center"><%=dayOfWeek%></h3>
-    <h4 style="text-align: center"><%=showDateStr%></h4>
+    </div>
 </div>
 
-    <div class="card-body w-75" style="margin: auto; ">
-        <div class="row" style="padding: 8px">
-            <a class="btn btn-outline-success w-100" href="<%=request.getContextPath()%>/checkAvailability">Create a Booking</a>
-        </div>
-    </div>
-
-<div class="card" style="margin: auto">
-    <div class="card-body" style="margin: auto">
-        <a class="btn btn-outline-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
-        <a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
-        <a class="btn btn-outline-primary bi bi-chevron-right" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
-    </div>
-
-</div>
 
 
-<br>
-<table id="timeIncrementsTable" class="table table-striped table-bordered" style="table-layout: fixed; margin: 0px">
-    <thead>
-    <tr>
-        <th id="blankTh">
 
-        </th>
-        <% for (LocalTime timeIncrement : timeIncrements){%>
-        <th style="text-align: center"><%=timeIncrement%></th>
-        <%}%>
-    </tr>
-    </thead>
-</table>
-<div class="table-responsive">
-    <table class="table table-striped table-bordered" style="table-layout: fixed; position: absolute">
-        <div class="lineTime" id="lineTime" style="height: <%=22*table.getRows().size()%>px; width: 5px; background-color: gold; position: absolute;  z-index: 2" ></div>
-        <tbody>
-        <%for (Rows row : table.getRows()){%>
-        <tr style="">
-            <td>
-                <%=row.getTableNumber()%>
-            </td>
-            <% for (int i = 0; i <row.getColumns().size(); i++){
-                Columns column = row.getColumns().get(i);
-            %>
-            <% if (column.isStartOfBooking()){%>
-            <td class="" style="background-color: dodgerblue;" colspan="<%=column.getAmountOfTimeIncrements()%>-1">
-                <div style="z-index: 4; color: black">
-                    <%=column.getBookingDetails()%>
-                </div>
-            </td>
-            <%i+=column.getAmountOfTimeIncrements()-1;}else{%>
-            <td>
 
-            </td>
-            <%}
+<div class="card"; style="width: 95% ;margin: auto">
+    <table id="timeIncrementsTable" class="table table-striped table-bordered" style="table-layout: fixed; margin: 0px">
+        <thead>
+        <tr>
+            <th></th>
+            <%  int tempHour =timeIncrements.get(0).getHour();
+                int o = 1;
+                for(BookingFormattedTimeIncrements timeIncrement1 : bookingFormattedTimeIncrements){
+                    if(timeIncrement1.getTimeIncrement().getMinute()==0){
+                        if(o==1){
+                            o=0;
+                        }
+                        else{
+                            o = 1;
+                        }
+                    }%>
+                   <th class="timeIncrements timeIncrements<%=o%>" style="text-align: center; font-size: 14px" colspan="<%=timeIncrement1.getColspan()%>"> <%=timeIncrement1.getTimeIncrement().getHour()%></th>
+            <%}%>
+
+        </tr>
+        <tr>
+            <th id="blankTh" style="font-size:  10px">
+                Table
+            </th>
+            <%
+            o=1;
+            for (LocalTime timeIncrement : timeIncrements){
+                if (timeIncrement.getMinute()==0){
+                    if(o==1){
+                        o=0;
+                    }
+                    else{
+                        o = 1;
+                    }
+                }
+                if(timeIncrement.compareTo(timeIncrements.get(timeIncrements.size()-1))==0){%>
+                <th id="lastTimeIncrement" class="timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getMinute()%></th>
+                <%}else{%>
+                <th class="timeIncrements timeIncrements<%=o%>" style="text-align: center;"><%=timeIncrement.getMinute()%></th>
+
+                <%}
             }%>
         </tr>
-        <%}%>
-
-        </tbody>
-
-
+        </thead>
     </table>
+    <div class="table-responsive" style="overflow-scrolling: auto">
+        <table class="table table-striped table-bordered" style="table-layout: fixed; position: absolute; max-height: 100px">
+            <div class="lineTime" id="lineTime" style="height: <%=18.81*table.getRows().size()%>px; width: 5px; background-color: gold; position: absolute;  z-index: 2; margin: 0px; padding: 0px" ></div>
+            <tbody>
+            <%for (Rows row : table.getRows()){%>
+            <tr style="">
+                <th>
+                    <%=row.getTableNumber()%>
+                </th>
+                <% for (int i = 0; i <row.getColumns().size(); i++){
+                    Columns column = row.getColumns().get(i);
+                %>
+                <% if (column.isStartOfBooking()){%>
+                <td class="" style="background-color: rgb(14,133,255);" colspan="<%=column.getAmountOfTimeIncrements()%>-1">
+                    <div style="z-index: 4; color: white; font-size: 8px">
+                        <%=column.getBookingDetails()%>
+                    </div>
+                </td>
+                <%i+=column.getAmountOfTimeIncrements()-1;}
+                else{%>
+                <td>
+
+                </td>
+                <%}
+                }%>
+            </tr>
+            <%}%>
+
+            </tbody>
+
+
+        </table>
+    </div>
 </div>
-
-<br>
-
 </body>
 </html>
 

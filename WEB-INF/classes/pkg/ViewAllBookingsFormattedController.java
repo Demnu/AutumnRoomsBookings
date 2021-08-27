@@ -59,6 +59,22 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         LocalTime closeTime = venue.getTimeVenueCloses();
         //Get time increments for day
         ArrayList<LocalTime> timeIncrements = venue.getTimeIncrements();
+        ArrayList<BookingFormattedTimeIncrements> bookingFormattedTimeIncrements = new ArrayList<>();
+        //create object to help generating th time increments
+        boolean duplicate = false;
+        for (int i  = 0 ; i < timeIncrements.size(); i++){
+            for (BookingFormattedTimeIncrements timeIncrement : bookingFormattedTimeIncrements){
+                if (timeIncrements.get(i).getHour()==timeIncrement.getTimeIncrement().getHour()){
+                    duplicate = true;
+                    timeIncrement.setColspan(timeIncrement.getColspan()+1);
+                }
+            }
+            if (!duplicate) {
+                BookingFormattedTimeIncrements tempTimeIncrement = new BookingFormattedTimeIncrements(timeIncrements.get(i),1);
+                bookingFormattedTimeIncrements.add(tempTimeIncrement);
+            }
+            duplicate = false;
+        }
 
         //Get all tables
         ArrayList<ServableTable> allTables = ServableTableDatabaseInterface.getAllServableTabless();
@@ -85,6 +101,7 @@ public class ViewAllBookingsFormattedController extends HttpServlet {
         Table table = new Table(allTables, timeIncrements);
 
         Functions functions = new Functions();
+        request.setAttribute("bookingFormattedTimeIncrements",bookingFormattedTimeIncrements);
         request.setAttribute("dayOfWeek",dayOfWeek.toString());
         request.setAttribute("openTime",openTime);
         request.setAttribute("closeTime",closeTime);

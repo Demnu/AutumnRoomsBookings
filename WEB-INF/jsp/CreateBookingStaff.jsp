@@ -18,10 +18,22 @@
     <link rel="stylesheet" href="/resources/demos/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
+    <style>
+        /*div.test {*/
+        /*    width: 50%;*/
+        /*    height: 50%;*/
+        /*    position: absolute;*/
+        /*    top:0;*/
+        /*    bottom: 0;*/
+        /*    left: 0;*/
+        /*    right: 0;*/
+        /*    margin: auto;*/
+        /*}*/
+    </style>
 </head>
 <body>
 <jsp:include page="Navbar.jsp"/>
-<div class="container">
+<div class="container test" style="">
     <div class="card">
         <div class="card w-100">
             <div class="card-header">
