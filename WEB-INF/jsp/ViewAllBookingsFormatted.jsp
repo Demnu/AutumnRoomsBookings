@@ -62,51 +62,96 @@
             margin-top: -200px;
         }
         th.timeIncrements0{
-            background-color: rgb(239, 239, 239) !important;
+            background-color: rgb(248, 248, 248);
+
         }
         th.timeIncrements1{
-            background-color: white !important;
+            background-color: white ;
         }
-        /*!* xs < 768 *!*/
+        td.true{
+            background-color: rgb(243, 243, 243);
+        }
+        td.false{
+            background-color: white ;
+        }
+        .body {
+            /*height: 200px;*/
+            overflow: auto;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        #containerForTable::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        #containerForTable {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        th.minuteTimeIncrement{
+            padding: 0 !important;
+            padding-bottom: 6px!important;
+            height: 14px !important;
+            font-size: 12px;
+
+        }
+        th {
+            word-wrap: break-word;
+        }
+        th.tableNumber{
+
+            font-size: 10px;
+        }
+        /* xs < 768 */
         /*@media screen and (max-width: 768px) {*/
-        /*    th.timeIncrements {*/
+        /*    th.minuteTimeIncrement {*/
         /*        font-size: 6px;*/
         /*    }*/
         /*}*/
 
         /*!* sm *!*/
         /*@media screen and (min-width: 1300px) {*/
-        /*    th.timeIncrements {*/
+        /*    th.minuteTimeIncrement {*/
         /*        font-size: 10px;*/
         /*    }*/
         /*}*/
 
         /*!* md *!*/
         /*@media screen and (min-width: 1460px) {*/
-        /*    th.timeIncrements {*/
+        /*    th.minuteTimeIncrement {*/
         /*        font-size: 11px;*/
         /*    }*/
         /*}*/
 
         /*!* lg *!*/
         /*@media screen and (min-width: 1540px) {*/
-        /*    th.timeIncrements {*/
-        /*        font-size: 12px;*/
+        /*    th.minuteTimeIncrement {*/
+        /*        font-size: 10px;*/
         /*    }*/
         /*}*/
     </style>
     <script>
         function setLineTime(){
             setInterval(setLineTime, 1000);
-            let tdWidth =  parseFloat(document.getElementById("blankTh").offsetWidth);
+            let dimensions = document.getElementById("blankTh").getBoundingClientRect();
+            var tdWidth = dimensions.width;
+            dimensions = document.getElementById("containerForTable").getBoundingClientRect();
+
+            var tableHeight = dimensions.height;
             $("#lineTime").css("left",tdWidth);
+            $("#lineTime").css("height",tableHeight);
+            // if (tdWidth<=29){
+            //     $(".minuteTimeIncrement").css("font-size",8);
+            // }
+
             moveLineTime();
         }
         function moveLineTime(){
             let dimensions = document.getElementById("blankTh").getBoundingClientRect();
             var tdWidth = dimensions.width;
             dimensions = document.getElementById("timeIncrementsTable").getBoundingClientRect();
-            let tableWidth = dimensions.width - tdWidth;
+            let tableWidth = dimensions.width;
 
             let currentTime = new Date();
             let openTimeMinutes = document.getElementById("openTimeMinutes").innerHTML;
@@ -126,17 +171,22 @@
             let left = parseFloat(currentSeconds * secondPixel);
             // document.getElementById("demo").innerHTML=left;
 
-            $("#lineTime").css("left",left+tdWidth-2.5);
+            $("#lineTime").css("left",left-2.5);
+        }
+        function setTableSize(){
+            let screenHeightPx = screen.height*0.60;
+            $("#containerForTable").css("height",screenHeightPx);
         }
     </script>
 </head>
-<body onload="setLineTime()">
+<body onload="setTableSize(),setLineTime()">
 <div id="openTimeMinutes" style="visibility: hidden; position: absolute"><%=openTimeMinutes%></div>
 <div id="closeTimeMinutes" style="visibility: hidden;position: absolute"><%=closeTimeMinute%></div>
 <div class="card-header bg-dark text-white">
     <h5 style="text-align: center"><%=dayOfWeek%></h5>
     <h6 style="text-align: center"><%=showDateStr%></h6>
 </div>
+
 <div style="display: flex; justify-content: center;padding: 5px">
     <div style=" margin: 2px ; margin-right: 50px; left: 10px">
         <a style="" class=" btn btn-sm btn-primary " href="<%=request.getContextPath()%>/checkAvailability">Create a Booking</a>
@@ -154,14 +204,10 @@
 
     </div>
 </div>
-
-
-
-
-
-<div class="card"; style="width: 95% ;margin: auto">
+<div class="card"; style="width: 98% ;margin: auto">
     <table id="timeIncrementsTable" class="table table-striped table-bordered" style="table-layout: fixed; margin: 0px">
         <thead>
+
         <tr>
             <th></th>
             <%  int tempHour =timeIncrements.get(0).getHour();
@@ -175,14 +221,12 @@
                             o = 1;
                         }
                     }%>
-                   <th class="timeIncrements timeIncrements<%=o%>" style="text-align: center; font-size: 14px" colspan="<%=timeIncrement1.getColspan()%>"> <%=timeIncrement1.getTimeIncrement().getHour()%></th>
+                   <th class="hourTimeIncrement timeIncrements timeIncrements<%=o%>" style="text-align: center; font-size: 14px" colspan="<%=timeIncrement1.getColspan()%>"> <%=timeIncrement1.getTimeIncrement().getHour()%></th>
             <%}%>
 
         </tr>
         <tr>
-            <th id="blankTh" style="font-size:  10px">
-                Table
-            </th>
+            <th></th>
             <%
             o=1;
             for (LocalTime timeIncrement : timeIncrements){
@@ -194,18 +238,18 @@
                         o = 1;
                     }
                 }
-                if(timeIncrement.compareTo(timeIncrements.get(timeIncrements.size()-1))==0){%>
-                <th id="lastTimeIncrement" class="timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getMinute()%></th>
-                <%}else{%>
-                <th class="timeIncrements timeIncrements<%=o%>" style="text-align: center;"><%=timeIncrement.getMinute()%></th>
-
+                if(timeIncrement == timeIncrements.get(timeIncrements.size()-2)){%>
+                    <th id="blankTh" class="minuteTimeIncrement timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getMinute()%></th>
                 <%}
-            }%>
+                else{%>
+                    <th id="" class="minuteTimeIncrement timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getMinute()%></th>
+                <%}%>
+            <%}%>
         </tr>
         </thead>
     </table>
-    <div class="table-responsive" style="overflow-scrolling: auto">
-        <table class="table table-striped table-bordered" style="table-layout: fixed; position: absolute; max-height: 100px">
+    <div id="containerForTable" class="table-responsive body" style="">
+        <table id="tableBody" class="table table-striped table-bordered" style="table-layout: fixed; position: relative; max-height: 1px">
             <div class="lineTime" id="lineTime" style="height: <%=18.81*table.getRows().size()%>px; width: 5px; background-color: gold; position: absolute;  z-index: 2; margin: 0px; padding: 0px" ></div>
             <tbody>
             <%for (Rows row : table.getRows()){%>
@@ -217,14 +261,14 @@
                     Columns column = row.getColumns().get(i);
                 %>
                 <% if (column.isStartOfBooking()){%>
-                <td class="" style="background-color: rgb(14,133,255);" colspan="<%=column.getAmountOfTimeIncrements()%>-1">
-                    <div style="z-index: 4; color: white; font-size: 8px">
+                <td class="<%=column.isEven()%>" style="background-color: rgb(14,133,255);" colspan="<%=column.getAmountOfTimeIncrements()%>-1">
+                    <div style="z-index: 4; color: white; font-size: 12px">
                         <%=column.getBookingDetails()%>
                     </div>
                 </td>
                 <%i+=column.getAmountOfTimeIncrements()-1;}
                 else{%>
-                <td>
+                <td class="<%=column.isEven()%>">
 
                 </td>
                 <%}
@@ -241,116 +285,3 @@
 </body>
 </html>
 
-
-<%--<div class="wholeTable" style="display: flex; flex-direction: column">--%>
-
-<%--    <table id="bookingsTable" class="table table-striped table-sm table-bordered" cellspacing="0" width="100%" style='table-layout:fixed'>--%>
-<%--        <thead>--%>
-<%--        <tr>--%>
-<%--            <th style="background-color: white;"></th>--%>
-<%--            <% for (int i = 0 ; i < timeIncrements.size(); i++){ %>--%>
-<%--            <th class="" style="background-color: white;  text-align: right; left: 20px;">--%>
-
-<%--                <%=timeIncrements.get(i)%>--%>
-
-<%--            </th>--%>
-<%--            <%}%>--%>
-<%--        </tr>--%>
-<%--        </thead>--%>
-<%--        <tbody>--%>
-
-<%--        <%--%>
-<%--            int i = 0;--%>
-<%--            for (Rows row : table.getRows()){%>--%>
-<%--        <tr>--%>
-<%--            <td><%=row.getTableNumber()%></td>--%>
-<%--            <%for (Columns column : row.getColumns()){%>--%>
-<%--            <%if (Functions.isOdd(i)){--%>
-<%--                if (column.isBooked()){%>--%>
-<%--            <% if (column.isStartOfBooking()){--%>
-<%--            %>--%>
-<%--            <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">--%>
-<%--                <div  class="booking" style="background-color: dodgerblue; height: 70%; display: flex; justify-content: space-between;">--%>
-<%--                    <div style="padding-left: 2px">--%>
-<%--                        <%=column.getBookingDetails()%>--%>
-<%--                    </div>--%>
-<%--                    <div style="padding-right: 2px; display: flex">--%>
-<%--                        <%=todaysBookingsList.get(0).getNumberOfPeople()%>--%>
-<%--                        <div style="font-size: 10px">--%>
-<%--                            seats--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--                <div class="progress" style="height: 10px; background-color: dodgerblue">--%>
-<%--                    <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">--%>
-<%--                        <div class="hiddenTimeIncrementStartTime">--%>
-<%--                            startTime<%=column.getStartTimeOfBooking()%>--%>
-<%--                        </div>--%>
-<%--                        <div class="hiddenTimeIncrementEndTime">--%>
-<%--                            endTime<%=column.getEndTimeOfBooking()%>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-
-<%--                </div>--%>
-<%--            </td>--%>
-<%--            <%}%>--%>
-<%--            <%}%>--%>
-<%--            <%if (!column.isBooked()){%>--%>
-<%--            <td style="font-size: 12px" class="timeIncrement">--%>
-<%--                <div class="imageHiddenOdd" style="width: 0%">--%>
-<%--                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>--%>
-<%--                </div>--%>
-<%--                <div class="currentTimeLine" style="width: 0%">--%>
-<%--                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>--%>
-<%--                </div>--%>
-<%--            </td>--%>
-<%--            <%}--%>
-<%--            }%>--%>
-<%--            <%if (!Functions.isOdd(i)){--%>
-<%--                if (column.isBooked()){%>--%>
-<%--            <% if (column.isStartOfBooking()){--%>
-<%--            %>--%>
-<%--            <td class = "timeIncrementBooking"  colspan="<%=column.getAmountOfTimeIncrements()%>">--%>
-<%--                <div  class="booking" style="background-color: dodgerblue; height: 70%; display: flex; justify-content: space-between;">--%>
-<%--                    <div style="padding-left: 2px">--%>
-<%--                        <%=column.getBookingDetails()%>--%>
-<%--                    </div>--%>
-<%--                    <div style="padding-right: 2px; display: flex">--%>
-<%--                        <%=todaysBookingsList.get(0).getNumberOfPeople()%>--%>
-<%--                        <div style="font-size: 10px">--%>
-<%--                            seats--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--                <div class="progress" style="height: 10px; background-color: dodgerblue">--%>
-<%--                    <div class=" bookingProgress progress-bar bg-warning " role="progressbar" style="width: 0%;">--%>
-<%--                        <div class="hiddenTimeIncrementStartTime">--%>
-<%--                            startTime<%=column.getStartTimeOfBooking()%>--%>
-<%--                        </div>--%>
-<%--                        <div class="hiddenTimeIncrementEndTime">--%>
-<%--                            endTime<%=column.getEndTimeOfBooking()%>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </td>--%>
-<%--            <%}%>--%>
-<%--            <%}%>--%>
-<%--            <%if (!column.isBooked()){%>--%>
-<%--            <td style="font-size: 12px" class="timeIncrement">--%>
-<%--                <div class="imageHiddenEven" style="width: 0%">--%>
-<%--                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>--%>
-<%--                </div>--%>
-<%--                <div class="currentTimeLine" style="width: 0%">--%>
-<%--                    <div class="hiddenTimeIncrement"><%=column.getTimeIncrement()%></div>--%>
-<%--                </div>--%>
-<%--            </td>--%>
-<%--            <%}--%>
-<%--            }%>--%>
-<%--            <%}--%>
-<%--                i++;--%>
-<%--            }--%>
-<%--            %>--%>
-<%--        </tr>--%>
-<%--        </tbody>--%>
-<%--    </table>--%>
-<%--</div>--%>

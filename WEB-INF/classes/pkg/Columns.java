@@ -13,6 +13,7 @@ public class Columns implements Comparable<Columns>{
     private String startTimeOfBooking;
     private LocalTime endTimeOfBookingLocalTime;
     private LocalTime startTimeOfBookingLocalTime;
+    private boolean even = true;
     @Override
     public String toString() {
         if (bookingDetails.isEmpty()){
@@ -38,6 +39,15 @@ public class Columns implements Comparable<Columns>{
         startOfBooking = false;
         amountOfTimeIncrements = 0;
         endTimeOfBooking = "";
+        even = true;
+    }
+
+    public boolean isEven() {
+        return even;
+    }
+
+    public void setEven(boolean even) {
+        this.even = even;
     }
 
     public LocalTime getTimeIncrementLocalTime() {

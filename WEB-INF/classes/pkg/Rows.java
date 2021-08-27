@@ -59,9 +59,26 @@ public class Rows {
                 columns.add(tempColumn);
             }
         }
-
-
         Collections.sort(columns);
+        if (columns.size()>1){
+            boolean bool = false;
+            for (int i = 0; i < columns.size();i++){
+                if (columns.get(i).getTimeIncrementLocalTime().getMinute()==0){
+                    if (bool == false){
+                        bool = true;
+                    }
+                    else{
+                        bool = false;
+                    }
+                    columns.get(i).setEven(bool);
+
+                }
+                else{
+                    columns.get(i).setEven(bool);
+                }
+            }
+        }
+
     }
 
     public int getTableNumber() {
