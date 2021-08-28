@@ -44,6 +44,15 @@
     <script src="extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
 
     <style>
+        body{
+            background-image: url("${pageContext.request.contextPath}/imgs/autumnroomsBackground.jpeg");
+            background-size:cover
+
+        }
+        .card{
+            opacity: 98% !important;
+
+        }
         tr {
             line-height: 2px;
             min-height: 2px;
@@ -90,6 +99,16 @@
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        html {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
         th.minuteTimeIncrement{
             padding: 0 !important;
             padding-bottom: 6px!important;
@@ -101,38 +120,44 @@
             word-wrap: break-word;
         }
         th.tableNumber{
+            padding: 0 !important;
+            padding-top: 5px !important;
+            height: 14px !important;
 
-            font-size: 10px;
         }
-        /* xs < 768 */
-        /*@media screen and (max-width: 768px) {*/
-        /*    th.minuteTimeIncrement {*/
-        /*        font-size: 6px;*/
+        /* !*Ipad Horizontal < 768 *!*/
+        /*@media screen and (max-height: 768px) {*/
+        /*    .body {*/
+        /*         max-height: 600px;*/
         /*    }*/
         /*}*/
 
-        /*!* sm *!*/
-        /*@media screen and (min-width: 1300px) {*/
-        /*    th.minuteTimeIncrement {*/
-        /*        font-size: 10px;*/
+        /*!*!* Left screen medium *!*!*/
+        /*@media screen and (min-height: 900px) {*/
+        /*    .body {*/
+        /*        max-height: 735px;*/
         /*    }*/
         /*}*/
 
-        /*!* md *!*/
-        /*@media screen and (min-width: 1460px) {*/
-        /*    th.minuteTimeIncrement {*/
-        /*        font-size: 11px;*/
+        /*!* Ipad horizontal *!*/
+        /*@media screen and (min-height: 937px) {*/
+        /*    .body {*/
+        /*        max-height: 770px;*/
+        /*    }*/
+        /*}*/
+        /*!* Right screen large *!*/
+        /*@media screen and (min-height: 1024px) {*/
+        /*    .body {*/
+        /*        max-height: 850px;*/
         /*    }*/
         /*}*/
 
-        /*!* lg *!*/
-        /*@media screen and (min-width: 1540px) {*/
-        /*    th.minuteTimeIncrement {*/
-        /*        font-size: 10px;*/
-        /*    }*/
-        /*}*/
+
+
     </style>
     <script>
+        var currentScreenHeight = 0;
+        var count = 0;
         function setLineTime(){
             setInterval(setLineTime, 1000);
             let dimensions = document.getElementById("blankTh").getBoundingClientRect();
@@ -174,18 +199,49 @@
 
             $("#lineTime").css("left",tdWidth + left-2.5);
         }
-        function setTableSize(){
-            setInterval(setTableSize, 1000);
-            let screenHeightPx = screen.height;
+        function startTableSize(){
+            let screenHeightPx = $(window).height();
+            let dimensions = document.getElementById("tableBody").getBoundingClientRect();
+            let preTableHeightPx = dimensions.height;
             $("#containerForTable").css("height",0);
-            const dimensions = document.getElementById("bodySizeBeforeTable").getBoundingClientRect();
+            dimensions = document.getElementById("bodySizeBeforeTable").getBoundingClientRect();
             let bodyHeight = dimensions.height;
-            var tableHeight = screenHeightPx*0.6;
-            $("#containerForTable").css("height",tableHeight);
+            var tableHeight = screenHeightPx-bodyHeight-15;
+
+            // if (preTableHeightPx<tableHeight){
+            //     $("#containerForTable").css("height",preTableHeightPx);
+            // }
+            // else{
+            //
+            // }
+            $("#containerForTable").css("height",tableHeight-tableHeight*0.01);
         }
+        function setTableSize(){
+                count ++;
+                let screenHeightPx = $(window).height();
+                let dimensions = document.getElementById("tableBody").getBoundingClientRect();
+                let preTableHeightPx = dimensions.height;
+                $("#containerForTable").css("height",0);
+                dimensions = document.getElementById("bodySizeBeforeTable").getBoundingClientRect();
+                let bodyHeight = dimensions.height;
+                var tableHeight = screenHeightPx-bodyHeight-15;
+
+                if (preTableHeightPx<tableHeight){
+                    $("#containerForTable").css("height",preTableHeightPx);
+                }
+                else{
+                    $("#containerForTable").css("height",tableHeight-tableHeight*0.01);
+
+                }
+
+            // }
+        }
+        window.addEventListener("resize", setTableSize);
+
+
     </script>
 </head>
-<body  onload="setTableSize(),setLineTime()">
+<body  onload="setTableSize(), setLineTime()">
 <div id="bodySizeBeforeTable">
     <div id="openTimeMinutes" style="visibility: hidden; position: absolute"><%=openTimeMinutes%></div>
     <div id="closeTimeMinutes" style="visibility: hidden;position: absolute"><%=closeTimeMinute%></div>
@@ -193,28 +249,29 @@
         <h5 style="text-align: center"><%=dayOfWeek%></h5>
         <h6 style="text-align: center"><%=showDateStr%></h6>
     </div>
-    <div id="demo">
 
-    </div>
 
-    <div style="display: flex; justify-content: center;padding: 5px">
-        <div style=" margin: 2px ; margin-right: 50px; left: 10px">
-            <a style="" class=" btn btn-sm btn-primary " href="<%=request.getContextPath()%>/checkAvailability">Create a Booking</a>
-        </div>
-        <div style="margin: 2px">
-            <a style="" class="btn btn-sm btn-outline-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
-        </div>
-        <div style="margin: 2px">
-            <a class="btn btn-outline-primary btn-sm" style="width: 150px " href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
-        </div>
-        <div style="margin: 2px">
-            <a  class="btn  btn-outline-primary bi bi-chevron-right btn-sm" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
-        </div>
-        <div style="width: 124px; margin-left: 50px">
 
-        </div>
-    </div>
     <div class="card"; style="width: 98% ;margin: auto">
+        <p id="demo">
+        </p>
+        <div style="display: flex; justify-content: center;padding: 5px">
+            <div style=" margin: 2px ; margin-right: 50px; left: 10px">
+                <a style="" class=" btn btn-sm btn-primary " href="<%=request.getContextPath()%>/checkAvailability">Create a Booking</a>
+            </div>
+            <div style="margin: 2px">
+                <a style="" class="btn btn-sm btn-outline-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
+            </div>
+            <div style="margin: 2px">
+                <a class="btn btn-outline-primary btn-sm" style="width: 150px " href="<%=request.getContextPath()%>/viewAllBookingsFormatted">Back to Today</a>
+            </div>
+            <div style="margin: 2px">
+                <a  class="btn  btn-outline-primary bi bi-chevron-right btn-sm" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
+            </div>
+            <div style="width: 124px; margin-left: 50px">
+
+            </div>
+        </div>
         <table id="timeIncrementsTable" class="table table-striped table-bordered" style="table-layout: fixed; margin: 0px">
             <thead>
 
@@ -267,7 +324,8 @@
                     <%for (Rows row : table.getRows()){%>
                         <% if (row.getSectionID()==section.getSectionID()){%>
                         <tr style="">
-                            <th style="font-size: 12px">
+                            <!-- TODO Development: Make th  for table number have col span of 2 -->
+                            <th class="tableNumber" style="font-size: 12px">
                                 <%=row.getTableNumber()%>
                             </th>
                             <% for (int i = 0; i <row.getColumns().size(); i++){
