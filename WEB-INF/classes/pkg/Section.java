@@ -20,6 +20,15 @@ public class Section {
     private  LocalTime endTime;
     private boolean timeConstrained;
     private ArrayList<LocalTime> timeIncrements = new ArrayList<>();
+    private int numberOfBookingsOnDay;
+
+    public int getNumberOfBookingsOnDay() {
+        return numberOfBookingsOnDay;
+    }
+
+    public void setNumberOfBookingsOnDay(int numberOfBookingsOnDay) {
+        this.numberOfBookingsOnDay = numberOfBookingsOnDay;
+    }
 
     public void setTimeIncrements() {
         int openHour = startTime.getHour();

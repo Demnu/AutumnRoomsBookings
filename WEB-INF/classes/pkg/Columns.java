@@ -3,6 +3,7 @@ import java.time.LocalTime;
 import java.sql.*;
 import java.util.ArrayList;
 public class Columns implements Comparable<Columns>{
+    private Booking booking;
     private LocalTime timeIncrementLocalTime;
     private String timeIncrement;
     private boolean booked;
@@ -14,14 +15,43 @@ public class Columns implements Comparable<Columns>{
     private LocalTime endTimeOfBookingLocalTime;
     private LocalTime startTimeOfBookingLocalTime;
     private boolean even = true;
+    private int numPeople;
+    private int amountOfIncrements;
+
+    public int getAmountOfIncrements() {
+        return amountOfIncrements;
+    }
+
+    public void setAmountOfIncrements(int amountOfIncrements) {
+        this.amountOfIncrements = amountOfIncrements;
+    }
+
     @Override
     public String toString() {
-        if (bookingDetails.isEmpty()){
-            return timeIncrement;
+        String str=timeIncrementLocalTime.toString();
+        if (isBooked()){
+            str += "b ";
         }
         else{
-            return bookingDetails;
+            str +=" ";
         }
+        return str;
+    }
+
+    public Booking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
+    }
+
+    public int getNumPeople() {
+        return numPeople;
+    }
+
+    public void setNumPeople(int numPeople) {
+        this.numPeople = numPeople;
     }
 
     @Override
@@ -182,4 +212,5 @@ public class Columns implements Comparable<Columns>{
     public int getEndTimeMinutes(){
         return endTimeOfBookingLocalTime.getMinute();
     }
+
 }

@@ -33,7 +33,38 @@ public class Booking implements Comparable{
     public ArrayList<BookingTime> getBookingTimes() {
         return bookingTimes;
     }
+    public void setBookingTimesIgnoreTimeToReset() {
+        timeRequiredAfterBookingIsFinished = LocalTime.of(0,0);
+        ArrayList<BookingTime> tempBookingTimes = new ArrayList<BookingTime>();
+        int startOfBookingHour = startTimeOfBookingLocalTime.getHour();
+        int startOfBookingMinute = startTimeOfBookingLocalTime.getMinute();
+        int endOfBookingHour = endTimeOfBookingLocalTime.getHour();
+        int endOfBookingMinute = endTimeOfBookingLocalTime.getMinute();
+        int hoursOpened = endOfBookingHour - startOfBookingHour;
+        int minutesOpened = endOfBookingMinute - startOfBookingMinute;
+        int totalMinutes = (hoursOpened*60) + minutesOpened;
+        int currentMinute = 0;
+        LocalTime tempLocalTime = LocalTime.of(startOfBookingHour,startOfBookingMinute);
+        while(currentMinute<=totalMinutes){
+            BookingTime bookingTime = new BookingTime();
+            if (tempLocalTime.compareTo(startTimeOfBookingLocalTime)==0){
+                bookingTime.setIsStartTime(true);
+            }
+            else if (tempLocalTime.compareTo(endTimeOfBookingLocalTime)==0 && timeRequiredAfterBookingIsFinished.compareTo(LocalTime.of(0,0))==0){
+                bookingTime.setIsEndTime(true);
+            }
+            else{
+                bookingTime.setBetween(true);
 
+            }
+            bookingTime.setTimeIncrement(tempLocalTime);
+            tempBookingTimes.add(bookingTime);
+            tempLocalTime = tempLocalTime.plusMinutes(15);
+            currentMinute +=15;
+        }
+        this.bookingTimes =  tempBookingTimes;
+
+    }
     public void setBookingTimes() {
         ArrayList<BookingTime> tempBookingTimes = new ArrayList<BookingTime>();
         int startOfBookingHour = startTimeOfBookingLocalTime.getHour();

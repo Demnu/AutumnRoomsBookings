@@ -23,72 +23,69 @@ public class Rows {
         this.sectionID = servableTable.getSectionID();
         columns = new ArrayList<>();
         Columns tempColumn;
+        ArrayList<LocalTime> timeIncrements = new ArrayList<>();
+        for (LocalTime localTime : timeIncrementsLocalTime){
+            timeIncrements.add(localTime);
+        }
         ArrayList<LocalTime> timeIncrementsFilled = new ArrayList<>();
+
         for (Booking booking : servableTable.getBookingsOnDay()){
             boolean startBookingIncrement = true;
-            boolean firstIncrementSkipped = false;
-            for (LocalTime bookingTimeIncrement : booking.getTimeIncrementsForBooking()){
-                tempColumn = new Columns();
-                if (firstIncrementSkipped == false){
-                    firstIncrementSkipped = true;
+            for (BookingTime bookingTimeIncrement : booking.getBookingTimes()){
+                if (bookingTimeIncrement.isStartTime()){
+                    tempColumn = new Columns();
+                    tempColumn.setBooking(booking);
+                    tempColumn.setStartTimeOfBookingLocalTime(bookingTimeIncrement.getTimeIncrement());
+                    tempColumn.setAmountOfIncrements(booking.getTimeIncrementsForBooking().size());
+                    tempColumn.setTimeIncrementLocalTime(bookingTimeIncrement.getTimeIncrement());
+                    tempColumn.setBooked(true);
+                    tempColumn.setStartOfBooking(true);
+                    columns.add(tempColumn);
+                    timeIncrementsFilled.add(bookingTimeIncrement.getTimeIncrement());
+
+                }
+                else if(bookingTimeIncrement.isEndTime()){
+
                 }
                 else{
                     tempColumn = new Columns();
-                    if (startBookingIncrement == true){
-                        tempColumn.setStartOfBooking(true);
-                        tempColumn.setAmountOfTimeIncrements(booking.getTimeIncrementsForBooking().size());
-                        tempColumn.setEndTimeOfBooking(booking.getEndTimeOfBookingLocalTime());
-                        tempColumn.setStartTimeOfBooking(booking.getStartTimeOfBooking());
-                        tempColumn.setEndTimeOfBookingLocalTime(booking.getEndTimeOfBookingLocalTime());
-                        tempColumn.setStartTimeOfBookingLocalTime(booking.getStartTimeOfBookingLocalTime());
-                        startBookingIncrement = false;
-                    }
-                    tempColumn.setTimeIncrementLocalTime(bookingTimeIncrement);
-                    tempColumn.setTimeIncrement(bookingTimeIncrement.toString());
                     tempColumn.setBooked(true);
-                    tempColumn.setBookingDetails("Harry Collins");
+                    tempColumn.setTimeIncrementLocalTime(bookingTimeIncrement.getTimeIncrement());
                     columns.add(tempColumn);
-                    timeIncrementsFilled.add(bookingTimeIncrement);
+                    timeIncrementsFilled.add(bookingTimeIncrement.getTimeIncrement());
+
+
                 }
             }
         }
-        boolean timeIncrementIsFilled;
-
-        for (LocalTime timeIncrement : timeIncrementsLocalTime){
+        timeIncrements.removeAll(timeIncrementsFilled);
+        for (LocalTime localTime : timeIncrements){
             tempColumn = new Columns();
-            timeIncrementIsFilled = false;
-            for (LocalTime timeIncrementFilled : timeIncrementsFilled){
-                if (timeIncrement.equals(timeIncrementFilled)){
-                    timeIncrementIsFilled = true;
-                }
-            }
-            if (timeIncrementIsFilled == false){
-                tempColumn.setTimeIncrementLocalTime(timeIncrement);
-                tempColumn.setTimeIncrement(timeIncrement.toString());
-                tempColumn.setBooked(false);
-                columns.add(tempColumn);
-            }
+            tempColumn.setTimeIncrementLocalTime(localTime);
+            tempColumn.setBooked(false);
+            columns.add(tempColumn);
         }
         Collections.sort(columns);
-        if (columns.size()>1){
-            boolean bool = false;
-            for (int i = 0; i < columns.size();i++){
-                if (columns.get(i).getTimeIncrementLocalTime().getMinute()==0){
-                    if (bool == false){
-                        bool = true;
-                    }
-                    else{
-                        bool = false;
-                    }
-                    columns.get(i).setEven(bool);
+//        if (!columns.isEmpty()){
+//            int firstColIncrements = columns.get(0).getTimeIncrementLocalTime().getMinute()/15;
+//
+//        }
 
+        boolean bool = true;
+        for (Columns column : columns){
+
+
+            if (column.getTimeIncrementLocalTime().getMinute()==0){
+                if (bool){
+                    bool = false;
                 }
                 else{
-                    columns.get(i).setEven(bool);
+                    bool = true;
                 }
             }
-        }
+            column.setEven(bool);
 
+        }
     }
 
     public int getTableNumber() {
@@ -114,5 +111,14 @@ public class Rows {
 
     public void setColumns(ArrayList<Columns> columns) {
         this.columns = columns;
+    }
+
+    @Override
+    public String toString() {
+        String str = "";
+        for (Columns columns : columns){
+            str += columns;
+        }
+        return str;
     }
 }

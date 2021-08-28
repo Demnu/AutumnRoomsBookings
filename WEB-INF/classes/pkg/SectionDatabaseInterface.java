@@ -138,8 +138,8 @@ public class SectionDatabaseInterface {
                 endTimes.add(result.getTime(20).toLocalTime());
                 section.setStartTimes(startTimes);
                 section.setEndTimes(endTimes);
-
                 sectionList.add(section);
+
             }
             result.close();
             preparedStatement.close();

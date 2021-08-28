@@ -21,12 +21,15 @@
     Functions functions = (Functions) request.getAttribute("functions");
     LocalDate dateBack = showDate.minusDays(1);
     LocalDate dateForward = showDate.plusDays(1);
+    LocalDate dateBack7 = showDate.minusDays(7);
+    LocalDate dateForward7 = showDate.plusDays(7);
     String dayOfWeek = (String) request.getAttribute("dayOfWeek");
     int openTimeMinutes = openTime.getMinute() + openTime.getHour()*60;
     int closeTimeMinute = closeTime.getHour()*60 + closeTime.getMinute();
-
     ArrayList<BookingFormattedTimeIncrements> bookingFormattedTimeIncrements = (ArrayList<BookingFormattedTimeIncrements>) request.getAttribute("bookingFormattedTimeIncrements");
+    ArrayList<BookingFormattedTimeIncrements> bookingFormattedMinuteTimeIncrements = (ArrayList<BookingFormattedTimeIncrements>) request.getAttribute("bookingFormattedMinuteTimeIncrements");
     ArrayList<Section> sections = (ArrayList<Section>) request.getAttribute("sections");
+    ArrayList<Section> chosenSections = (ArrayList<Section>) request.getAttribute("chosenSections");
 
 
 %>
@@ -46,8 +49,7 @@
     <style>
         body{
             background-image: url("${pageContext.request.contextPath}/imgs/autumnroomsBackground.jpeg");
-            background-size:cover
-
+            background-size: cover;
         }
         .card{
             opacity: 98% !important;
@@ -125,6 +127,9 @@
             height: 14px !important;
 
         }
+        .no-transition {
+            transition: none !important;
+        }
         /* !*Ipad Horizontal < 768 *!*/
         /*@media screen and (max-height: 768px) {*/
         /*    .body {*/
@@ -174,6 +179,7 @@
             moveLineTime();
         }
         function moveLineTime(){
+
             let dimensions = document.getElementById("blankTh").getBoundingClientRect();
             var tdWidth = dimensions.width;
             dimensions = document.getElementById("timeIncrementsTable").getBoundingClientRect();
@@ -196,8 +202,13 @@
 
             let left = parseFloat(currentSeconds * secondPixel);
             // document.getElementById("demo").innerHTML=left;
+            if (left<tableWidth){
+                $("#lineTime").css("left",tdWidth + left-2.5);
+            }
+            else{
+                $("#lineTime").css("left",tableWidth+tdWidth-5);
+            }
 
-            $("#lineTime").css("left",tdWidth + left-2.5);
         }
         function startTableSize(){
             let screenHeightPx = $(window).height();
@@ -249,15 +260,13 @@
         <h5 style="text-align: center"><%=dayOfWeek%></h5>
         <h6 style="text-align: center"><%=showDateStr%></h6>
     </div>
-
-
-
     <div class="card"; style="width: 98% ;margin: auto">
-        <p id="demo">
-        </p>
         <div style="display: flex; justify-content: center;padding: 5px">
             <div style=" margin: 2px ; margin-right: 50px; left: 10px">
                 <a style="" class=" btn btn-sm btn-primary " href="<%=request.getContextPath()%>/checkAvailability">Create a Booking</a>
+            </div>
+            <div style="margin: 2px">
+                <a style="" class="btn btn-sm btn-outline-primary bi bi-chevron-double-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack7%>"></a>
             </div>
             <div style="margin: 2px">
                 <a style="" class="btn btn-sm btn-outline-primary bi bi-chevron-left" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateBack%>"></a>
@@ -268,13 +277,40 @@
             <div style="margin: 2px">
                 <a  class="btn  btn-outline-primary bi bi-chevron-right btn-sm" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward%>"></a>
             </div>
+            <div style="margin: 2px">
+                <a  class="btn  btn-outline-primary bi bi-chevron-double-right btn-sm" href="<%=request.getContextPath()%>/viewAllBookingsFormatted?inputtedDate=<%=dateForward7%>"></a>
+            </div>
             <div style="width: 124px; margin-left: 50px">
-
             </div>
         </div>
+        <div style="display: flex; justify-content: center;padding: 5px">
+
+            <%for (Section sectionTemp : sections){
+                if (sections.size()!=chosenSections.size() && chosenSections.get(0).getSectionID() == sectionTemp.getSectionID()){%>
+                    <div style="margin: 2px">
+                        <form action="viewAllBookingsFormatted" method="GET" name="createJoinedTable">
+                            <input type="submit" class="btn btn-outline-primary btn-sm" value="<%=sectionTemp.getName()%>">
+                        </form>
+                    </div>
+                <%}else{%>
+                    <div style="margin: 2px">
+                        <form action="viewAllBookingsFormatted" method="POST" name="" >
+                            <input hidden name="sectionID" value="<%=sectionTemp.getSectionID()%>">
+                            <input hidden name="inputtedDate" value="<%=showDate%>">
+                            <input type="submit" class="btn btn-outline-secondary btn-sm" value="<%=sectionTemp.getName()%>">
+                        </form>
+                    </div>
+                <%}%>
+           <%}%>
+        </div>
+
+<%--            <%--%>
+<%--                for (Rows row : table.getRows()){%>--%>
+<%--                   <p><%=row%></p>--%>
+<%--                <%}%>--%>
+
         <table id="timeIncrementsTable" class="table table-striped table-bordered" style="table-layout: fixed; margin: 0px">
             <thead>
-
             <tr>
                 <th></th>
                 <%  int tempHour =timeIncrements.get(0).getHour();
@@ -296,8 +332,8 @@
                 <th id="blankTh"></th>
                 <%
                     o=1;
-                    for (LocalTime timeIncrement : timeIncrements){
-                        if (timeIncrement.getMinute()==0){
+                    for (BookingFormattedTimeIncrements timeIncrement : bookingFormattedMinuteTimeIncrements){
+                        if (timeIncrement.getTimeIncrement().getMinute()==0){
                             if(o==1){
                                 o=0;
                             }
@@ -305,8 +341,24 @@
                                 o = 1;
                             }
                         }%>
-                        <th id="" class="minuteTimeIncrement timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getMinute()%></th>
-                    <%}%>
+                    <th id="" class="minuteTimeIncrement timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getTimeIncrement().getMinute()%></th>
+                <%}%>
+            </tr>
+            <tr>
+                <th></th>
+                <%
+                    o=1;
+                    for (BookingFormattedTimeIncrements timeIncrement : bookingFormattedMinuteTimeIncrements){
+                        if (timeIncrement.getTimeIncrement().getMinute()==0){
+                            if(o==1){
+                                o=0;
+                            }
+                            else{
+                                o = 1;
+                            }
+                        }%>
+                <th id="" class="minuteTimeIncrement timeIncrements timeIncrements<%=o%>" style="text-align: center"><%=timeIncrement.getCovers()%></th>
+                <%}%>
             </tr>
             </thead>
         </table>
@@ -314,13 +366,22 @@
             <table id="tableBody" class="table table-striped table-bordered" style="table-layout: fixed; position: relative; max-height: 1px">
                 <div class="lineTime" id="lineTime" style="height: <%=18.81*table.getRows().size()%>px; width: 5px; background-color: gold; position: absolute;  z-index: 2; margin: 0px; padding: 0px" ></div>
                 <tbody>
-                <%for (Section section : sections){%>
-                    <tr>
-                        <th style="text-align: left;" colspan="5>"><%=section.getName()%></th>
-                        <% for (int i = 4 ; i<timeIncrements.size();i++){%>
-                            <th></th>
-                        <%}%>
-                    </tr>
+
+                <%for (Section section : chosenSections){%>
+                <tr>
+                    <th style="text-align: left;" colspan="6">
+                        <span>
+                            <%=section.getName()%>
+                        </span>
+                        <span style="font-size: 12px">
+                            <%=section.getNumberOfBookingsOnDay()%> Bookings
+
+                        </span>
+                    </th>
+                    <% for (int i = 6 ; i<timeIncrements.size();i++){%>
+                    <th></th>
+                    <%}%>
+                </tr>
                     <%for (Rows row : table.getRows()){%>
                         <% if (row.getSectionID()==section.getSectionID()){%>
                         <tr style="">
@@ -331,32 +392,31 @@
                             <% for (int i = 0; i <row.getColumns().size(); i++){
                                 Columns column = row.getColumns().get(i);
                             %>
-                            <% if (column.isStartOfBooking()){%>
-                            <td class="<%=column.isEven()%>" style="background-color: rgb(14,133,255);" colspan="<%=column.getAmountOfTimeIncrements()%>-1">
-                                <div style="z-index: 4; color: white; font-size: 12px">
-                                    <%=column.getBookingDetails()%>
-                                </div>
-                            </td>
-                            <%i+=column.getAmountOfTimeIncrements()-1;}
-                            else{%>
-                            <td class="<%=column.isEven()%>">
+                                <% if (column.isStartOfBooking()){%>
+                                    <td class="<%=column.isEven()%>" style="background-color: rgb(14,133,255);" colspan="<%=column.getAmountOfIncrements()-1%>>">
+                                        <div style="z-index: 4; color: white; font-size: 12px">
+                                            <%=column.getTimeIncrementLocalTime()%>
+                                        </div>
+                                    </td>
+                                <%}
+                                else if (!column.isBooked()){%>
+                                    <td class="<%=column.isEven()%>">
 
-                            </td>
-                            <%}
+                                    </td>
+                                <%}
                             }%>
                         </tr>
                         <%}
                     }
                 }%>
-
                 </tbody>
 
 
             </table>
         </div>
     </div>
-</div>
 
+
+    </div>
 </body>
 </html>
-

@@ -41,6 +41,7 @@ public class ServableTable {
     }
 
     public void setBookedTimesBookedOutForDay() {
+
         for (Booking booking : bookingsOnDay){
             for (BookingTime bookingTime : booking.getBookingTimes()){
                 boolean saved = false;
